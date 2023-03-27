@@ -28,19 +28,19 @@
     {#if !$hasStarted}
       {#if !$showError}
         <p>
-          Frog Chorus is a simple application that allows your mobile device or computer to chirp in a “chorus” of other devices, as if they were a chorus of frogs in the wild. This application uses your device's built-in speaker and microphone to operate, and does not require that devices be connected on a common Wi-Fi network.
+          Frog Chorus is a simple web-application that allows your mobile device or computer to chirp in a “chorus” of other devices, as if they were a chorus of frogs in the wild. This application uses your device's built-in speaker and microphone to operate, and does not require that devices be connected electronically in any way. Click <span class="font-mono">START</span> below to begin.
         </p>
+        <button
+          class="border-black border-2 bg-white rounded-lg p-2 mt-6 mb-6 tracking-wider m-auto block font-mono w-36"
+          on:click|once|capture|trusted={handleStart}>
+            START
+        </button>
         <p>
           For an introduction to current topics around the biology and ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
         </p>
         <p>
-          This project is dedicated to the memory of the Dutch sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, see <a href="#info">info</a>.
+          This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, see <a href="#info">info</a>.
         </p>
-        <button
-          class="border-black border-2 bg-white rounded-lg p-2 mt-4 tracking-wider m-auto block"
-          on:click|once|capture|trusted={handleStart}>
-            START
-        </button>
       {:else}
         <div>
           <!-- <header>Error</header> -->
@@ -79,7 +79,7 @@
   <Section hashString='#info'>
   <div class="text-base">
     <p>
-      This project is a translation of a series of art installations by the late Dutch sound artist Felix Hess. The first such installation was developed in 1982, with a set of fifty robots,each outfitted with a microphone, speaker, and circuitry to allow each robot to listen to its environment and make sounds in the manner of a frog in a frog chorus. 
+      This project is a translation of a series of art installations by the late Dutch sound artist Felix Hess. The first such installation was developed in 1982, with a set of fifty robots, each outfitted with a microphone, speaker, and circuitry to allow each robot to listen to its environment and make sounds in the manner of a frog in a frog chorus. 
     </p>
     <!-- blockquote -->
     <!-- The acoustic communications between animals like frogs, cicadas, or grasshoppers often give rise to group concerts or choruses. Both order and chaos appear to be present in the resulting sound patterns, and one may notice various rhythms and wavelike movements. Similar group processes can be realised with machines built specifically for such a purpose. - Felix Hess -->
@@ -89,14 +89,14 @@
     <figure>
       <img src="{hess_diagram}" alt="Flow diagram of the frog behavior">
       <figcaption class="text-sm text-center">
-        Flow diagram of the frog behavior excerpted from Hess' <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic">Electronic Sound Creatures</a>
+        Flow diagram of the frog behavior excerpted from Hess' <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic" target="_blank" rel="noreferrer">Electronic Sound Creatures</a>
       </figcaption>
     </figure>
     <p>
-      The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode">Web Audio AnalyserNode</a>.
+      The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank" rel="noreferrer">Web Audio AnalyserNode</a>.
     </p>
-    <p>This project is open-source. For more information, check out the source code at <a href="https://github.com/reubenson/frog-chorus">GitHub</a>.</p>
-    <p>For more information about the developer of this project, visit <a href="https://reubenson.com">https://reubenson.com</a>.</p>
+    <p>This project is open-source. For more information, check out the source code at <a href="https://github.com/reubenson/frog-chorus" target="_blank" rel="noreferrer">GitHub</a>.</p>
+    <p>For more information about the developer of this project, visit <a href="https://reubenson.com" target="_blank" rel="noreferrer">https://reubenson.com</a>.</p>
     <h6 class="mt-4 text-lg">References</h6>
     <ol class="list-disc">
       <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank" rel="noreferrer">A brief historical introduction to Felix on BLDG Blog</a></li>

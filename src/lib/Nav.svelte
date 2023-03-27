@@ -2,8 +2,8 @@
   import { showCloseIcon, handleClose } from "./store";
 </script>
 
-<nav class="text-gray-600 body-font absolute w-screen border-b">
-  <header class="bg-gray-100 text-xl text-left h-16">
+<nav class="text-gray-900 body-font absolute w-screen">
+  <header class="text-xl text-left h-16">
     <ul
       class="p-4"
       class:open
@@ -13,9 +13,15 @@
         <a href="#info">𝒾𝓃𝒻𝑜</a>
         {/if}
       </li>
-      <li class="text-center">
+      <li class="text-center text-4xl">
+        <!-- https://www.fancytextpro.com/CursiveTextGenerator -->
+        <a href="">ḟԻ✺❡ ḉℏ✺Իṳṧ</a>
+        <!-- <a href="">ᠻ᥅ꪮᧁ ᥴꫝꪮ᥅ꪊᦓ</a> -->
+        <!-- <a href="">ᠻ᥅ꪮᧁ ᥴꫝꪮ᥅ꪊᦓ</a> -->
+        <!-- <a href="">ⲯ﹍︿﹍︿﹍ 𝚏𝚛𝚘𝚐 𝚌𝚑𝚘𝚛𝚞𝚜 ﹍ⲯ﹍ⲯ﹍︿﹍☼</a> -->
+        <!-- <a href="">𝖋𝖗𝖔𝖌 𝖈𝖍𝖔𝖗𝖚𝖘</a> -->
         <!-- <a href="#">𝒻𝓇𝑜𝑔 𝒸𝒽𝑜𝓇𝓊𝓈</a> -->
-        <a href="#">FROG CHORUS</a>
+        <!-- <a href="#">FROG CHORUS</a> -->
       </li>
     </ul>
     {#if $showCloseIcon}

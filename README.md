@@ -1,5 +1,7 @@
 # Frog Chorus
-This project is built with Svelte, TypeScript, Svelte, and Tailwind CSS, and hosted via GitHub pages at https://frogchor.us.
+This project is built with Svelte, TypeScript, Svelte, and Tailwind CSS, and hosted via GitHub pages at https://frogchor.us. 
+
+In keeping with the Jekyll framework that GitHub Pages is designed to work with, static files served to the user are hosted in `/docs`.
 
 ## Getting Started
 To get the app serving locally with Vite:
