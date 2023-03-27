@@ -31,7 +31,7 @@
           Frog Chorus is a simple application that allows your mobile device or computer to chirp in a “chorus” of other devices, as if they were a chorus of frogs in the wild. This application uses your device's built-in speaker and microphone to operate, and does not require that devices be connected on a common Wi-Fi network.
         </p>
         <p>
-          For an introduction to current research around the biology of frog choruses, read <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html">Now That's What I Call Frog Mating Music</a>.
+          For an introduction to current topics around the biology and ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
         </p>
         <p>
           This project is dedicated to the memory of the Dutch sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, see <a href="#info">info</a>.
@@ -95,10 +95,11 @@
     <p>
       The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode">Web Audio AnalyserNode</a>.
     </p>
+    <p>This project is open-source. For more information, check out the source code at <a href="https://github.com/reubenson/frog-chorus">GitHub</a>.</p>
     <p>For more information about the developer of this project, visit <a href="https://reubenson.com">https://reubenson.com</a>.</p>
     <h6 class="mt-4 text-lg">References</h6>
     <ol class="list-disc">
-      <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank" rel="noreferrer">A brief historical introduction on BLDG Blog</a></li>
+      <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank" rel="noreferrer">A brief historical introduction to Felix on BLDG Blog</a></li>
       <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank" rel="noreferrer">Artist talk by Felix Hess in 2010 (YouTube)</a></li>
       <li class="list-inside"><a href="https://www.kehrerverlag.com/en/felix-hess-light-as-air-978-3-933257-65-9" target="_blank" rel="noreferrer">"Light as Air"</a> monograph published by Kehrer Verlag</li>
       <li class="list-inside"><a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" target="_blank" rel="noreferrer" class="italic">Electronic Sound Creatures by Felix Hess</a></li>
