@@ -4,9 +4,9 @@
 </script>
 
 <nav class="text-gray-900 body-font absolute w-screen">
-  <header class="text-xl text-left h-16">
+  <header class="text-xl text-left h-20">
     <ul
-      class="p-4"
+      class="pt-10"
       class:open
     >
       <li class="left-6 absolute">

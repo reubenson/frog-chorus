@@ -15,7 +15,8 @@
   } from './lib/store'
   import './app.css'
   import hess_diagram from './assets/hess_diagram.jpeg';
-  import frog_jumping from './assets/frogjumping.gif'
+  import frog_jumping from './assets/frogjumping.gif';
+  import grass from './assets/profolia-grass.gif';
   
   window.addEventListener('hashchange', handleUrlUpdate);
 </script>
@@ -28,13 +29,17 @@
     {#if !$hasStarted}
       {#if !$showError}
         <p>
-          <span class="italic">Frog Chorus</span> is a simple web-application that allows your mobile device or computer to chirp in a “chorus” of other devices, as if they were a <a href="addd youtube link" target="_blank" rel="noreferrer">chorus of frogs in the wild</a> . This application uses your device's built-in speaker and microphone to operate, and does not require that devices be connected electronically in any way. Click <span class="font-mono">START</span> below to begin.
+          <span class="italic">Frog Chorus</span> is a simple web-application that allows your mobile device or computer to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank" rel="noreferrer">chorus of frogs in the wild</a> . This application uses your device's built-in speaker and microphone to operate, and does not require that devices be connected electronically in any way. Click <span class="font-sans">START</span> below to begin.
         </p>
         <button
-          class="border-black border-2 bg-white rounded-lg p-2 mt-6 mb-6 tracking-wider m-auto block font-mono w-36"
-          on:click|once|capture|trusted={handleStart}>
-            START
+          class="border-black border-2 text-white p-2 mt-6 mb-6 tracking-widest m-auto block font-sans w-48 border-black ring-2"
+          on:click|once|capture|trusted={handleStart}
+          style="background-image: url('{grass}')">
+          <!-- START -->
+          <!-- 𝓈𝓉𝒶𝓇𝓉 -->
+          𝓼𝓽𝓪𝓻𝓽
         </button>
+          <!-- <img src="{frog_jumping}" alt="frog jumping" class="w-full"> -->
         <p>
           For an introduction to current topics around the biology and ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank" rel="noreferrer">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank" rel="noreferrer">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
         </p>
@@ -56,23 +61,9 @@
         </div>
       {/if}
     {:else}
-      <!--
-
-      on start, the audio device will initialize, and a number of frogs
-      will be instantiated. Each frog will register itself with the audio device.
-      At an interval, the audio device will update the behavior of each frog.
-      When a frog makes a call, the audio device microphone needs to be disabled,
-      such that a frog does not listen to itself.
-
-      Each frog will also have its own debug state, which can be toggled on and off,
-      in order to print some basic metrics, and plot FFT histograms
-
-      -->
       <div class="flex flex-row p-4">
         {#each $FROGS as frog}<FROG {...frog}/>{/each}
       </div>
-
-      <!-- TO DO: don't wait for audioImprint to calculate to start frog-->
     {/if}
   </Section>
 
@@ -106,7 +97,4 @@
       <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank" rel="noreferrer">Felix's audio recordings, recently reissued by Basic Function</a></li>
     </ol>
   </Section>
-
-  <!-- potentially use slider to determine number of frogs instantiated 
-  https://svelte.dev/tutorial/local-transitions -->
 </main>

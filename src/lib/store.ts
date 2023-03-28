@@ -64,6 +64,8 @@ function handleUpdates(frog: Frog) {
 }
 
 export const handleStart = () => {
+  // TODO: add GA event for click
+
   return audio
     .start()
     .then(() => {
@@ -85,8 +87,6 @@ export const handleStart = () => {
     })
     .catch(errorMsg => {
       handleError(errorMsg);
-    //   showError.set(true);
-    //   errorMessage.set(errorMsg);
     });
 };
 

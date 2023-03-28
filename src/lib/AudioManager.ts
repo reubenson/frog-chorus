@@ -43,7 +43,7 @@ export class AudioConfig {
         const audioInputDevice = audioInputDevices[0];
 
         // manually throw error, for debugging error-handling
-        throw new Error('testing error');
+        // throw new Error('testing error');
 
         if (!audioInputDevice) {
           console.error('no audio input device found');
@@ -115,13 +115,6 @@ export class AudioConfig {
     const fft = new Float32Array(bufferLength);
     const numberOfSteps = 5; // can be tweaked
     const intervalLength = Math.floor((duration * 1000) / numberOfSteps);
-
-    // render error if there is an issue on playback
-    // await audio.play()
-    //   .catch(e => {
-    //     handleError(e);
-    //     throw new Error(e);
-    //   });
 
     for (let index = 0; index < numberOfSteps; index++) {
       await new Promise(resolve => setTimeout(resolve, intervalLength));
