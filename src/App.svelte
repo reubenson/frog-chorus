@@ -15,6 +15,7 @@
   } from './lib/store'
   import './app.css'
   import hess_diagram from './assets/hess_diagram.jpeg';
+  import frog_jumping from './assets/frogjumping.gif'
   
   window.addEventListener('hashchange', handleUrlUpdate);
 </script>
@@ -23,7 +24,6 @@
 
 <main class="font-serif bg-emerald-100 h-screen text-center tracking-wider overflow-y-scroll pb-6">
   <NAV />
-
   <Section hashString=''>
     {#if !$hasStarted}
       {#if !$showError}

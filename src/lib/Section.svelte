@@ -10,6 +10,6 @@
   });
 </script>
 
-<section transition:fade class="{showSection ? '' : 'hidden'} max-w-xl m-auto pl-6 pr-6 text-left mt-24 mb-16 p-8 rounded-lg">
+<section transition:fade class="{showSection ? '' : 'hidden'} max-w-xl m-auto pl-6 pr-6 text-left mt-20 mb-16 p-8 rounded-lg">
   <slot></slot>
 </section>
