@@ -1,3 +1,9 @@
+.header-frog {
+  bottom: -.1em;
+  left: -.3em;
+  min-width: .4em;
+}
+
 section p {
   margin-top: 1em;
 }
