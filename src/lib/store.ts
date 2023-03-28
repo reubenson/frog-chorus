@@ -32,7 +32,6 @@ export const handleUrlUpdate = () => {
   hash.set(h);
   // show a close icon when hash content is being rendered
   showCloseIcon.set(h.includes('#'));
-  console.log('hash in store', hash);
 };
 
 export const handleClose = () => {
@@ -44,6 +43,13 @@ export const handleError = (msg) => {
   console.error('Rendering error to user:', msg);
   showError.set(true);
   errorMessage.set(msg);
+
+  // send error to GA
+  if (!!window.gtag) {
+    window.gtag('event', 'error_rendered', {
+      msg
+    });
+  }
 }
 
 function handleUpdates(frog: Frog) {
@@ -78,8 +84,9 @@ export const handleStart = () => {
       hasStarted.set(true);
     })
     .catch(errorMsg => {
-      showError.set(true);
-      errorMessage.set(errorMsg);
+      handleError(errorMsg);
+    //   showError.set(true);
+    //   errorMessage.set(errorMsg);
     });
 };
 

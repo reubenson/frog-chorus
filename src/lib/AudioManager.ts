@@ -42,6 +42,9 @@ export class AudioConfig {
         const audioInputDevices = devices.filter(device => device.kind === 'audioinput');
         const audioInputDevice = audioInputDevices[0];
 
+        // manually throw error, for debugging error-handling
+        throw new Error('testing error');
+
         if (!audioInputDevice) {
           console.error('no audio input device found');
           return;
