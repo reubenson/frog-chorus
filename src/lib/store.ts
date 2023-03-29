@@ -16,7 +16,7 @@ export const audio = new AudioConfig();
 export const audioFile = `${AUDIO_SRC_DIRECTORY}/${AUDIO_FILES[2]}`;
 export const hasStarted = writable(false);
 export const FFT_SIZE = 1024;
-export const DEBUG_ON = writable(true);
+export const DEBUG_ON = writable(false);
 export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
 export const inputSamplingInterval = 50; // time (ms) between FFT analysis events
@@ -88,6 +88,11 @@ export const handleStart = () => {
     .catch(errorMsg => {
       handleError(errorMsg);
     });
+};
+
+export const toggleOnDebug = () => {
+  DEBUG_ON.set(true);
+  console.log('DEBUG_ON', DEBUG_ON);
 };
 
 // on initialization
