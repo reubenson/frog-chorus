@@ -16,7 +16,7 @@
   export let isCurrentlySinging;
   export let frogSignalDetected;
   let fftEl, convolutionEl, differenceEl, ambientEl;
-
+  let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
 
   function plotInputFFT(data) {
     if (!fftEl) return;
@@ -41,7 +41,7 @@
 
     drawFFT(data, ambientEl);
   }
-  
+
   $: {
     plotInputFFT(directInputFFT);
     plotConvolution(convolutionFFT);
@@ -50,9 +50,15 @@
   }
 </script>
 
-<div class="frog-item max-w-lg m-auto border-black border-4 p-4 rounded-md transition-colors duration-500 {isCurrentlySinging ? 'bg-lime-800' : ''}">
+<div class="frog-item w-full max-w-lg h-full m-auto border-black border-2 p-4 rounded-md">
+  <div class="text-center">
+    <div class="text-8xl animate-pulse p-4 opacity-0">&#78223;</div>
+    <p>Your frog is listening ...</p>
+  </div>
+  <!-- if only one frog: -->
+  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-lime-300' : ''}"></div>
   <div class="frog-debug-panel mt-2">
-    <header class="text-2xl transition-colors duration-500 {frogSignalDetected ? 'bg-black' : ''}">Frog {id}</header>
+    <!-- <header class="text-2xl transition-colors duration-500 {frogSignalDetected ? 'bg-black' : ''}">Frog {id}</header> -->
     {#if $DEBUG_ON}
     <div class="debug-panel">
       <div class="mt-2">
