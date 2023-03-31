@@ -328,13 +328,13 @@ export class Frog {
     const rolloff = this.audioFeatures?.spectralRolloff;
     const spectralFlatness = this.audioFeatures?.spectralFlatness;
     const spread = this.audioFeatures?.spectralSpread;
-    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 200;
+    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 400;
     const relativeFlatness = spectralFlatness - this.baselineFlatness;
     const relativeSpread = spread - this.baselineSpread;
     // console.log('relativeFlatness', relativeFlatness);
     // console.log('this.baselineFlatness', this.baselineFlatness);
     console.log('this.relativeSpread', relativeSpread);
-    this.frogSignalDetected = rolloffIsSimilar && relativeSpread < -5;
+    this.frogSignalDetected = rolloffIsSimilar;
     // console.log('this.audioFeatures?.spectralRolloff', this.audioFeatures?.spectralRolloff);
     // console.log('this.audioFeatures?.spectralFlatness', this.audioFeatures?.spectralFlatness);
   }
