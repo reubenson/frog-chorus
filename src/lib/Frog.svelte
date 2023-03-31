@@ -61,7 +61,6 @@
     updateMetrics(amplitude);
     
     outlineColor = frogSignalDetected ? 'emerald-900' : 'emerald-100';
-    console.log('frogSignalDetected', frogSignalDetected);
   }
 </script>
 
@@ -102,6 +101,12 @@
           </li>
           <li>
             Slope: {audioFeatures?.spectralSlope}
+          </li>
+          <li>
+            Rolloff: {audioFeatures?.spectralRolloff}
+          </li>
+          <li>
+            Kurtosis: {audioFeatures?.spectralFlux}
           </li>
         </ul>
       </div>

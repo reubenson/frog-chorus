@@ -69,6 +69,7 @@ export class Frog {
   isCurrentlySinging: boolean;
   audioFeatures: object;
   buffer: AudioBuffer;
+  baselineRolloff: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -181,7 +182,7 @@ export class Frog {
       sampleRate: this.audioConfig.ctx.sampleRate,
       source: inputSourceNode,
       bufferSize: 512,
-      featureExtractors: ['loudness', 'perceptualSpread', 'spectralSlope'],
+      featureExtractors: ['loudness', 'perceptualSpread', 'spectralSlope', 'spectralRolloff', 'spectralFlatness'],
       callback: features => {
         this.audioFeatures = Object.assign(features);
       }
@@ -254,11 +255,18 @@ export class Frog {
    * other frogs in the acoustic environment
    *
    * To Do: make this measurement after the amplitude of the environment
-   * is held below a threshold value for a number of seconds
+   * is held below a threshold value for a number of seconds?
    */
   private establishAmbientFFT() {
-    if (this.amplitude < this.amplitudeThreshold) {
+    if (this.amplitude < this.amplitudeThreshold && this.amplitude > -120) {
       this.ambientFFT = this.convolutionFFT;
+
+      // dynamically reset amplitude threshold to lower values as the environment gets quieter
+      this.amplitudeThreshold = this.amplitude;
+      this.baselineRolloff = this.audioFeatures?.spectralRolloff;
+      log('amplitude threshold:', this.amplitudeThreshold);
+      log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
+      log('kurtosis', this.audioFeatures?.spectralFlatness);
     }
   }
 
@@ -309,7 +317,15 @@ export class Frog {
     const convolutionIsLouder = convolutionPeakBin.value > ambientPeakBin.value;
 
     // To Do: incorporate logic around audioFeatures?
-    this.frogSignalDetected = peaksAreSimilar && convolutionIsLouder;
+    // this.frogSignalDetected = peaksAreSimilar && convolutionIsLouder;
+
+    // testing spectral rolloff
+    // "The frequency below which is contained 99% of the energy of the spectrum"
+    const rolloff = this.audioFeatures?.spectralRolloff;
+    const spectralFlatness = this.audioFeatures?.spectralFlatness;
+    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 2500;
+    this.frogSignalDetected = rolloffIsSimilar && spectralFlatness < 0.1;
+    // console.log('this.audioFeatures?.kurtosis', this.audioFeatures?.spectralFlatness);
   }
 
   /**
@@ -317,7 +333,7 @@ export class Frog {
    */
   private updateShyness() {
     const rateOfLosingShyness = 0.1; // value to be tweaked
-    const environmentIsQuiet = this.amplitude < this.amplitudeThreshold;
+    const environmentIsQuiet = this.amplitude < (this.amplitudeThreshold + 40);
 
     if (environmentIsQuiet) {
       const velocity = rateOfLosingShyness;
@@ -395,7 +411,11 @@ export class Frog {
    * @returns number - between 0 and 1
    */
   private determineChirpProbability() {
-    return this.eagerness * (1 - this.shyness);
+    if (this.eagerness === 1) {
+      return true;
+    } else {
+      return this.eagerness * (1 - this.shyness);
+    }
   }
 
   /**
