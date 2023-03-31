@@ -70,6 +70,8 @@ export class Frog {
   audioFeatures: object;
   buffer: AudioBuffer;
   baselineRolloff: number;
+  baselineFlatness: number;
+  baselineSpread: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -180,9 +182,9 @@ export class Frog {
     this.meydaAnalyser = Meyda.createMeydaAnalyzer({
       audioContext: this.audioConfig.ctx,
       sampleRate: this.audioConfig.ctx.sampleRate,
-      source: inputSourceNode,
+      source: this.convolver,
       bufferSize: 512,
-      featureExtractors: ['loudness', 'perceptualSpread', 'spectralSlope', 'spectralRolloff', 'spectralFlatness'],
+      featureExtractors: ['loudness', 'perceptualSpread', 'spectralSlope', 'spectralRolloff', 'spectralFlatness', 'spectralSpread'],
       callback: features => {
         this.audioFeatures = Object.assign(features);
       }
@@ -264,6 +266,8 @@ export class Frog {
       // dynamically reset amplitude threshold to lower values as the environment gets quieter
       this.amplitudeThreshold = this.amplitude;
       this.baselineRolloff = this.audioFeatures?.spectralRolloff;
+      this.baselineFlatness = this.audioFeatures?.spectralFlatness;
+      this.baselineSpread = this.audioFeatures?.spectralSpread;
       log('amplitude threshold:', this.amplitudeThreshold);
       log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
       log('kurtosis', this.audioFeatures?.spectralFlatness);
@@ -323,9 +327,16 @@ export class Frog {
     // "The frequency below which is contained 99% of the energy of the spectrum"
     const rolloff = this.audioFeatures?.spectralRolloff;
     const spectralFlatness = this.audioFeatures?.spectralFlatness;
-    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 2500;
-    this.frogSignalDetected = rolloffIsSimilar && spectralFlatness < 0.1;
-    // console.log('this.audioFeatures?.kurtosis', this.audioFeatures?.spectralFlatness);
+    const spread = this.audioFeatures?.spectralSpread;
+    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 200;
+    const relativeFlatness = spectralFlatness - this.baselineFlatness;
+    const relativeSpread = spread - this.baselineSpread;
+    // console.log('relativeFlatness', relativeFlatness);
+    // console.log('this.baselineFlatness', this.baselineFlatness);
+    console.log('this.relativeSpread', relativeSpread);
+    this.frogSignalDetected = rolloffIsSimilar && relativeSpread < -5;
+    // console.log('this.audioFeatures?.spectralRolloff', this.audioFeatures?.spectralRolloff);
+    // console.log('this.audioFeatures?.spectralFlatness', this.audioFeatures?.spectralFlatness);
   }
 
   /**
