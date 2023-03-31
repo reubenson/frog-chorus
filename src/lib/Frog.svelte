@@ -17,6 +17,9 @@
   export let frogSignalDetected;
   let fftEl, convolutionEl, differenceEl, ambientEl;
   let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
+  let ampFontsize = 10;
+  let loudnessFontsize = 10;
+  let outlineColor = 'black';
 
   function plotInputFFT(data) {
     if (!fftEl) return;
@@ -42,18 +45,36 @@
     drawFFT(data, ambientEl);
   }
 
+  function updateMetrics(amp) {
+    const fontMin = 0;
+    const fontMax = 72;
+
+    ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
+    loudnessFontsize = fontMin + (audioFeatures?.loudness?.total / 20) * fontMax; 
+  }
+
   $: {
     plotInputFFT(directInputFFT);
     plotConvolution(convolutionFFT);
     plotDifference(diffFFT);
     plotBaseline(ambientFFT);
+    updateMetrics(amplitude);
+    
+    outlineColor = frogSignalDetected ? 'emerald-900' : 'emerald-100';
+    console.log('frogSignalDetected', frogSignalDetected);
   }
 </script>
 
 <div class="frog-item w-full max-w-lg h-full m-auto border-black border-2 p-4 rounded-md">
   <div class="text-center">
-    <div class="text-8xl animate-pulse p-4 opacity-0">&#78223;</div>
-    <p>Your frog is listening ...</p>
+    <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 bg-{outlineColor}">&#78223;</div>
+    <p class="text-{outlineColor}">Your frog is listening ...</p>
+    <span class="invisible bg-emerald-900 bg-emerald-100"></span>
+  </div>
+  <div>
+    <!-- metrics -->
+    <span style="font-size: {ampFontsize}px" class="absolute">&#127908;</span>
+    <!-- <span style="font-size: {loudnessFontsize}px">&#127908;</span> -->
   </div>
   <!-- if only one frog: -->
   <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-lime-300' : ''}"></div>
