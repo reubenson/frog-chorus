@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { writable } from 'svelte/store';
 import { AudioConfig } from './AudioManager';
 import { Frog } from './Frog';
+import spring_peeper from '../assets/spring-peeper.mp3';
+
 
 // UI state
 export const showCloseIcon = writable(false);
@@ -13,10 +15,10 @@ export const AUDIO_SRC_DIRECTORY = 'https://reubenson.com/frog/audio';
 // peeper downloaded from https://www.umesc.usgs.gov/terrestrial/amphibians/armi/frog_calls/spring_peeper.mp3
 export const AUDIO_FILES = ['Aneides_lugubris90.mp3', 'Anaxyrus_punctatus2.mp3', 'spring-peeper.mp3'];
 export const audio = new AudioConfig();
-export const audioFile = `${AUDIO_SRC_DIRECTORY}/${AUDIO_FILES[2]}`;
+export const audioFile = spring_peeper;
 export const hasStarted = writable(false);
 export const FFT_SIZE = 1024;
-export const DEBUG_ON = writable(true); // temporarily true while bugfixing
+export const DEBUG_ON = writable(false); // temporarily true while bugfixing
 export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
 export const inputSamplingInterval = 50; // time (ms) between FFT analysis events

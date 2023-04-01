@@ -71,8 +71,6 @@ export class Frog {
   audioFeatures: object;
   buffer: AudioBuffer;
   baselineRolloff: number;
-  baselineFlatness: number;
-  baselineSpread: number;
   baselineCentroid: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
@@ -186,7 +184,7 @@ export class Frog {
       sampleRate: this.audioConfig.ctx.sampleRate,
       source: this.convolver,
       bufferSize: 1024,
-      featureExtractors: ['loudness', 'perceptualSpread', 'spectralSlope', 'spectralRolloff', 'spectralFlatness', 'spectralSpread', 'spectralCrest', 'spectralCentroid'],
+      featureExtractors: ['loudness', 'spectralRolloff', 'spectralCrest', 'spectralCentroid'],
       callback: features => {
         this.audioFeatures = Object.assign(features);
       }
@@ -316,47 +314,36 @@ export class Frog {
     const convolutionPeakBin = this.findPeakBin(this.convolutionFFT);
     const ambientPeakBin = this.findPeakBin(this.ambientFFT);
 
-    // log('convolution peak bin', convolutionPeakBin);
-    // log('ambient peak bin', ambientPeakBin);
-
     // simple calculation: determine whether the peak frequency bin is similar,
     // between convolutionFFT and ambientFFT
     const peaksAreSimilar = Math.abs(convolutionPeakBin.index - ambientPeakBin.index) < 4;
-    // const convolutionIsLouder = convolutionPeakBin.value > ambientPeakBin.value;
     const convolutionAmplitude = calculateAmplitude(this.convolutionFFT);
     const convolutionIsLouder = convolutionAmplitude - this.convolutionAmplitudeThreshold > 20;
 
-    // To Do: incorporate logic around audioFeatures?
+    // these criteria ensure (1) that the dominant frequency of the frog is reflected in the convolution FFT data (works under the assumption that the frog only has one dominant frequency, e.g. not cocqui) and (2) that the microphone is above ambient noise, and therefore actually hearing a frog, and not hovering around the ambient state
     const convolutionMatches = peaksAreSimilar && convolutionIsLouder;
-    // console.log('convolutionMatches', convolutionMatches);
 
-    // testing spectral rolloff
-    // "The frequency below which is contained 99% of the energy of the spectrum"
+    // spectral rolloff: "The frequency below which is contained 99% of the energy of the spectrum". This is useful for ensuring that the spectrum is similar, without a bunch of energy added to non-frog parts of the spectrun
     const rolloff = this.audioFeatures?.spectralRolloff;
-    const spectralFlatness = this.audioFeatures?.spectralFlatness;
-    const spread = this.audioFeatures?.spectralSpread;
-    const crest = this.audioFeatures?.spectralCrest;
-    const centroid = this.audioFeatures?.spectralCentroid;
     const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 700;
-    const relativeFlatness = spectralFlatness - this.baselineFlatness;
-    const relativeSpread = spread - this.baselineSpread;
+
+    // spectral crest: "This is the ratio of the loudest magnitude over the RMS of the whole frame. A high number is an indication of a loud peak compared out to the overall curve of the spectrum".  This is useful for ensuring that there are still sharp peaks in the audio. This is only useful for frogs like spring peepers, which have a strong dominant frequency
+    const crest = this.audioFeatures?.spectralCrest;
+    const hasSharpCrest = crest> 10;
+    
+    // spectral centroid: "An indicator of the “brightness” of a given sound, representing the spectral centre of gravity. If you were to take the spectrum, make a wooden block out of it and try to balance it on your finger (across the X axis), the spectral centroid would be the frequency that your finger “touches” when it successfully balances." This is very useful, because it ensures that the majority of activity in the spectrum is close to the frog's dominant frequency
+    const centroid = this.audioFeatures?.spectralCentroid;
     const relativeCentroid = Math.abs(centroid - this.baselineCentroid);
-    // console.log('baselineCentroid', this.baselineCentroid);
-    // console.log('relativeCentroid', relativeCentroid);
-    // console.log('relativeFlatness', relativeFlatness);
-    // console.log('this.baselineFlatness', this.baselineFlatness);
-    // console.log('this.relativeSpread', relativeSpread);
-    // console.log('rolloffIsSimilar', rolloffIsSimilar);
-    this.frogSignalDetected = convolutionMatches && crest > 10 && relativeCentroid < 0.7 && rolloffIsSimilar;
+    const centroidIsSimilar = relativeCentroid < 0.7;
+
+    this.frogSignalDetected = convolutionMatches && hasSharpCrest && centroidIsSimilar && rolloffIsSimilar;
     if (this.frogSignalDetected) {
+      // these logs can be helpful for dialing in appropriate threshold values
       console.log('relativeCentroid', relativeCentroid);
       console.log('crest', crest);
       console.log('convolutionAmplitude', convolutionAmplitude);
       console.log('rolloff', rolloff);
-      console.log('this.baselineRolloff', this.baselineRolloff);
     }
-    // console.log('this.audioFeatures?.spectralRolloff', this.audioFeatures?.spectralRolloff);
-    // console.log('this.audioFeatures?.spectralFlatness', this.audioFeatures?.spectralFlatness);
   }
 
   /**

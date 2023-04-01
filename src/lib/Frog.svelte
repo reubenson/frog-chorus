@@ -10,12 +10,11 @@
   export let eagerness;
   export let directInputFFT;
   export let convolutionFFT;
-  export let diffFFT;
   export let ambientFFT;
   export let audioFeatures;
   export let isCurrentlySinging;
   export let frogSignalDetected;
-  let fftEl, convolutionEl, differenceEl, ambientEl;
+  let fftEl, convolutionEl, ambientEl;
   let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
   let ampFontsize = 10;
   let loudnessFontsize = 10;
@@ -31,12 +30,6 @@
     if (!convolutionEl) return;
     
     drawFFT(data, convolutionEl);
-  }
-  
-  function plotDifference(data) {
-    if (!differenceEl) return;
-
-    drawFFT(data, differenceEl);
   }
 
   function plotBaseline(data) {
@@ -56,23 +49,22 @@
   $: {
     plotInputFFT(directInputFFT);
     plotConvolution(convolutionFFT);
-    plotDifference(diffFFT);
     plotBaseline(ambientFFT);
     updateMetrics(amplitude);
     
-    outlineColor = frogSignalDetected ? 'emerald-900' : 'emerald-100';
+    outlineColor = frogSignalDetected ? 'emerald-900' : 'black';
   }
 </script>
 
-<div class="frog-item w-full max-w-lg h-full m-auto border-black border-2 p-4 rounded-md">
-  <div class="text-center">
+<div class="frog-item w-full max-w-lg h-full m-auto p-4 rounded-md">
+  <div class="text-center relative h-36">
     <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 text-{outlineColor}">&#78223;</div>
+    <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-colors duration-1000 text-{outlineColor}">&xcirc;</div>
     <p class="text-{outlineColor}">Your frog is listening ...</p>
     <span class="invisible text-emerald-900 text-emerald-100"></span>
   </div>
   <div>
-    <!-- metrics -->
-    <span style="font-size: {ampFontsize}px" class="absolute">&#127908;</span>
+    <!-- <span style="font-size: {ampFontsize}px" class="absolute">&#127908;</span> -->
     <!-- <span style="font-size: {loudnessFontsize}px">&#127908;</span> -->
   </div>
   <!-- if only one frog: -->
@@ -81,44 +73,16 @@
     <!-- <header class="text-2xl transition-colors duration-500 {frogSignalDetected ? 'bg-black' : ''}">Frog {id}</header> -->
     {#if $DEBUG_ON}
     <div class="debug-panel">
-      <div class="mt-2">
-        <header class="text-xl mb-2">Basic Metrics</header>
+      <div class="mt-4">
+        <header class="text-xl mt-2">Basic Metrics</header>
         <ul class="flex flex-row flex-wrap">
-          <li class="h-14 p-2 basis-2/4">Shyness: {_.round(shyness, 3)}</li>
-          <li class="h-14 p-2 basis-2/4">Eagerness: {_.round(eagerness, 3)}</li>
-          <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(amplitude, 2)}</li>
-          <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(convolutionAmplitude)}</li>
-        </ul>
-        <header class="mt-4 text-xl">
-          Audio Features
-        </header>
-        <ul>
-          <li>
-            Loudness: {_.round(audioFeatures?.loudness?.total, 2)}
-          </li>
-          <li>
-            Spread: {_.round(audioFeatures?.perceptualSpread, 2)}
-          </li>
-          <li>
-            Slope: {audioFeatures?.spectralSlope}
-          </li>
-          <li>
-            Rolloff: {Math.round(audioFeatures?.spectralRolloff)}
-          </li>
-          <li>
-            Flatness: {audioFeatures?.spectralFlatness}
-          </li>
-          <li>
-            Crest: {Math.round(audioFeatures?.spectralCrest)}
-          </li>
-          <li>
-            Centroid: {Math.round(audioFeatures?.spectralCentroid)}
-          </li>
+          <li class="h-14 p-2 basis-2/4">Shyness: {_.round(shyness, 2)}</li>
+          <li class="h-14 p-2 basis-2/4">Eagerness: {_.round(eagerness, 2)}</li>
         </ul>
       </div>
-      <header class="text-xl mt-8 mb-2">Figures</header>
+      <header class="text-xl mt-2 mb-2">Figures</header>
       <div class="flex flex-wrap flex-row">
-        <div class="basis-2/4 p-2 shrink">
+        <div class="basis-full p-2 shrink">
           <header>FFT</header>
           <canvas bind:this={fftEl} class="w-full"></canvas>
           <ul>
@@ -132,11 +96,17 @@
           <header>Convolution</header>
           <canvas bind:this={convolutionEl} class="w-full"></canvas>
         </div>
-        <div class="basis-2/4 p-2">
-          <header>FFT Differential</header>
-          <canvas bind:this={differenceEl} class="w-full"></canvas>
-        </div>
       </div>
+      <header class="mt-4 text-xl">
+        Audio Features
+      </header>
+      <ul class="flex flex-row flex-wrap">
+        <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(amplitude, 0)}</li>
+        <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(convolutionAmplitude)}</li>
+        <li class="h-14 p-2 basis-2/4">
+          Loudness: {_.round(audioFeatures?.loudness?.total, 2)}
+        </li>
+      </ul>
     </div>
     {/if}
   </div>
