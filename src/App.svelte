@@ -35,7 +35,7 @@
           <!-- TODO: Try expanding UI to show vidoe here? -->
         </p>
         <p>
-          This application uses your device's built-in speaker and microphone to operate, and does not require that devices be connected electronically in any way. Click <span class="font-sans">START</span> below to begin.
+          This application uses your device's built-in speaker and microphone to operate, using the medium of air and acoustics, without the aid of technologies like wi-fi and bluetooth. Click <span class="font-sans">𝓼𝓽𝓪𝓻𝓽</span> below to begin.
         </p>
         <button
           class="border-black border-2 text-white p-2 mt-6 mb-6 tracking-widest m-auto block font-sans w-48 border-black ring-2"

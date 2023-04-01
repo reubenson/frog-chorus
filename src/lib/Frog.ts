@@ -57,6 +57,7 @@ export class Frog {
   rateOfStateChange: number; // manually-calibrated value used to determine rate of change in eagerness and shyness
   sampleDuration: number;
   amplitudeThreshold: number; // relative threshold between a quiet vs noisy environment
+  convolutionAmplitudeThreshold: number;
   hasInitialized: boolean;
   convolutionAnalyser: AnalyserNode;
   directInputAnalyser: AnalyserNode;
@@ -72,6 +73,7 @@ export class Frog {
   baselineRolloff: number;
   baselineFlatness: number;
   baselineSpread: number;
+  baselineCentroid: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -82,7 +84,7 @@ export class Frog {
     this.lastUpdated = Date.now();
     this.currentTimestamp = Date.now();
     this.rateOfStateChange = 0.2; // to be tweaked
-    this.amplitudeThreshold = -70; // to be tweaked
+    this.amplitudeThreshold = -65; // to be tweaked
     this.hasInitialized = false;
     this.frogSignalDetected = false;
     this.isCurrentlySinging = false;
@@ -183,8 +185,8 @@ export class Frog {
       audioContext: this.audioConfig.ctx,
       sampleRate: this.audioConfig.ctx.sampleRate,
       source: this.convolver,
-      bufferSize: 512,
-      featureExtractors: ['loudness', 'perceptualSpread', 'spectralSlope', 'spectralRolloff', 'spectralFlatness', 'spectralSpread'],
+      bufferSize: 1024,
+      featureExtractors: ['loudness', 'perceptualSpread', 'spectralSlope', 'spectralRolloff', 'spectralFlatness', 'spectralSpread', 'spectralCrest', 'spectralCentroid'],
       callback: features => {
         this.audioFeatures = Object.assign(features);
       }
@@ -262,12 +264,14 @@ export class Frog {
   private establishAmbientFFT() {
     if (this.amplitude < this.amplitudeThreshold && this.amplitude > -120) {
       this.ambientFFT = this.convolutionFFT;
+      this.convolutionAmplitudeThreshold = this.convolutionAmplitude;
 
       // dynamically reset amplitude threshold to lower values as the environment gets quieter
       this.amplitudeThreshold = this.amplitude;
       this.baselineRolloff = this.audioFeatures?.spectralRolloff;
       this.baselineFlatness = this.audioFeatures?.spectralFlatness;
       this.baselineSpread = this.audioFeatures?.spectralSpread;
+      this.baselineCentroid = this.audioFeatures?.spectralCentroid;
       log('amplitude threshold:', this.amplitudeThreshold);
       log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
       log('kurtosis', this.audioFeatures?.spectralFlatness);
@@ -318,23 +322,39 @@ export class Frog {
     // simple calculation: determine whether the peak frequency bin is similar,
     // between convolutionFFT and ambientFFT
     const peaksAreSimilar = Math.abs(convolutionPeakBin.index - ambientPeakBin.index) < 4;
-    const convolutionIsLouder = convolutionPeakBin.value > ambientPeakBin.value;
+    // const convolutionIsLouder = convolutionPeakBin.value > ambientPeakBin.value;
+    const convolutionAmplitude = calculateAmplitude(this.convolutionFFT);
+    const convolutionIsLouder = convolutionAmplitude - this.convolutionAmplitudeThreshold > 20;
 
     // To Do: incorporate logic around audioFeatures?
-    // this.frogSignalDetected = peaksAreSimilar && convolutionIsLouder;
+    const convolutionMatches = peaksAreSimilar && convolutionIsLouder;
+    // console.log('convolutionMatches', convolutionMatches);
 
     // testing spectral rolloff
     // "The frequency below which is contained 99% of the energy of the spectrum"
     const rolloff = this.audioFeatures?.spectralRolloff;
     const spectralFlatness = this.audioFeatures?.spectralFlatness;
     const spread = this.audioFeatures?.spectralSpread;
-    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 400;
+    const crest = this.audioFeatures?.spectralCrest;
+    const centroid = this.audioFeatures?.spectralCentroid;
+    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 700;
     const relativeFlatness = spectralFlatness - this.baselineFlatness;
     const relativeSpread = spread - this.baselineSpread;
+    const relativeCentroid = Math.abs(centroid - this.baselineCentroid);
+    // console.log('baselineCentroid', this.baselineCentroid);
+    // console.log('relativeCentroid', relativeCentroid);
     // console.log('relativeFlatness', relativeFlatness);
     // console.log('this.baselineFlatness', this.baselineFlatness);
-    console.log('this.relativeSpread', relativeSpread);
-    this.frogSignalDetected = rolloffIsSimilar;
+    // console.log('this.relativeSpread', relativeSpread);
+    // console.log('rolloffIsSimilar', rolloffIsSimilar);
+    this.frogSignalDetected = convolutionMatches && crest > 10 && relativeCentroid < 0.7 && rolloffIsSimilar;
+    if (this.frogSignalDetected) {
+      console.log('relativeCentroid', relativeCentroid);
+      console.log('crest', crest);
+      console.log('convolutionAmplitude', convolutionAmplitude);
+      console.log('rolloff', rolloff);
+      console.log('this.baselineRolloff', this.baselineRolloff);
+    }
     // console.log('this.audioFeatures?.spectralRolloff', this.audioFeatures?.spectralRolloff);
     // console.log('this.audioFeatures?.spectralFlatness', this.audioFeatures?.spectralFlatness);
   }
@@ -395,7 +415,7 @@ export class Frog {
    * Make the frog chirp, by playing audio sample
    */
   private playSample() {
-    const shouldPauseWhilePlaying = true;
+    const shouldPauseWhilePlaying = false; // remove after debugging
 
     if (shouldPauseWhilePlaying) {
       this.isCurrentlySinging = true;

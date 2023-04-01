@@ -66,9 +66,9 @@
 
 <div class="frog-item w-full max-w-lg h-full m-auto border-black border-2 p-4 rounded-md">
   <div class="text-center">
-    <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 bg-{outlineColor}">&#78223;</div>
+    <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 text-{outlineColor}">&#78223;</div>
     <p class="text-{outlineColor}">Your frog is listening ...</p>
-    <span class="invisible bg-emerald-900 bg-emerald-100"></span>
+    <span class="invisible text-emerald-900 text-emerald-100"></span>
   </div>
   <div>
     <!-- metrics -->
@@ -103,10 +103,16 @@
             Slope: {audioFeatures?.spectralSlope}
           </li>
           <li>
-            Rolloff: {audioFeatures?.spectralRolloff}
+            Rolloff: {Math.round(audioFeatures?.spectralRolloff)}
           </li>
           <li>
-            Kurtosis: {audioFeatures?.spectralFlux}
+            Flatness: {audioFeatures?.spectralFlatness}
+          </li>
+          <li>
+            Crest: {Math.round(audioFeatures?.spectralCrest)}
+          </li>
+          <li>
+            Centroid: {Math.round(audioFeatures?.spectralCentroid)}
           </li>
         </ul>
       </div>
