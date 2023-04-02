@@ -430,9 +430,13 @@ export class Frog {
    */
   private determineChirpProbability() {
     if (this.eagerness === 1) {
-      return true;
-    } else {
+      return 1;
+    } else if (this.shyness > 0) {
       return this.eagerness * (1 - this.shyness);
+    }
+    else { // shyness === 0
+      // frog may be too insensitive to other frog sounds, but at least it's not shy, so boost eagerness
+      return this.eagerness + 0.05;
     }
   }
 
