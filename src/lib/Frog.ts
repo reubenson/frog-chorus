@@ -325,7 +325,7 @@ export class Frog {
 
     // spectral rolloff: "The frequency below which is contained 99% of the energy of the spectrum". This is useful for ensuring that the spectrum is similar, without a bunch of energy added to non-frog parts of the spectrun
     const rolloff = this.audioFeatures?.spectralRolloff;
-    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 100;
+    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 200;
 
     // spectral crest: "This is the ratio of the loudest magnitude over the RMS of the whole frame. A high number is an indication of a loud peak compared out to the overall curve of the spectrum".  This is useful for ensuring that there are still sharp peaks in the audio. This is only useful for frogs like spring peepers, which have a strong dominant frequency
     const crest = this.audioFeatures?.spectralCrest;
@@ -343,6 +343,8 @@ export class Frog {
       console.log('crest', crest);
       console.log('convolutionAmplitude', convolutionAmplitude);
       console.log('rolloff', rolloff);
+    } else {
+      console.log('convolutionMatches');
     }
   }
 
