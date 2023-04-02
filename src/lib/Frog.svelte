@@ -57,7 +57,7 @@
 </script>
 
 <div class="frog-item w-full max-w-lg h-full m-auto p-4 rounded-md">
-  <div class="text-center relative h-36">
+  <div class="text-center relative h-50">
     <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 text-{outlineColor}">&#78223;</div>
     <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-colors duration-1000 text-{outlineColor}">&xcirc;</div>
     <p class="text-{outlineColor}">Your frog is listening ...</p>
@@ -69,7 +69,7 @@
   </div>
   <!-- if only one frog: -->
   <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-lime-300' : ''}"></div>
-  <div class="frog-debug-panel mt-2">
+  <div class="frog-debug-panel mt-4">
     <!-- <header class="text-2xl transition-colors duration-500 {frogSignalDetected ? 'bg-black' : ''}">Frog {id}</header> -->
     {#if $DEBUG_ON}
     <div class="debug-panel">
@@ -104,7 +104,16 @@
         <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(amplitude, 0)}</li>
         <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(convolutionAmplitude)}</li>
         <li class="h-14 p-2 basis-2/4">
-          Loudness: {_.round(audioFeatures?.loudness?.total, 2)}
+          Loudness: {_.round(audioFeatures?.loudness?.total, 0)}
+        </li>
+        <li class="h-14 p-2 basis-2/4">
+          Rolloff: {_.round(audioFeatures?.spectralRolloff, 0)}
+        </li>
+        <li class="h-14 p-2 basis-2/4">
+          Centroid: {_.round(audioFeatures?.spectralCentroid, 0)}
+        </li>
+        <li class="h-14 p-2 basis-2/4">
+          Crest: {_.round(audioFeatures?.spectralCrest, 0)}
         </li>
       </ul>
     </div>

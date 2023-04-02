@@ -325,16 +325,16 @@ export class Frog {
 
     // spectral rolloff: "The frequency below which is contained 99% of the energy of the spectrum". This is useful for ensuring that the spectrum is similar, without a bunch of energy added to non-frog parts of the spectrun
     const rolloff = this.audioFeatures?.spectralRolloff;
-    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 700;
+    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 100;
 
     // spectral crest: "This is the ratio of the loudest magnitude over the RMS of the whole frame. A high number is an indication of a loud peak compared out to the overall curve of the spectrum".  This is useful for ensuring that there are still sharp peaks in the audio. This is only useful for frogs like spring peepers, which have a strong dominant frequency
     const crest = this.audioFeatures?.spectralCrest;
-    const hasSharpCrest = crest> 10;
+    const hasSharpCrest = crest > 10;
     
     // spectral centroid: "An indicator of the “brightness” of a given sound, representing the spectral centre of gravity. If you were to take the spectrum, make a wooden block out of it and try to balance it on your finger (across the X axis), the spectral centroid would be the frequency that your finger “touches” when it successfully balances." This is very useful, because it ensures that the majority of activity in the spectrum is close to the frog's dominant frequency
     const centroid = this.audioFeatures?.spectralCentroid;
     const relativeCentroid = Math.abs(centroid - this.baselineCentroid);
-    const centroidIsSimilar = relativeCentroid < 0.7;
+    const centroidIsSimilar = relativeCentroid < 1.0;
 
     this.frogSignalDetected = convolutionMatches && hasSharpCrest && centroidIsSimilar && rolloffIsSimilar;
     if (this.frogSignalDetected) {
