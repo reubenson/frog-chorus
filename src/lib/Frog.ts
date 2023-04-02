@@ -378,7 +378,7 @@ export class Frog {
     if (this.frogSignalDetected) {
       // increase eagerness if other frogs are heard
       // TODO: make a function of amount of signal detected?
-      const velocity = this.rateOfStateChange; // amount of change in eagerness per second
+      const velocity = this.rateOfStateChange * 5; // amount of change in eagerness per second
 
       this.eagerness += velocity * this.timeSinceLastUpdate();
     } else {

@@ -89,11 +89,11 @@
           </ul>
         </div>
         <div class="basis-2/4 p-2">
-          <header>Ambient Baseline</header>
+          <header>C-Baseline</header>
           <canvas bind:this={ambientEl} class="w-full"></canvas>
         </div>
         <div class="basis-2/4 p-2">
-          <header>Convolution</header>
+          <header>C-Realtime</header>
           <canvas bind:this={convolutionEl} class="w-full"></canvas>
         </div>
       </div>

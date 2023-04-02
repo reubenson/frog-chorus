@@ -31,11 +31,11 @@
     {#if !$hasStarted}
       {#if !$showError}
         <p>
-          <span class="italic">Frog Chorus</span> is an audio-based web-application that allows your computing device to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank" rel="noreferrer">chorus of frogs in the wild</a> . 
+          <span class="italic">Frog Chorus</span> is an audio-based web-application that allows your phone or computer to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank" rel="noreferrer">chorus of frogs in the wild</a> . 
           <!-- TODO: Try expanding UI to show video here? -->
         </p>
         <p>
-        This application uses your device's built-in speaker and microphone to operate, without the aid of technologies like wi-fi and bluetooth. Running this app simultaneously on at least five devices is recommended. Click <span class="font-sans">𝓼𝓽𝓪𝓻𝓽</span> below to begin!
+        It uses your device's built-in speaker and microphone to operate, without the aid of technologies like wi-fi and bluetooth. Due to the nature of the app, you should run this software with a group, with each person operating their own "frog". Click <span class="font-sans">𝓼𝓽𝓪𝓻𝓽</span> below to begin!
         </p>
         <button
           class="border-black border-2 text-white p-2 mt-6 mb-6 tracking-widest m-auto block font-sans w-48 border-black ring-2"
