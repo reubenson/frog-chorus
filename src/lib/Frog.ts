@@ -57,12 +57,14 @@ export class Frog {
   rateOfStateChange: number; // manually-calibrated value used to determine rate of change in eagerness and shyness
   sampleDuration: number;
   amplitudeThreshold: number; // relative threshold between a quiet vs noisy environment
+  loudnessThreshold: number; // loudness calculated with Meyda lib
   convolutionAmplitudeThreshold: number;
   hasInitialized: boolean;
   convolutionAnalyser: AnalyserNode;
   directInputAnalyser: AnalyserNode;
   meydaAnalyser: MeydaAnalyzer;
   amplitude: number;
+  loudness: number;
   convolutionAmplitude: number;
   convolver: ConvolverNode;
   ambientFFT: Float32Array;
@@ -72,6 +74,7 @@ export class Frog {
   buffer: AudioBuffer;
   baselineRolloff: number;
   baselineCentroid: number;
+  ambientTimeout: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -83,6 +86,7 @@ export class Frog {
     this.currentTimestamp = Date.now();
     this.rateOfStateChange = 0.2; // to be tweaked
     this.amplitudeThreshold = -65; // to be tweaked
+    this.loudnessThreshold = 8; // to be tweaked
     this.hasInitialized = false;
     this.frogSignalDetected = false;
     this.isCurrentlySinging = false;
@@ -245,10 +249,29 @@ export class Frog {
 
     this.convolutionFFT = convolutionFFT;
     this.directInputFFT = directInputFFT;
-    this.diffFFT = convolutionFFT.map((item, i) => {
-      // To Do: resolve the arbitary -60 value
-      return this.ambientFFT ? item - this.ambientFFT[i] - 60 : -Infinity;
-    });
+
+    this.loudness = this?.audioFeatures?.loudness?.total;
+    console.log('this.loudness', this.loudness);
+    // this.diffFFT = convolutionFFT.map((item, i) => {
+    //   // To Do: resolve the arbitary -60 value
+    //   return this.ambientFFT ? item - this.ambientFFT[i] - 60 : -Infinity;
+    // });
+  }
+
+  private setAmbientFFT() {
+    this.ambientFFT = this.convolutionFFT;
+    this.convolutionAmplitudeThreshold = this.convolutionAmplitude;
+
+    // dynamically reset amplitude threshold to lower values as the environment gets quieter
+    // this.amplitudeThreshold = this.amplitude;
+    // this.loudnessThreshold = this.loudness;
+    this.baselineRolloff = this.audioFeatures?.spectralRolloff;
+    this.baselineFlatness = this.audioFeatures?.spectralFlatness;
+    this.baselineSpread = this.audioFeatures?.spectralSpread;
+    this.baselineCentroid = this.audioFeatures?.spectralCentroid;
+    log('amplitude threshold:', this.amplitudeThreshold);
+    log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
+    log('kurtosis', this.audioFeatures?.spectralFlatness);
   }
 
   /**
@@ -260,19 +283,43 @@ export class Frog {
    * is held below a threshold value for a number of seconds?
    */
   private establishAmbientFFT() {
-    if (this.amplitude < this.amplitudeThreshold && this.amplitude > -120) {
-      this.ambientFFT = this.convolutionFFT;
-      this.convolutionAmplitudeThreshold = this.convolutionAmplitude;
+    // early return if ambientFFT has already been set
+    if (this.ambientFFT) return;
+    
+    if (this.loudness > this.loudnessThreshold) {
+      clearTimeout(this.ambientTimeout);
+      this.ambientTimeout = null;
+      return;
+    }
 
-      // dynamically reset amplitude threshold to lower values as the environment gets quieter
-      this.amplitudeThreshold = this.amplitude;
-      this.baselineRolloff = this.audioFeatures?.spectralRolloff;
-      this.baselineFlatness = this.audioFeatures?.spectralFlatness;
-      this.baselineSpread = this.audioFeatures?.spectralSpread;
-      this.baselineCentroid = this.audioFeatures?.spectralCentroid;
-      log('amplitude threshold:', this.amplitudeThreshold);
-      log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
-      log('kurtosis', this.audioFeatures?.spectralFlatness);
+    if (this.ambientTimeout) return;
+
+    // set ambientFFT if the environemnt has settled into quiet for five seconds
+    this.ambientTimeout = setTimeout(() => {
+      this.setAmbientFFT();
+    }, 5000);
+
+    console.log('this.ambientTimeout', this.ambientTimeout);
+
+    // if (this.loudness < this.loudnessThreshold) {
+    //   setTimeout()
+    // }
+
+    // if (this.amplitude < this.amplitudeThreshold && this.amplitude > -120) {
+    if (this.loudness < this.loudnessThreshold && this.loudness > 0) {
+      // this.ambientFFT = this.convolutionFFT;
+      // this.convolutionAmplitudeThreshold = this.convolutionAmplitude;
+
+      // // dynamically reset amplitude threshold to lower values as the environment gets quieter
+      // this.amplitudeThreshold = this.amplitude;
+      // // this.loudnessThreshold = this.loudness;
+      // this.baselineRolloff = this.audioFeatures?.spectralRolloff;
+      // this.baselineFlatness = this.audioFeatures?.spectralFlatness;
+      // this.baselineSpread = this.audioFeatures?.spectralSpread;
+      // this.baselineCentroid = this.audioFeatures?.spectralCentroid;
+      // log('amplitude threshold:', this.amplitudeThreshold);
+      // log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
+      // log('kurtosis', this.audioFeatures?.spectralFlatness);
     }
   }
 
@@ -353,7 +400,8 @@ export class Frog {
    */
   private updateShyness() {
     const rateOfLosingShyness = 0.1; // value to be tweaked
-    const environmentIsQuiet = this.amplitude < (this.amplitudeThreshold + 40);
+    // const environmentIsQuiet = this.amplitude < (this.amplitudeThreshold + 40);
+    const environmentIsQuiet = this.loudness < this.loudnessThreshold + 5;
 
     if (environmentIsQuiet) {
       const velocity = rateOfLosingShyness;

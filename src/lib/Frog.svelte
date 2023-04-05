@@ -14,6 +14,8 @@
   export let audioFeatures;
   export let isCurrentlySinging;
   export let frogSignalDetected;
+  export let loudnessThreshold;
+  export let loudness;
   let fftEl, convolutionEl, ambientEl;
   let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
   let ampFontsize = 10;
@@ -42,7 +44,8 @@
     const fontMin = 0;
     const fontMax = 72;
 
-    ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
+    // ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
+    ampFontsize = fontMin + (loudness / 30) * fontMax;
     loudnessFontsize = fontMin + (audioFeatures?.loudness?.total / 20) * fontMax; 
   }
 
@@ -50,7 +53,7 @@
     plotInputFFT(directInputFFT);
     plotConvolution(convolutionFFT);
     plotBaseline(ambientFFT);
-    updateMetrics(amplitude);
+    updateMetrics(loudness);
     
     outlineColor = frogSignalDetected ? 'emerald-900' : 'black';
   }
@@ -101,10 +104,11 @@
         Audio Features
       </header>
       <ul class="flex flex-row flex-wrap">
+        <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(loudnessThreshold, 1)}</li>
         <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(amplitude, 0)}</li>
         <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(convolutionAmplitude)}</li>
         <li class="h-14 p-2 basis-2/4">
-          Loudness: {_.round(audioFeatures?.loudness?.total, 0)}
+          Loudness: {_.round(audioFeatures?.loudness?.total, 1)}
         </li>
         <li class="h-14 p-2 basis-2/4">
           Rolloff: {_.round(audioFeatures?.spectralRolloff, 0)}
