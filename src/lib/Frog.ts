@@ -266,8 +266,8 @@ export class Frog {
     // this.amplitudeThreshold = this.amplitude;
     // this.loudnessThreshold = this.loudness;
     this.baselineRolloff = this.audioFeatures?.spectralRolloff;
-    this.baselineFlatness = this.audioFeatures?.spectralFlatness;
-    this.baselineSpread = this.audioFeatures?.spectralSpread;
+    // this.baselineFlatness = this.audioFeatures?.spectralFlatness;
+    // this.baselineSpread = this.audioFeatures?.spectralSpread;
     this.baselineCentroid = this.audioFeatures?.spectralCentroid;
     log('amplitude threshold:', this.amplitudeThreshold);
     log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
@@ -294,10 +294,10 @@ export class Frog {
 
     if (this.ambientTimeout) return;
 
-    // set ambientFFT if the environemnt has settled into quiet for five seconds
+    // set ambientFFT if the environemnt has settled into quiet for 2.5 seconds
     this.ambientTimeout = setTimeout(() => {
       this.setAmbientFFT();
-    }, 5000);
+    }, 2500);
 
     console.log('this.ambientTimeout', this.ambientTimeout);
 
@@ -372,7 +372,7 @@ export class Frog {
 
     // spectral rolloff: "The frequency below which is contained 99% of the energy of the spectrum". This is useful for ensuring that the spectrum is similar, without a bunch of energy added to non-frog parts of the spectrun
     const rolloff = this.audioFeatures?.spectralRolloff;
-    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 400;
+    const rolloffIsSimilar = Math.abs(rolloff - this.baselineRolloff) < 800;
 
     // spectral crest: "This is the ratio of the loudest magnitude over the RMS of the whole frame. A high number is an indication of a loud peak compared out to the overall curve of the spectrum".  This is useful for ensuring that there are still sharp peaks in the audio. This is only useful for frogs like spring peepers, which have a strong dominant frequency
     const crest = this.audioFeatures?.spectralCrest;
@@ -486,7 +486,7 @@ export class Frog {
     }
     else { // shyness === 0
       // frog may be too insensitive to other frog sounds, but at least it's not shy, so boost eagerness
-      return this.eagerness + 0.01;
+      return this.eagerness + 0.005;
     }
   }
 

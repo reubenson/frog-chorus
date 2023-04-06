@@ -16,6 +16,8 @@
   export let frogSignalDetected;
   export let loudnessThreshold;
   export let loudness;
+  export let baselineCentroid;
+  export let baselineRolloff;
   let fftEl, convolutionEl, ambientEl;
   let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
   let ampFontsize = 10;
@@ -116,6 +118,10 @@
       <header class="mt-4 text-xl">
         Audio Features
       </header>
+      <ul>
+        <li class="h-14 p-2 basis-2/4">Base Rolloff: {_.round(baselineRolloff, 1)}</li>
+        <li class="h-14 p-2 basis-2/4">Base Centroid: {_.round(baselineCentroid, 1)}</li>
+      </ul>
       <ul class="flex flex-row flex-wrap">
         <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(loudnessThreshold, 1)}</li>
         <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(amplitude, 0)}</li>
