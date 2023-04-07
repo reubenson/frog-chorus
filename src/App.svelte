@@ -52,7 +52,7 @@
           style="background-image: url('{grass}')">
           <!-- START -->
           <!-- 𝓈𝓉𝒶𝓇𝓉 -->
-          <span class="select-none">𝓼𝓽𝓪𝓻𝓽</span>
+          <span class="select-nonee">𝓼𝓽𝓪𝓻𝓽</span>
         </button>
           <!-- <img src="{frog_jumping}" alt="frog jumping" class="w-full"> -->
         <p>
