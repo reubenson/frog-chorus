@@ -75,6 +75,7 @@ export class Frog {
   baselineRolloff: number;
   baselineCentroid: number;
   ambientTimeout: number;
+  chirpProbability: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -251,7 +252,6 @@ export class Frog {
     this.directInputFFT = directInputFFT;
 
     this.loudness = this?.audioFeatures?.loudness?.total;
-    console.log('this.loudness', this.loudness);
     // this.diffFFT = convolutionFFT.map((item, i) => {
     //   // To Do: resolve the arbitary -60 value
     //   return this.ambientFFT ? item - this.ambientFFT[i] - 60 : -Infinity;
@@ -391,7 +391,7 @@ export class Frog {
       console.log('convolutionAmplitude', convolutionAmplitude);
       console.log('rolloff', rolloff);
     } else {
-      console.log('convolutionMatches');
+      // console.log('convolutionMatches');
     }
   }
 
@@ -473,6 +473,24 @@ export class Frog {
   }
 
   /**
+   * Map eagerness to an exponential curve
+   * @param eagerness - value 0 to 1
+   * @returns - 0 to 1
+   */
+  public calculateEagernessFactor(eagerness) {
+    return Math.pow(eagerness, 1/3);
+  }
+
+   /**
+   * Map shyness to an exponential curve
+   * @param shyness - value 0 to 1
+   * @returns - 0 to 1
+   */
+   public calculateShynessFactor(shyness) {
+    return 1 - Math.pow(shyness, 3);
+  }
+
+  /**
    * Determine the likelihood that the frog should chirp.
    * Currently a simple calculation, but curves can be adjusted
    * to yield different frog chorus behaviors
@@ -482,7 +500,7 @@ export class Frog {
     if (this.eagerness === 1) {
       return 1;
     } else if (this.shyness > 0) {
-      return this.eagerness * (1 - this.shyness);
+      return this.calculateEagernessFactor(this.eagerness) * this.calculateShynessFactor(this.shyness);
     }
     else { // shyness === 0
       // frog may be too insensitive to other frog sounds, but at least it's not shy, so boost eagerness
@@ -494,8 +512,8 @@ export class Frog {
    * Determine whether the frog should chirp, or not
    */
   private tryChirp() {
-    const chirpProbability = this.determineChirpProbability();
-    const shouldChirp = testProbability(chirpProbability);
+    this.chirpProbability = this.determineChirpProbability();
+    const shouldChirp = testProbability(this.chirpProbability);
 
     if (shouldChirp) {
       this.playSample();

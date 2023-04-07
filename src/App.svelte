@@ -12,7 +12,8 @@
     handleUrlUpdate,
     showError,
     errorMessage,
-    toggleOnDebug
+    toggleOnDebug,
+    DEBUG_ON
   } from './lib/store'
   import { longpress } from './lib/actions';
   import './app.css'
@@ -26,6 +27,12 @@
 <Tailwind />
 
 <main class="font-serif bg-emerald-100 h-screen text-center tracking-wider overflow-y-scroll pb-6">
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  {#if DEBUG_ON}
+  <script src="https://unpkg.com/function-plot/dist/function-plot.js"></script>
+  {/if}
   <NAV />
   <Section hashString=''>
     {#if !$hasStarted}

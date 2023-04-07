@@ -2,6 +2,8 @@
   import _ from 'lodash';
   import { drawFFT } from "./utils";
   import { DEBUG_ON } from './store';
+  import { onMount } from 'svelte';
+  import { Frog } from './Frog';
   
   export let id;
   export let amplitude;
@@ -18,12 +20,15 @@
   export let loudness;
   export let baselineCentroid;
   export let baselineRolloff;
+  export let chirpProbability;
   let fftEl, convolutionEl, ambientEl;
   let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
   let ampFontsize = 10;
   let loudnessFontsize = 10;
   let outlineColor = 'black';
   let showBaselineLoading = true;
+  let plotWidth = 300;
+  let plotHeight = 200;
 
   function plotInputFFT(data) {
     if (!fftEl) return;
@@ -55,6 +60,60 @@
     loudnessFontsize = fontMin + (audioFeatures?.loudness?.total / 20) * fontMax; 
   }
 
+  function updateEagernessCurve(eagerness) {
+    window.functionPlot({
+      target: "#eagerness-curve",
+      title: 'Eagerness',
+      width: plotWidth,
+      height: plotHeight,
+      xAxis: { domain: [0, 1] },
+      yAxis: { domain: [0, 1] },
+      grid: true,
+      disableZoom: true,
+      data: [
+        {
+          graphType: 'polyline',
+          fn: function (scope) {
+            return Frog.prototype.calculateEagernessFactor(scope.x);
+          },
+          skipTip: true
+        }
+      ],
+      annotations: [{
+        y: Frog.prototype.calculateEagernessFactor(eagerness),
+        text: `eagerness = ${_.round(eagerness, 2)}`
+        // text: eagerness
+      }]
+    });
+  }
+
+  function updateShynessCurve(shyness) {
+    window.functionPlot({
+      target: "#shyness-curve",
+      title: 'Shyness',
+      width: plotWidth,
+      height: plotHeight,
+      xAxis: { domain: [0, 1] },
+      yAxis: { domain: [0, 1] },
+      grid: true,
+      disableZoom: true,
+      data: [
+        {
+          graphType: 'polyline',
+          fn: function (scope) {
+            return Frog.prototype.calculateShynessFactor(scope.x);
+          },
+          skipTip: true
+        }
+      ],
+      annotations: [{
+        y: Frog.prototype.calculateShynessFactor(shyness),
+        text: `shyness = ${_.round(shyness, 2)}`
+      }]
+    });
+
+  }
+
   $: {
     plotInputFFT(directInputFFT);
     plotConvolution(convolutionFFT);
@@ -62,6 +121,9 @@
     updateMetrics(loudness);
     
     outlineColor = frogSignalDetected ? 'emerald-900' : 'black';
+
+    updateEagernessCurve(eagerness);
+    updateShynessCurve(shyness);
   }
 </script>
 
@@ -87,9 +149,19 @@
         <ul class="flex flex-row flex-wrap">
           <li class="h-14 p-2 basis-2/4">Shyness: {_.round(shyness, 2)}</li>
           <li class="h-14 p-2 basis-2/4">Eagerness: {_.round(eagerness, 2)}</li>
+          <li class="h-14 p-2 basis-2/4">Chirp Probability: {_.round(chirpProbability, 2)}</li>
         </ul>
       </div>
-      <header class="text-xl mt-2 mb-2">Figures</header>
+      <header class="text-xl mt-2 mb-2">Behavior Curves</header>
+      <div class="width-full">
+        <!-- <header>Eagerness</header> -->
+        <div id="eagerness-curve" ></div>
+      </div>
+      <div class="width-full">
+        <!-- <header>Shyness</header> -->
+        <div id="shyness-curve"></div>
+      </div>
+      <header class="text-xl mt-2 mb-2">Audio Metrics</header>
       <div class="flex flex-wrap flex-row">
         <div class="basis-full p-2 shrink">
           <header>FFT</header>
