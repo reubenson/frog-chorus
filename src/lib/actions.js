@@ -20,13 +20,19 @@ export function longpress(node, threshold = 500) {
   }
 
   node.addEventListener('mousedown', down);
-  node.addEventListener('ontouchstart', down);
+  node.addEventListener('touchstart', down);
+
+  // allow mobile long-press
+  const preventDefault = e => e.preventDefault;
+  node.addEventListener('touchend', preventDefault);
+  node.addEventListener('touchmove', preventDefault);
+  node.addEventListener('touchcancel', preventDefault);
 
   return {
     destroy() {
       console.log('in destroy');
       node.removeEventListener('mousedown', down);
-      node.removeEventListener('ontouchstart', down);
+      node.removeEventListener('touchstart', down);
     }
   }
 }
