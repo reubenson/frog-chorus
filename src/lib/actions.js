@@ -1,6 +1,7 @@
 export function longpress(node, threshold = 500) {
   const down = (event) => {
     console.log('event', event);
+    event.preventDefault();
     const timeout = setTimeout(() => {
       node.dispatchEvent(new CustomEvent('longpress'));
     }, threshold);
