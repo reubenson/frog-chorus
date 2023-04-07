@@ -26,7 +26,7 @@
 
 <Tailwind />
 
-<main class="font-serif bg-emerald-100 h-screen text-center tracking-wider overflow-y-scroll pb-6">
+<main class="font-serif h-screen text-center tracking-wider overflow-y-scroll pb-6">
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>

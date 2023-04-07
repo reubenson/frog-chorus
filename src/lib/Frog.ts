@@ -518,7 +518,6 @@ export class Frog {
     this.chirpProbability = this.determineChirpProbability();
     const shouldChirp = testProbability(this.chirpProbability);
 
-    console.log('shouldChirp', shouldChirp);
     if (shouldChirp) {
       this.playSample();
 

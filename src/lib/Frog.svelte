@@ -62,10 +62,13 @@
   }
 
   function plotEagernessCurve() {
+    const el = document.querySelector('#eagerness-curve');
+    const box = el.getBoundingClientRect();
+
     window.functionPlot({
       target: "#eagerness-curve",
       title: 'Eagerness',
-      width: plotWidth,
+      width: box.width,
       height: plotHeight,
       xAxis: { domain: [0, 1] },
       yAxis: { domain: [0, 1.1] },
@@ -88,10 +91,13 @@
   }
 
   function plotShynessCurve() {
+    const el = document.querySelector('#shyness-curve');
+    const box = el.getBoundingClientRect();
+
     window.functionPlot({
       target: "#shyness-curve",
       title: 'Shyness',
-      width: plotWidth,
+      width: box.width,
       height: plotHeight,
       xAxis: { domain: [0, 1] },
       yAxis: { domain: [0, 1.1] },
@@ -120,7 +126,6 @@
 
     plotEagernessCurve();
     annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateEagernessFactor(eagerness), 2)}`;
-    // console.log('annotationEl', annotationEl);
   }
 
   function updateShynessCurve(shyness) {
@@ -166,17 +171,21 @@
     <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 text-{outlineColor}">&#78223;</div>
     <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-colors duration-1000 text-{outlineColor}">&xcirc;</div>
     <p class="text-{outlineColor}">Your frog is listening ...</p>
+    {#if frogSignalDetected}
+      Frog detected
+    {/if}
     {#if showNoisyWarning}
       <p>(But it seems like it's pretty noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {/if}
-    <span class="invisible text-emerald-900 text-emerald-100"></span>
+    <!-- hard-code colors here -->
+    <span class="invisible text-emerald-900 text-emerald-100 bg-lime-300"></span>
   </div>
   <div>
     <!-- <span style="font-size: {ampFontsize}px" class="absolute">&#127908;</span> -->
     <!-- <span style="font-size: {loudnessFontsize}px">&#127908;</span> -->
   </div>
   <!-- if only one frog: -->
-  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-lime-300' : ''}"></div>
+  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-lime-300' : 'bg-emerald-100'}"></div>
   <div class="frog-debug-panel mt-4">
     <!-- <header class="text-2xl transition-colors duration-500 {frogSignalDetected ? 'bg-black' : ''}">Frog {id}</header> -->
     {#if $DEBUG_ON}

@@ -3,7 +3,7 @@
   import frog03 from '../assets/frog03.gif'
 </script>
 
-<nav class="text-gray-900 body-font absolute w-screen">
+<nav class="z-10 text-gray-900 body-font absolute w-screen backdrop-blur-sm bg-transparent">
   <header class="text-xl text-left h-20">
     <ul
       class="pt-10"
