@@ -56,8 +56,8 @@
     const fontMin = 0;
     const fontMax = 72;
 
-    // ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
-    ampFontsize = fontMin + (loudness / 30) * fontMax;
+    ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
+    // ampFontsize = fontMin + (loudness / 30) * fontMax;
     loudnessFontsize = fontMin + (audioFeatures?.loudness?.total / 20) * fontMax; 
   }
 
@@ -141,7 +141,7 @@
     plotInputFFT(directInputFFT);
     plotConvolution(convolutionFFT);
     plotBaseline(ambientFFT);
-    updateMetrics(loudness);
+    updateMetrics(amplitude);
     
     outlineColor = frogSignalDetected ? 'emerald-900' : 'black';
 
@@ -200,10 +200,10 @@
       </div>
       <header class="text-xl mt-2 mb-2">Behavior Curves</header>
       <div class="flex flex-wrap flex-row">
-        <div class="basis-2/4">
+        <div class="basis-2/4 min-w-[150px]">
           <div id="eagerness-curve" ></div>
         </div>
-        <div class="basis-2/4">
+        <div class="basis-2/4 min-w-[150px]">
           <div id="shyness-curve"></div>
         </div>
       </div>

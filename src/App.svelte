@@ -112,4 +112,5 @@
       <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank" rel="noreferrer">Felix's audio recordings, recently reissued by Basic Function</a></li>
     </ol>
   </Section>
+  <div class="-z-20 bg-emerald-100 absolute left-0 right-0 top-0 bottom-0"></div>
 </main>
