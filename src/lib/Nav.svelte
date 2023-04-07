@@ -30,5 +30,5 @@
         on:click={handleClose}>&#10008</button>
     {/if}
   </header>
-  <marquee behavior="scroll" direction="left" class="mt-2">&#128679; website building in progress &#128679;</marquee>
+  <marquee behavior="scroll" direction="left" class="mt-2">&#128679; work in progress &#128679;</marquee>
 </nav>

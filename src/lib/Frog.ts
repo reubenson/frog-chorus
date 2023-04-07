@@ -99,7 +99,7 @@ export class Frog {
    * the frog's shyness and eagerness
    */
   public async initialize() {
-    const attemptRate = 100; // evaluate whether to chirp every 100 ms
+    const attemptRate = 250; // evaluate whether to chirp every 100 ms
 
     await this.fetchAudioBuffer();
 
@@ -400,6 +400,7 @@ export class Frog {
    */
   private updateShyness() {
     const rateOfLosingShyness = 0.1; // value to be tweaked
+    const rateOfIncreasingShyness = 0.4;
     // const environmentIsQuiet = this.amplitude < (this.amplitudeThreshold + 40);
     const environmentIsQuiet = this.loudness < this.loudnessThreshold + 5;
 
@@ -409,7 +410,7 @@ export class Frog {
       // monotonically decrease shyness if the environment is quiet
       this.shyness -= velocity * this.timeSinceLastUpdate();
     } else {
-      const velocity = this.rateOfStateChange;
+      const velocity = rateOfIncreasingShyness;
 
       // increase shyness if environment is loud
       // To Do: also make a function of this.frogSignalDetected?
@@ -452,7 +453,7 @@ export class Frog {
    * Make the frog chirp, by playing audio sample
    */
   private playSample() {
-    const shouldPauseWhilePlaying = false; // remove after debugging
+    const shouldPauseWhilePlaying = true; // remove after debugging
 
     if (shouldPauseWhilePlaying) {
       this.isCurrentlySinging = true;
@@ -461,7 +462,7 @@ export class Frog {
       setTimeout(() => {
         this.isCurrentlySinging = false;
         this.meydaAnalyser.start();
-      }, this.sampleDuration * 1000);
+      }, 2 * this.sampleDuration * 1000);
     }
 
     // Reference: https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode
@@ -478,7 +479,9 @@ export class Frog {
    * @returns - 0 to 1
    */
   public calculateEagernessFactor(eagerness) {
-    return Math.pow(eagerness, 1/3);
+    const eagernessBaseFactor = 0.01;
+
+    return eagernessBaseFactor + Math.pow(eagerness, 1/3) * (1 - eagernessBaseFactor);
   }
 
    /**
@@ -499,13 +502,13 @@ export class Frog {
   private determineChirpProbability() {
     if (this.eagerness === 1) {
       return 1;
-    } else if (this.shyness > 0) {
+    } else  {
       return this.calculateEagernessFactor(this.eagerness) * this.calculateShynessFactor(this.shyness);
     }
-    else { // shyness === 0
-      // frog may be too insensitive to other frog sounds, but at least it's not shy, so boost eagerness
-      return this.eagerness + 0.005;
-    }
+    // else { // shyness === 0
+    //   // frog may be too insensitive to other frog sounds, but at least it's not shy, so boost eagerness
+    //   return this.eagerness + 0.005;
+    // }
   }
 
   /**
@@ -515,6 +518,7 @@ export class Frog {
     this.chirpProbability = this.determineChirpProbability();
     const shouldChirp = testProbability(this.chirpProbability);
 
+    console.log('shouldChirp', shouldChirp);
     if (shouldChirp) {
       this.playSample();
 

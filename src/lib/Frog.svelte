@@ -29,6 +29,7 @@
   let showBaselineLoading = true;
   let plotWidth = 300;
   let plotHeight = 200;
+  let showNoisyWarning = false;
 
   function plotInputFFT(data) {
     if (!fftEl) return;
@@ -60,14 +61,14 @@
     loudnessFontsize = fontMin + (audioFeatures?.loudness?.total / 20) * fontMax; 
   }
 
-  function updateEagernessCurve(eagerness) {
+  function plotEagernessCurve() {
     window.functionPlot({
       target: "#eagerness-curve",
       title: 'Eagerness',
       width: plotWidth,
       height: plotHeight,
       xAxis: { domain: [0, 1] },
-      yAxis: { domain: [0, 1] },
+      yAxis: { domain: [0, 1.1] },
       grid: true,
       disableZoom: true,
       data: [
@@ -81,20 +82,19 @@
       ],
       annotations: [{
         y: Frog.prototype.calculateEagernessFactor(eagerness),
-        text: `eagerness = ${_.round(eagerness, 2)}`
-        // text: eagerness
+        text: 'eagerness'
       }]
     });
   }
 
-  function updateShynessCurve(shyness) {
+  function plotShynessCurve() {
     window.functionPlot({
       target: "#shyness-curve",
       title: 'Shyness',
       width: plotWidth,
       height: plotHeight,
       xAxis: { domain: [0, 1] },
-      yAxis: { domain: [0, 1] },
+      yAxis: { domain: [0, 1.1] },
       grid: true,
       disableZoom: true,
       data: [
@@ -108,10 +108,28 @@
       ],
       annotations: [{
         y: Frog.prototype.calculateShynessFactor(shyness),
-        text: `shyness = ${_.round(shyness, 2)}`
+        text: 'shyness'
       }]
     });
+  }
 
+  function updateEagernessCurve(eagerness) {
+    const annotationEl = document.body.querySelector('#eagerness-curve .annotations text');
+
+    if (!annotationEl) return;
+
+    plotEagernessCurve();
+    annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateEagernessFactor(eagerness), 2)}`;
+    // console.log('annotationEl', annotationEl);
+  }
+
+  function updateShynessCurve(shyness) {
+    const annotationEl = document.body.querySelector('#shyness-curve .annotations text');
+
+    if (!annotationEl) return;
+
+    plotShynessCurve();
+    annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateShynessFactor(shyness), 2)}`;
   }
 
   $: {
@@ -124,7 +142,23 @@
 
     updateEagernessCurve(eagerness);
     updateShynessCurve(shyness);
+
+    if (!showBaselineLoading) showNoisyWarning = false;
   }
+
+  onMount(() => {
+    plotEagernessCurve();
+    plotShynessCurve();
+
+    // indicate to user that they're in a noisy environment
+    const noisyTimeout = 10000;
+    setTimeout(() => {
+      // use showBaselineLoading as an indicator that ambient threshold has not been met
+      if (showBaselineLoading) {
+        showNoisyWarning = true;
+      }
+    }, noisyTimeout);
+  });
 </script>
 
 <div class="frog-item w-full max-w-lg h-full m-auto rounded-md">
@@ -132,6 +166,9 @@
     <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 text-{outlineColor}">&#78223;</div>
     <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-colors duration-1000 text-{outlineColor}">&xcirc;</div>
     <p class="text-{outlineColor}">Your frog is listening ...</p>
+    {#if showNoisyWarning}
+      <p>(But it seems like it's pretty noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
+    {/if}
     <span class="invisible text-emerald-900 text-emerald-100"></span>
   </div>
   <div>
@@ -153,13 +190,13 @@
         </ul>
       </div>
       <header class="text-xl mt-2 mb-2">Behavior Curves</header>
-      <div class="width-full">
-        <!-- <header>Eagerness</header> -->
-        <div id="eagerness-curve" ></div>
-      </div>
-      <div class="width-full">
-        <!-- <header>Shyness</header> -->
-        <div id="shyness-curve"></div>
+      <div class="flex flex-wrap flex-row">
+        <div class="basis-2/4">
+          <div id="eagerness-curve" ></div>
+        </div>
+        <div class="basis-2/4">
+          <div id="shyness-curve"></div>
+        </div>
       </div>
       <header class="text-xl mt-2 mb-2">Audio Metrics</header>
       <div class="flex flex-wrap flex-row">

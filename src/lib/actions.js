@@ -1,10 +1,12 @@
 export function longpress(node, threshold = 500) {
-  const down = () => {
+  const down = (event) => {
+    console.log('event', event);
     const timeout = setTimeout(() => {
       node.dispatchEvent(new CustomEvent('longpress'));
     }, threshold);
 
     const cancel = () => {
+      console.log('cancelling timeout');
       clearTimeout(timeout);
       node.removeEventListener('mousemove', cancel);
       node.removeEventListener('mouseup', cancel);
@@ -21,6 +23,7 @@ export function longpress(node, threshold = 500) {
 
   return {
     destroy() {
+      console.log('in destroy');
       node.removeEventListener('mousedown', down);
       node.removeEventListener('ontouchstart', down);
     }
