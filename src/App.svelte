@@ -122,7 +122,7 @@
       <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank" rel="noreferrer">Felix's audio recordings, recently reissued by Basic Function</a></li>
     </ol>
     <img class="mt-8 width-full" src="{frogmail}" alt="froggy email">
-    <p>Feedback, suggestions, and inquiries may be directed <a href="mailto:frogchor@gmail.com"></a>to frogchor@gmail.com</p>
+    <p>Feedback, suggestions, and inquiries may be directed <a href="mailto:frogchor@gmail.com">to frogchor@gmail.com</a></p>
   </Section>
   <div class="-z-20 bg-{colors.background} fixed left-0 right-0 top-0 bottom-0"></div>
 
