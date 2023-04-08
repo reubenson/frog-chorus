@@ -99,7 +99,7 @@ export class Frog {
    * the frog's shyness and eagerness
    */
   public async initialize() {
-    const attemptRate = 250; // evaluate whether to chirp every 100 ms
+    const attemptRate = 400; // how often to evaluate whether to chirp
 
     await this.fetchAudioBuffer();
 
@@ -490,7 +490,7 @@ export class Frog {
   public calculateEagernessFactor(eagerness) {
     const eagernessBaseFactor = 0.01;
 
-    return eagernessBaseFactor + Math.pow(eagerness, 1/3) * (1 - eagernessBaseFactor);
+    return eagernessBaseFactor + Math.pow(eagerness, 1/2) * (1 - eagernessBaseFactor);
   }
 
    /**

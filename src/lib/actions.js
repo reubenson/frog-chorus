@@ -21,7 +21,6 @@ export function longpress(node, threshold = 500) {
 
   return {
     destroy() {
-      console.log('in destroy');
       node.removeEventListener('mousedown', down);
       node.removeEventListener('touchstart', down);
     }

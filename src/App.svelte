@@ -44,8 +44,8 @@
   <noscript>
     &#9888; Please enable javascript on your browser to use this app &#9888;
   </noscript>
-  {#if DEBUG_ON}
-  <script src="https://unpkg.com/function-plot/dist/function-plot.js"></script>
+  {#if $DEBUG_ON}
+    <script src="https://unpkg.com/function-plot/dist/function-plot.js"></script>
   {/if}
   <NAV />
   <Section hashString=''>

@@ -5,7 +5,6 @@
   import { onMount } from 'svelte';
   import { Frog } from './Frog';
   
-  export let id;
   export let amplitude;
   export let convolutionAmplitude;
   export let shyness;
@@ -22,13 +21,11 @@
   export let baselineRolloff;
   export let chirpProbability;
   let fftEl, convolutionEl, ambientEl;
-  let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
   let ampFontsize = 10;
   let environmentVolumeLevel = 0;
   let loudnessFontsize = 10;
   let outlineColor = 'black';
   let showBaselineLoading = true;
-  let plotWidth = 300;
   let plotHeight = 200;
   let showNoisyWarning = false;
   let showExitMessage = false;
@@ -60,12 +57,18 @@
 
     ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
     environmentVolumeLevel = Math.min(((amp + 110) / 80) * 100, 100); // roughly map it to a percentage
-    loudnessFontsize = fontMin + (audioFeatures?.loudness?.total / 20) * fontMax; 
+    loudnessFontsize = fontMin + (loudness / 20) * fontMax; 
   }
 
   function plotEagernessCurve() {
+    const functionPlot = window?.functionPlot;
+
+    if (!functionPlot) return; // functionPlot library is loaded dynamically in debug mode
+
     const el = document.querySelector('#eagerness-curve');
-    const box = el.getBoundingClientRect();
+    const box = el?.getBoundingClientRect();
+
+    if (!box) return;
 
     window.functionPlot({
       target: "#eagerness-curve",
@@ -93,8 +96,14 @@
   }
 
   function plotShynessCurve() {
+    const functionPlot = window?.functionPlot;
+
+    if (!functionPlot) return; // functionPlot library is loaded dynamically in debug mode
+
     const el = document.querySelector('#shyness-curve');
-    const box = el.getBoundingClientRect();
+    const box = el?.getBoundingClientRect();
+
+    if (!box) return;
 
     window.functionPlot({
       target: "#shyness-curve",
@@ -122,20 +131,22 @@
   }
 
   function updateEagernessCurve(eagerness) {
+    plotEagernessCurve();
+
     const annotationEl = document.body.querySelector('#eagerness-curve .annotations text');
 
     if (!annotationEl) return;
 
-    plotEagernessCurve();
     annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateEagernessFactor(eagerness), 2)}`;
   }
 
   function updateShynessCurve(shyness) {
+    plotShynessCurve();
+
     const annotationEl = document.body.querySelector('#shyness-curve .annotations text');
 
     if (!annotationEl) return;
 
-    plotShynessCurve();
     annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateShynessFactor(shyness), 2)}`;
   }
 
@@ -183,11 +194,11 @@
     {#if showNoisyWarning}
       <p>(But it seems like it's a bit noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {:else if showExitMessage} 
-      <p>(To turn your frog off, refresh page or click the logo at the top)</p>
+      <p>(When you're done, you can refresh page or click the logo at the top to turn your frog off)</p>
     {/if}
   </div>
   <!-- if only one frog: -->
-  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-500 bg-{isCurrentlySinging ? 'emerald-600' : colors.background}"></div>
+  <div class="-z-10 w-screen h-screen fixed bottom-0 left-0 top-0 transition-colors duration-500 bg-{isCurrentlySinging ? 'emerald-700' : ''}"></div>
   <div class="frog-debug-panel mt-4">
     {#if $DEBUG_ON}
     <div class="debug-panel">
@@ -246,7 +257,7 @@
         <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(amplitude, 0)}</li>
         <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(convolutionAmplitude)}</li>
         <li class="h-14 p-2 basis-2/4">
-          Loudness: {_.round(audioFeatures?.loudness?.total, 1)}
+          Loudness: {_.round(loudness, 1)}
         </li>
         <li class="h-14 p-2 basis-2/4">
           Rolloff: {_.round(audioFeatures?.spectralRolloff, 0)}
