@@ -31,6 +31,7 @@
   let plotWidth = 300;
   let plotHeight = 200;
   let showNoisyWarning = false;
+  let showExitMessage = false;
 
   function plotInputFFT(data) {
     if (!fftEl) return;
@@ -164,6 +165,8 @@
       // use showBaselineLoading as an indicator that ambient threshold has not been met
       if (showBaselineLoading) {
         showNoisyWarning = true;
+      } else {
+        showExitMessage = true;
       }
     }, noisyTimeout);
   });
@@ -179,6 +182,8 @@
     <div class="border-bottom border-[1px] border-{colors.main} m-auto mt-4 width-full transition-transform duration-75" style="transform: scaleX({environmentVolumeLevel}%)"></div>
     {#if showNoisyWarning}
       <p>(But it seems like it's a bit noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
+    {:else if showExitMessage} 
+      <p>(To turn your frog off, refresh page or click the logo at the top)</p>
     {/if}
   </div>
   <!-- if only one frog: -->

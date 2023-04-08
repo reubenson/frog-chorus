@@ -27,15 +27,16 @@
 
 <Tailwind />
 
-<main class="font-serif h-screen text-center tracking-wider overflow-y-scroll pb-6 text-{colors.main} {DEBUG_ON ? '' : 'overflow-hidden'}">
+<main class="font-serif text-center tracking-wider pb-6 text-{colors.main}">
   <noscript>
-    You need to enable JavaScript to run this app.
+    &#9888; Please enable javascript on your browser to use this app &#9888;
   </noscript>
   {#if DEBUG_ON}
   <script src="https://unpkg.com/function-plot/dist/function-plot.js"></script>
   {/if}
   <NAV />
   <Section hashString=''>
+    <marquee behavior="scroll" direction="left" class="mt-2 {$hasStarted ? 'invisible' : ''}">&#128679; work in progress &#128679;</marquee>
     {#if !$hasStarted}
       {#if !$showError}
         <p>
@@ -113,7 +114,7 @@
       <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank" rel="noreferrer">Felix's audio recordings, recently reissued by Basic Function</a></li>
     </ol>
   </Section>
-  <div class="-z-20 bg-{colors.background} absolute left-0 right-0 top-0 bottom-0"></div>
+  <div class="-z-20 bg-{colors.background} fixed left-0 right-0 top-0 bottom-0"></div>
 
   <!-- embed tailwind color styles -->
   <span class="invisble bg-emerald-900 bg-emerald-800 bg-emerald-700 bg-emerald-600 bg-emerald-500 bg-emerald-400 bg-emerald-300 bg-emerald-200 bg-emerald-100 text-emerald-900 text-emerald-800 text-emerald-700 text-emerald-600 text-emerald-500 text-emerald-400 text-emerald-300 text-emerald-200 text-emerald-100 border-emerald-900 border-emerald-800 border-emerald-700 border-emerald-600 border-emerald-500 border-emerald-400 border-emerald-300 border-emerald-200 border-emerald-100"></span>

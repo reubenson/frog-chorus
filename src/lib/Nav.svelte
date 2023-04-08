@@ -1,10 +1,18 @@
 <script lang="ts">
   import { showCloseIcon, handleClose, colors, hasStarted } from "./store";
   import frog03 from '../assets/frog03.gif'
+
+  function handleClick() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    handleClose();
+  }
 </script>
 
-<nav class="z-10 text-{colors.main} body-font absolute w-screen backdrop-blur-sm bg-transparent">
-  <header class="text-xl text-left h-20">
+<nav class="z-10 h-32 text-{colors.main} top-0 body-font fixed w-screen bg-{colors.background}d">
+  <header class="text-xl text-left h-20 bg-{colors.background}">
     <ul
       class="pt-10"
       class:open
@@ -28,8 +36,15 @@
     {#if $showCloseIcon}
       <button 
         class="absolute left-6 top-4"
-        on:click={handleClose}>&#10008</button>
+        on:click={handleClick}>&#10008</button>
+    {:else}
+      <button 
+        class="absolute left-6 top-4 rotate-45"
+        on:click={handleClick}
+        >
+          <a href="#info">&#10008</a>
+      </button>
     {/if}
   </header>
-  <marquee behavior="scroll" direction="left" class="mt-2 {$hasStarted ? 'invisible' : ''}">&#128679; work in progress &#128679;</marquee>
+  <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-b from-{colors.background} to-transparent"></div>
 </nav>
