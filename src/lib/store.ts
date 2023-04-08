@@ -4,18 +4,23 @@ import { AudioConfig } from './AudioManager';
 import { Frog } from './Frog';
 import spring_peeper from '../assets/spring-peeper.mp3';
 
-
 // UI state
 export const showCloseIcon = writable(false);
 export const showError = writable(false);
 export const errorMessage = writable('');
+
+// UX
+export const colors = {
+  background: 'emerald-900',
+  main: 'emerald-200'
+};
 
 export const frogsCount = 1;
 export const audio = new AudioConfig();
 export const audioFile = spring_peeper;
 export const hasStarted = writable(false);
 export const FFT_SIZE = 1024;
-export const DEBUG_ON = writable(true); // temporarily true while bugfixing
+export const DEBUG_ON = writable(false); // temporarily true while bugfixing
 export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
 export const inputSamplingInterval = 100; // time (ms) between FFT analysis events

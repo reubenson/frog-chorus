@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { showCloseIcon, handleClose } from "./store";
+  import { showCloseIcon, handleClose, colors } from "./store";
   import frog03 from '../assets/frog03.gif'
 </script>
 
-<nav class="z-10 text-gray-900 body-font absolute w-screen backdrop-blur-sm bg-transparent">
+<nav class="z-10 text-{colors.main} body-font absolute w-screen backdrop-blur-sm bg-transparent">
   <header class="text-xl text-left h-20">
     <ul
       class="pt-10"

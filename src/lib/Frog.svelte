@@ -1,7 +1,7 @@
 <script lang="ts">
   import _ from 'lodash';
   import { drawFFT } from "./utils";
-  import { DEBUG_ON } from './store';
+  import { DEBUG_ON, colors } from './store';
   import { onMount } from 'svelte';
   import { Frog } from './Frog';
   
@@ -144,7 +144,7 @@
     plotBaseline(ambientFFT);
     updateMetrics(amplitude);
     
-    outlineColor = frogSignalDetected ? 'emerald-300' : 'emerald-100';
+    outlineColor = frogSignalDetected ? colors.background : colors.main;
 
     updateEagernessCurve(eagerness);
     updateShynessCurve(shyness);
@@ -174,15 +174,15 @@
     <!-- circle inside frog representing its detecting of other frogs -->
     <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-opacity duration-500 {frogSignalDetected ? 'opacity-100' : 'opacity-0'}">&xcirc;</div>
     <p>Your frog is listening ...</p>
-    <div class="border-bottom border-[1px] border-black m-auto mt-2 width-full transition-transform duration-75" style="transform: scaleX({environmentVolumeLevel}%)"></div>
+    <div class="border-bottom border-[1px] border-{colors.main} m-auto mt-2 width-full transition-transform duration-75" style="transform: scaleX({environmentVolumeLevel}%)"></div>
     {#if showNoisyWarning}
       <p>(But it seems like it's pretty noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {/if}
     <!-- hard-code colors here -->
-    <span class="invisible text-emerald-300 text-emerald-100 bg-lime-300"></span>
+    <!-- <span class="invisible text-emerald-300 text-emerald-100 bg-lime-300"></span> -->
   </div>
   <!-- if only one frog: -->
-  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-emerald-300' : 'bg-emerald-100'}"></div>
+  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 bg-{isCurrentlySinging ? colors.main : colors.background}"></div>
   <div class="frog-debug-panel mt-4">
     {#if $DEBUG_ON}
     <div class="debug-panel">
