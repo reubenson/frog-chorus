@@ -153,8 +153,10 @@
   }
 
   onMount(() => {
-    plotEagernessCurve();
-    plotShynessCurve();
+    if ($DEBUG_ON) {
+      plotEagernessCurve();
+      plotShynessCurve();
+    }
 
     // indicate to user that they're in a noisy environment
     const noisyTimeout = 10000;
