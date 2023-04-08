@@ -39,7 +39,7 @@
         on:click={handleClick}>&#10008</button>
     {:else}
       <button 
-        class="absolute left-6 top-4 rotate-45"
+        class="absolute left-6 top-4 rotate-[50deg]"
         on:click={handleClick}
         >
           <a href="#info">&#10008</a>

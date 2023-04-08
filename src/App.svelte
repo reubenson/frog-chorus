@@ -61,7 +61,7 @@
           For an introduction to current topics around the ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank" rel="noreferrer">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank" rel="noreferrer">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
         </p>
         <p>
-          This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank" rel="noreferrer">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, see <a href="#info">info</a>.
+          This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank" rel="noreferrer">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, click <span class="inline-block rotate-[50deg]">&#10008</span> in the top left corner.
         </p>
       {:else}
         <div>
