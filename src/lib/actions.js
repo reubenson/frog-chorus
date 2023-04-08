@@ -12,12 +12,12 @@ export function longpress(node, threshold = 500) {
       clearTimeout(timeout);
       node.removeEventListener('mousemove', cancel);
       node.removeEventListener('mouseup', cancel);
-      node.removeEventListener('ontouchend', cancel);
+      node.removeEventListener('touchend', cancel);
     }
 
     node.addEventListener('mousemove', cancel);
     node.addEventListener('mouseup', cancel);
-    node.addEventListener('ontouchend', cancel);
+    node.addEventListener('touchend', cancel);
   }
 
   node.addEventListener('mousedown', down);
@@ -28,9 +28,9 @@ export function longpress(node, threshold = 500) {
     console.log('e', e);
     // e.preventDefault();
   };
-  node.addEventListener('touchend', preventDefault);
-  node.addEventListener('touchmove', preventDefault);
-  node.addEventListener('touchcancel', preventDefault);
+  // node.addEventListener('touchend', preventDefault);
+  // node.addEventListener('touchmove', preventDefault);
+  // node.addEventListener('touchcancel', preventDefault);
 
   return {
     destroy() {
