@@ -144,7 +144,7 @@
     plotBaseline(ambientFFT);
     updateMetrics(amplitude);
     
-    outlineColor = frogSignalDetected ? 'emerald-900' : 'emerald-100';
+    outlineColor = frogSignalDetected ? 'emerald-300' : 'emerald-100';
 
     updateEagernessCurve(eagerness);
     updateShynessCurve(shyness);
@@ -170,24 +170,20 @@
 <div class="frog-item w-full max-w-lg h-full m-auto rounded-md">
   <div class="text-center relative h-50">
     <!-- frog glyph -->
-    <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div>
+    <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div>
     <!-- circle inside frog representing its detecting of other frogs -->
     <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-opacity duration-500 {frogSignalDetected ? 'opacity-100' : 'opacity-0'}">&xcirc;</div>
     <p>Your frog is listening ...</p>
-    {#if frogSignalDetected}
-      Frog detected
-    {/if}
-    <div class="border-bottom border-[1px] border-black m-auto mt-2" style="width: {environmentVolumeLevel}%"></div>
+    <div class="border-bottom border-[1px] border-black m-auto mt-2 width-full transition-transform duration-75" style="transform: scaleX({environmentVolumeLevel}%)"></div>
     {#if showNoisyWarning}
       <p>(But it seems like it's pretty noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {/if}
     <!-- hard-code colors here -->
-    <span class="invisible text-emerald-900 text-emerald-100 bg-lime-300"></span>
+    <span class="invisible text-emerald-300 text-emerald-100 bg-lime-300"></span>
   </div>
   <!-- if only one frog: -->
-  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-emerald-900' : 'bg-emerald-100'}"></div>
+  <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-emerald-300' : 'bg-emerald-100'}"></div>
   <div class="frog-debug-panel mt-4">
-    <!-- <header class="text-2xl transition-colors duration-500 {frogSignalDetected ? 'bg-black' : ''}">Frog {id}</header> -->
     {#if $DEBUG_ON}
     <div class="debug-panel">
       <div class="mt-4">
