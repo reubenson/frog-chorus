@@ -1,6 +1,7 @@
 <script lang="ts">
   import _ from 'lodash';
   import { fade } from 'svelte/transition';
+  import { MetaTags } from 'svelte-meta-tags';
   import Tailwind from './lib/Tailwind.svelte';
   import Section from './lib/Section.svelte';
   import NAV from './lib/Nav.svelte';
@@ -25,6 +26,23 @@
   window.addEventListener('hashchange', handleUrlUpdate);
 </script>
 
+<MetaTags 
+  title="Frog Chorus"
+  description="Teaching your mobile device how to be a frog"
+  openGraph={{
+    url: 'https://frogchor.us/',
+    title: 'Frog Chorus',
+    description: 'Teaching your mobile device how to be a frog',
+    images: [
+      {
+        url: hess_diagram,
+        width: '1516',
+        height: '556',
+        alt: 'Frog Chorus - Felix Hess Diagram'
+      }
+    ]
+  }}
+/>
 <Tailwind />
 
 <main class="font-serif text-center tracking-wider pb-6 text-{colors.main}">
