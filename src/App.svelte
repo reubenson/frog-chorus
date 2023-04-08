@@ -1,7 +1,6 @@
 <script lang="ts">
   import _ from 'lodash';
   import { fade } from 'svelte/transition';
-  import { MetaTags } from 'svelte-meta-tags';
   import Tailwind from './lib/Tailwind.svelte';
   import Section from './lib/Section.svelte';
   import NAV from './lib/Nav.svelte';
@@ -21,28 +20,19 @@
   import './app.css'
   import hess_diagram from './assets/hess_diagram.jpeg';
   import frog_jumping from './assets/frogjumping.gif';
+  import frogmail from './assets/frogmail.gif';
   import grass from './assets/profolia-grass.gif';
+    import { onMount } from 'svelte';
   
   window.addEventListener('hashchange', handleUrlUpdate);
+
+  onMount(() => {
+    if (document.location.search.includes('debug')) {
+      toggleOnDebug();
+    }
+  });
 </script>
 
-<MetaTags 
-  title="Frog Chorus"
-  description="Teaching your mobile device how to be a frog"
-  openGraph={{
-    url: 'https://frogchor.us/',
-    title: 'Frog Chorus',
-    description: 'Teaching your mobile device how to be a frog',
-    images: [
-      {
-        url: hess_diagram,
-        width: '1516',
-        height: '556',
-        alt: 'Frog Chorus - Felix Hess Diagram'
-      }
-    ]
-  }}
-/>
 <Tailwind />
 
 <main class="font-serif text-center tracking-wider pb-6 text-{colors.main}">
@@ -131,6 +121,8 @@
       <li class="list-inside"><a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" target="_blank" rel="noreferrer" class="italic">Electronic Sound Creatures by Felix Hess</a></li>
       <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank" rel="noreferrer">Felix's audio recordings, recently reissued by Basic Function</a></li>
     </ol>
+    <img class="mt-8 width-full" src="{frogmail}" alt="froggy email">
+    <p>Feedback, suggestions, and inquiries may be directed <a href="mailto:frogchor@gmail.com"></a>to frogchor@gmail.com</p>
   </Section>
   <div class="-z-20 bg-{colors.background} fixed left-0 right-0 top-0 bottom-0"></div>
 

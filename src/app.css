@@ -1,6 +1,16 @@
-.header-frog {
+/* styles for frog gif */
+/* .header-frog {
   bottom: -.1em;
   left: -.3em;
+  min-width: .4em;
+  width: .4em;
+} */
+
+/* styles for frog glpyh */
+.header-frog {
+  bottom: -1.6em;
+  font-size: 9px;
+  left: -1.5em;
   min-width: .4em;
   width: .4em;
 }

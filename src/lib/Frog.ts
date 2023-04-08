@@ -181,7 +181,15 @@ export class Frog {
     this.convolutionAnalyser.fftSize = FFT_SIZE;
     this.convolutionAnalyser.smoothingTimeConstant = smoothingConstant; // this can be tweaked
 
-    inputSourceNode.connect(this.convolver);
+    // set up high-pass filter, to minimize handling noise and energy in the very low frequency spectrum
+    const filter = this.audioConfig.ctx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.setValueAtTime(2000, 0); // to be tweaked
+    filter.Q.setValueAtTime(0.01, 0);
+
+    // connect input to filter, and then to convolver for analysis
+    inputSourceNode.connect(filter);
+    filter.connect(this.convolver);
     this.convolver.connect(this.convolutionAnalyser);
 
     // create Meyda analyser

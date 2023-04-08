@@ -24,8 +24,11 @@
       </li>
       <li class="text-center text-4xl">
         <!-- https://www.fancytextpro.com/CursiveTextGenerator -->
+        <!-- <a href="">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
+          <img src="{frog03}" alt="frog chorus header" class="absolute header-frog {$hasStarted ? 'invisible' : ''}"></span>ṳṧ</a> -->
+        <!--  -->
         <a href="">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
-          <img src="{frog03}" alt="frog chorus header" class="absolute header-frog {$hasStarted ? 'invisible' : ''}"></span>ṳṧ</a>
+          <span class="absolute header-frog {$hasStarted ? 'invisible' : ''}">&#78223;</span>ṳṧ</a>
         <!-- <a href="">ᠻ᥅ꪮᧁ ᥴꫝꪮ᥅ꪊᦓ</a> -->
         <!-- <a href="">ⲯ﹍︿﹍︿﹍ 𝚏𝚛𝚘𝚐 𝚌𝚑𝚘𝚛𝚞𝚜 ﹍ⲯ﹍ⲯ﹍︿﹍☼</a> -->
         <!-- <a href="">𝖋𝖗𝖔𝖌 𝖈𝖍𝖔𝖗𝖚𝖘</a> -->

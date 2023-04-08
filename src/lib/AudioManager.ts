@@ -80,7 +80,6 @@ export class AudioConfig {
         this.analyser = ctx.createAnalyser();
         this.analyser.fftSize = FFT_SIZE;
         this.analyser.smoothingTimeConstant = 0.5; // to be tweaked
-        // input.connect(this.analyser); // why is this here??
       })
       .catch(err => {
         return Promise.reject(err);
@@ -96,37 +95,37 @@ export class AudioConfig {
    * @param duration - audio sample duration (seconds)
    * @returns Float32Array
    */
-  public async analyseSample(
-    audio: HTMLAudioElement,
-    sourceNode: MediaElementAudioSourceNode,
-    duration: number
-  ): Promise<Float32Array> {
-    // create analyser node
-    const analyserNode = this.ctx.createAnalyser();
+  // public async analyseSample(
+  //   audio: HTMLAudioElement,
+  //   sourceNode: MediaElementAudioSourceNode,
+  //   duration: number
+  // ): Promise<Float32Array> {
+  //   // create analyser node
+  //   const analyserNode = this.ctx.createAnalyser();
 
-    analyserNode.fftSize = FFT_SIZE;
-    analyserNode.smoothingTimeConstant = 0.97; // this can be tweaked
+  //   analyserNode.fftSize = FFT_SIZE;
+  //   analyserNode.smoothingTimeConstant = 0.97; // this can be tweaked
 
-    // set up audio node network
-    sourceNode.connect(analyserNode);
+  //   // set up audio node network
+  //   sourceNode.connect(analyserNode);
 
-    // measure the FFT of the audio sample n times, at equal time intervals across the duration of the sample
-    const bufferLength = analyserNode.frequencyBinCount;
-    const fft = new Float32Array(bufferLength);
-    const numberOfSteps = 5; // can be tweaked
-    const intervalLength = Math.floor((duration * 1000) / numberOfSteps);
+  //   // measure the FFT of the audio sample n times, at equal time intervals across the duration of the sample
+  //   const bufferLength = analyserNode.frequencyBinCount;
+  //   const fft = new Float32Array(bufferLength);
+  //   const numberOfSteps = 5; // can be tweaked
+  //   const intervalLength = Math.floor((duration * 1000) / numberOfSteps);
 
-    for (let index = 0; index < numberOfSteps; index++) {
-      await new Promise(resolve => setTimeout(resolve, intervalLength));
-      analyserNode.getFloatFrequencyData(fft);
+  //   for (let index = 0; index < numberOfSteps; index++) {
+  //     await new Promise(resolve => setTimeout(resolve, intervalLength));
+  //     analyserNode.getFloatFrequencyData(fft);
 
-      if (_.max(fft) === -Infinity) console.warn(`issue occurred analysing sample on step ${index}`);
-    }
+  //     if (_.max(fft) === -Infinity) console.warn(`issue occurred analysing sample on step ${index}`);
+  //   }
 
-    return fft;
-  }
+  //   return fft;
+  // }
 
-  public setCanvas(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
-  }
+  // public setCanvas(canvas: HTMLCanvasElement) {
+  //   this.canvas = canvas;
+  // }
 }
