@@ -24,6 +24,7 @@
   let fftEl, convolutionEl, ambientEl;
   let blurClass = $DEBUG_ON ? '' : 'blur-2xl';
   let ampFontsize = 10;
+  let environmentVolumeLevel = 80;
   let loudnessFontsize = 10;
   let outlineColor = 'black';
   let showBaselineLoading = true;
@@ -57,6 +58,7 @@
     const fontMax = 72;
 
     ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
+    environmentVolumeLevel = ((amp + 110) / 80) * 100; // roughly map it to a percentage
     // ampFontsize = fontMin + (loudness / 30) * fontMax;
     loudnessFontsize = fontMin + (audioFeatures?.loudness?.total / 20) * fontMax; 
   }
@@ -143,7 +145,7 @@
     plotBaseline(ambientFFT);
     updateMetrics(amplitude);
     
-    outlineColor = frogSignalDetected ? 'emerald-900' : 'black';
+    outlineColor = frogSignalDetected ? 'emerald-900' : 'emerald-100';
 
     updateEagernessCurve(eagerness);
     updateShynessCurve(shyness);
@@ -168,21 +170,21 @@
 
 <div class="frog-item w-full max-w-lg h-full m-auto rounded-md">
   <div class="text-center relative h-50">
-    <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 text-{outlineColor}">&#78223;</div>
+    <div class="text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div>
+    <!-- circle inside frog representing its detecting of other frogs -->
     <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-colors duration-1000 text-{outlineColor}">&xcirc;</div>
-    <p class="text-{outlineColor}">Your frog is listening ...</p>
+    <!-- circle around frog representing environment -->
+    <!-- <div style="font-size: {150 + environmentFontSize}px; transform: translateY(calc(-70px + {-environmentFontSize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-none transition-colors duration-1000 text-black}">&xcirc;</div> -->
+    <p>Your frog is listening ...</p>
     {#if frogSignalDetected}
       Frog detected
     {/if}
+    <div class="border-bottom border-[1px] border-black m-auto mt-2" style="width: {environmentVolumeLevel}%"></div>
     {#if showNoisyWarning}
       <p>(But it seems like it's pretty noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {/if}
     <!-- hard-code colors here -->
     <span class="invisible text-emerald-900 text-emerald-100 bg-lime-300"></span>
-  </div>
-  <div>
-    <!-- <span style="font-size: {ampFontsize}px" class="absolute">&#127908;</span> -->
-    <!-- <span style="font-size: {loudnessFontsize}px">&#127908;</span> -->
   </div>
   <!-- if only one frog: -->
   <div class="-z-10 w-screen h-screen absolute {blurClass} left-0 top-0 transition-colors duration-1000 {isCurrentlySinging ? 'bg-lime-300' : 'bg-emerald-100'}"></div>
