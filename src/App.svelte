@@ -69,7 +69,6 @@
           <!-- 𝓈𝓉𝒶𝓇𝓉 -->
           <span class="select-nonee">𝓼𝓽𝓪𝓻𝓽</span>
         </button>
-          <!-- <img src="{frog_jumping}" alt="frog jumping" class="w-full"> -->
         <p>
           For an introduction to current topics around the ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank" rel="noreferrer">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank" rel="noreferrer">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
         </p>

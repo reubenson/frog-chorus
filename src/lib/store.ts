@@ -95,7 +95,6 @@ export const handleStart = () => {
 };
 
 export const toggleOnDebug = () => {
-  console.log('toggling on debug');
   DEBUG_ON.set(true);
 };
 
