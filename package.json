@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build-stg && npm run add-cname",
-    "build-stg": "vite build --outDir docs/stg && npm run add-cname",
+    "build": "vite build && npm run build-stg",
+    "build-stg": "vite build --outDir docs/stg --assetsDir stg && mv -v ./docs/stg/stg/* ./docs/stg && npm run add-cname",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "add-cname": "touch docs/CNAME && echo 'frogchor.us' > docs/CNAME"
