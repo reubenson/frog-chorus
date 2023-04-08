@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run add-cname",
+    "build": "vite build && npm run build-stg && npm run add-cname",
     "build-stg": "vite build --outDir docs/stg && npm run add-cname",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
