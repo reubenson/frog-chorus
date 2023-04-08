@@ -10,9 +10,16 @@ npm i
 npm run dev
 ```
 
+## Deployments
 To generate static files to serve via GitHub pages:
 ```bash
 npm run build
+```
+
+### Staging
+An informal staging build is also deployed to frogchor.us/stg, which is managed via 
+```bash
+npm run build-stg
 ```
 
 ## Recommended IDE Setup
