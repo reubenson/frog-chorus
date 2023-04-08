@@ -99,7 +99,7 @@ export class Frog {
    * the frog's shyness and eagerness
    */
   public async initialize() {
-    const attemptRate = 400; // how often to evaluate whether to chirp
+    const attemptRate = 250; // how often to evaluate whether to chirp
 
     await this.fetchAudioBuffer();
 
