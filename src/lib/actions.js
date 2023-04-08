@@ -3,6 +3,7 @@ export function longpress(node, threshold = 500) {
     console.log('event', event);
     // event.preventDefault();
     const timeout = setTimeout(() => {
+      console.log('dispatching longpress');
       node.dispatchEvent(new CustomEvent('longpress'));
     }, threshold);
 

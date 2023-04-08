@@ -22,9 +22,14 @@
   import frog_jumping from './assets/frogjumping.gif';
   import frogmail from './assets/frogmail.gif';
   import grass from './assets/profolia-grass.gif';
-    import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
   
   window.addEventListener('hashchange', handleUrlUpdate);
+
+  function handleLongpress() {
+    toggleOnDebug();
+    handleStart();
+  }
 
   onMount(() => {
     if (document.location.search.includes('debug')) {
@@ -58,7 +63,7 @@
           class="border-black border-2 text-white p-2 mt-6 mb-6 tracking-widest m-auto block font-sans w-48 border-black ring-2"
           on:click|once|capture|trusted={handleStart}
           use:longpress
-          on:longpress={toggleOnDebug}
+          on:longpress={handleLongpress}
           style="background-image: url('{grass}')">
           <!-- START -->
           <!-- 𝓈𝓉𝒶𝓇𝓉 -->
