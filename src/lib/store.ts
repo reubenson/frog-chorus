@@ -18,7 +18,7 @@ export const FFT_SIZE = 1024;
 export const DEBUG_ON = writable(true); // temporarily true while bugfixing
 export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
-export const inputSamplingInterval = 50; // time (ms) between FFT analysis events
+export const inputSamplingInterval = 100; // time (ms) between FFT analysis events
 export const url = writable('');
 export let inputSourceNode;
 export const hash = writable('');

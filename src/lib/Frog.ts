@@ -121,12 +121,13 @@ export class Frog {
   public updateState() {
     if (!this.hasInitialized) return;
 
+    this.analyseInputSignal();
+
     if (this.isCurrentlySinging) {
       // log('pausing update state while chirping');
-      // return;
+      return;
     }
 
-    this.analyseInputSignal();
 
     this.currentTimestamp = Date.now();
 
