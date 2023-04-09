@@ -51,8 +51,6 @@
    * @param data
    */
   function plotBaseline(data) {
-    // if (!ambientEl || !data) return;
-
     if (ambientEl && data && showBaselineLoading) {
       drawFFT(data, ambientEl);
       showBaselineLoading = false;
@@ -69,10 +67,8 @@
   }
 
   function plotEagernessCurve() {
+    // functionPlot library is loaded dynamically in debug mode
     const functionPlot = _.get(window, 'functionPlot', () => {});
-
-    if (!functionPlot) return; // functionPlot library is loaded dynamically in debug mode
-
     const box = eagernessPlotEl?.getBoundingClientRect();
 
     if (!box) return;
@@ -97,14 +93,13 @@
       ],
       annotations: [{
         y: Frog.prototype.calculateEagernessFactor(eagerness),
-        text: 'eagerness'
+        text: 'eagerness coefficient'
       }]
     });
   }
 
   function plotShynessCurve() {
     const functionPlot = _.get(window, 'functionPlot', () => {});
-
     const box = shynessPlotEl?.getBoundingClientRect();
 
     if (!box) return;
@@ -129,7 +124,7 @@
       ],
       annotations: [{
         y: Frog.prototype.calculateShynessFactor(shyness),
-        text: 'shyness'
+        text: 'shyness coefficient'
       }]
     });
   }
@@ -141,7 +136,7 @@
 
     if (!annotationEl) return;
 
-    annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateEagernessFactor(eagerness), 2)}`;
+    // annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateEagernessFactor(eagerness), 2)}`;
   }
 
   function updateShynessCurve(shyness) {
@@ -151,7 +146,7 @@
 
     if (!annotationEl) return;
 
-    annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateShynessFactor(shyness), 2)}`;
+    // annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateShynessFactor(shyness), 2)}`;
   }
 
   $: {
@@ -169,8 +164,8 @@
 
   onMount(() => {
     if ($DEBUG_ON) {
-      plotEagernessCurve();
-      plotShynessCurve();
+      // plotEagernessCurve();
+      // plotShynessCurve();
     }
 
     // indicate to user that they're in a noisy environment

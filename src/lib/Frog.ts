@@ -525,7 +525,7 @@ export class Frog {
    * @returns - 0 to 1
    */
    public calculateShynessFactor(shyness) {
-    return 1 - Math.pow(shyness, 3);
+    return 1 - Math.pow(shyness, 2/3);
   }
 
   /**
