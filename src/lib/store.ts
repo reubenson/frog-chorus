@@ -4,6 +4,13 @@ import { AudioConfig } from './AudioManager';
 import { Frog } from './Frog';
 import spring_peeper from '../assets/spring-peeper.mp3';
 
+// Important parameters for refining behavior
+export const inputSamplingInterval = 80; // time (ms) between audio analysis events
+export const FFT_SIZE = 1024;
+export const highpassFilterFrequency = 2000; // (units: hz)
+export const loudnessThreshold = 21; // arbitrary units, following Meyda lib
+export const chirpAttemptRate = 250; // how often to attempt chirping (units: ms)
+
 // UI state
 export const showCloseIcon = writable(false);
 export const showError = writable(false);
@@ -19,11 +26,9 @@ export const frogsCount = 1;
 export const audio = new AudioConfig();
 export const audioFile = spring_peeper;
 export const hasStarted = writable(false);
-export const FFT_SIZE = 1024;
-export const DEBUG_ON = writable(false); // temporarily true while bugfixing
+export const DEBUG_ON = writable(false);
 export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
-export const inputSamplingInterval = 80; // time (ms) between FFT analysis events
 export const url = writable('');
 export let inputSourceNode;
 export const hash = writable('');

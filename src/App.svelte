@@ -19,7 +19,7 @@
   import { longpress } from './lib/actions';
   import './app.css'
   import hess_diagram from './assets/hess_diagram.jpeg';
-  import frog_jumping from './assets/frogjumping.gif';
+  // import frog_jumping from './assets/frogjumping.gif';
   import frogmail from './assets/frogmail.gif';
   import grass from './assets/profolia-grass.gif';
   import { onMount } from 'svelte';
@@ -53,7 +53,7 @@
     {#if !$hasStarted}
       {#if !$showError}
         <p>
-          <span class="italic">Frog Chorus</span> is an audio-based web-application that allows your laptop or mobile device to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank" rel="noreferrer">chorus of frogs in the wild</a> . 
+          <span class="italic">Frog Chorus</span> is an audio-based web-application that allows your laptop or mobile device to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank">chorus of frogs in the wild</a>. This app currently utilizes the sound of a <a href="https://en.wikipedia.org/wiki/Spring_peeper" target="_blank">spring peeper</a> to chirp.
           <!-- TODO: Try expanding UI to show video here? -->
         </p>
         <p>
@@ -70,10 +70,10 @@
           <span class="select-nonee">𝓼𝓽𝓪𝓻𝓽</span>
         </button>
         <p>
-          For an introduction to current topics around the ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank" rel="noreferrer">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank" rel="noreferrer">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
+          For an introduction to current topics around the ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
         </p>
         <p>
-          This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank" rel="noreferrer">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, click <span class="inline-block rotate-[50deg]">&#10008</span> in the top left corner.
+          This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, click <span class="inline-block rotate-[50deg]">&#10008</span> in the top left corner.
         </p>
       {:else}
         <div>
@@ -109,21 +109,21 @@
     <figure>
       <img src="{hess_diagram}" alt="Flow diagram of the frog behavior">
       <figcaption class="text-sm text-center">
-        Flow diagram of the frog behavior excerpted from Hess' <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic" target="_blank" rel="noreferrer">Electronic Sound Creatures</a>
+        Flow diagram of the frog behavior excerpted from Hess' <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic" target="_blank">Electronic Sound Creatures</a>
       </figcaption>
     </figure>
     <p>
-      The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank" rel="noreferrer">Web Audio AnalyserNode</a>.
+      The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">Web Audio AnalyserNode</a>.
     </p>
-    <p>This project is open-source. For more information, check out the source code at <a href="https://github.com/reubenson/frog-chorus" target="_blank" rel="noreferrer">GitHub</a>.</p>
-    <p>For more information about the developer of this project, visit <a href="https://reubenson.com" target="_blank" rel="noreferrer">https://reubenson.com</a>.</p>
+    <p>This project is open-source. For more information, check out the source code at <a href="https://github.com/reubenson/frog-chorus" target="_blank">GitHub</a>.</p>
+    <p>For more information about the developer of this project, visit <a href="https://reubenson.com" target="_blank">https://reubenson.com</a>.</p>
     <h6 class="mt-4 text-lg">References</h6>
     <ol class="list-disc">
-      <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank" rel="noreferrer">A brief historical introduction to Felix on BLDG Blog</a></li>
-      <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank" rel="noreferrer">Artist talk by Felix Hess in 2010 (YouTube)</a></li>
-      <li class="list-inside"><a href="https://www.kehrerverlag.com/en/felix-hess-light-as-air-978-3-933257-65-9" target="_blank" rel="noreferrer">"Light as Air"</a> monograph published by Kehrer Verlag</li>
-      <li class="list-inside"><a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" target="_blank" rel="noreferrer" class="italic">Electronic Sound Creatures by Felix Hess</a></li>
-      <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank" rel="noreferrer">Felix's audio recordings, recently reissued by Basic Function</a></li>
+      <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank">A brief historical introduction to Felix on BLDG Blog</a></li>
+      <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank">Artist talk by Felix Hess in 2010 (YouTube)</a></li>
+      <li class="list-inside"><a href="https://www.kehrerverlag.com/en/felix-hess-light-as-air-978-3-933257-65-9" target="_blank">"Light as Air"</a> monograph published by Kehrer Verlag</li>
+      <li class="list-inside"><a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" target="_blank" class="italic">Electronic Sound Creatures by Felix Hess</a></li>
+      <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank">Felix's audio recordings, recently reissued by Basic Function</a></li>
     </ol>
     <img class="mt-8 width-full" src="{frogmail}" alt="froggy email">
     <p>Feedback, suggestions, and inquiries may be directed <a href="mailto:frogchor@gmail.com">to frogchor@gmail.com</a></p>

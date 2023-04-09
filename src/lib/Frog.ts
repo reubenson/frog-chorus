@@ -38,7 +38,7 @@
 import type { MeydaAnalyzer } from 'meyda';
 import Meyda from 'meyda';
 import type { AudioConfig } from './AudioManager';
-import { FFT_SIZE, inputSourceNode } from './store';
+import { FFT_SIZE, chirpAttemptRate, highpassFilterFrequency, inputSourceNode, loudnessThreshold } from './store';
 import { log, processFFT, calculateAmplitude, testProbability } from './utils';
 
 let idCounter = 0;
@@ -56,7 +56,7 @@ export class Frog {
   currentTimestamp: number;
   rateOfStateChange: number; // manually-calibrated value used to determine rate of change in eagerness and shyness
   sampleDuration: number;
-  amplitudeThreshold: number; // relative threshold between a quiet vs noisy environment
+  // amplitudeThreshold: number; // relative threshold between a quiet vs noisy environment
   loudnessThreshold: number; // loudness calculated with Meyda lib
   convolutionAmplitudeThreshold: number;
   hasInitialized: boolean;
@@ -86,8 +86,8 @@ export class Frog {
     this.lastUpdated = Date.now();
     this.currentTimestamp = Date.now();
     this.rateOfStateChange = 0.2; // to be tweaked
-    this.amplitudeThreshold = -65; // to be tweaked
-    this.loudnessThreshold = 21; // to be tweaked
+    // this.amplitudeThreshold = -65; // to be tweaked
+    this.loudnessThreshold = loudnessThreshold;
     this.hasInitialized = false;
     this.frogSignalDetected = false;
     this.isCurrentlySinging = false;
@@ -99,7 +99,7 @@ export class Frog {
    * the frog's shyness and eagerness
    */
   public async initialize() {
-    const attemptRate = 250; // how often to evaluate whether to chirp
+    const attemptRate = chirpAttemptRate;
 
     await this.fetchAudioBuffer();
 
@@ -184,7 +184,7 @@ export class Frog {
     // set up high-pass filter, to minimize handling noise and energy in the very low frequency spectrum
     const filter = this.audioConfig.ctx.createBiquadFilter();
     filter.type = 'highpass';
-    filter.frequency.setValueAtTime(2000, 0); // to be tweaked
+    filter.frequency.setValueAtTime(highpassFilterFrequency, 0); // to be tweaked
     filter.Q.setValueAtTime(0.01, 0);
 
     // connect input to filter, and then to convolver for analysis
@@ -278,18 +278,15 @@ export class Frog {
     // this.baselineFlatness = this.audioFeatures?.spectralFlatness;
     // this.baselineSpread = this.audioFeatures?.spectralSpread;
     this.baselineCentroid = this.audioFeatures?.spectralCentroid;
-    log('amplitude threshold:', this.amplitudeThreshold);
-    log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
-    log('kurtosis', this.audioFeatures?.spectralFlatness);
+    // log('amplitude threshold:', this.amplitudeThreshold);
+    // log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
+    // log('kurtosis', this.audioFeatures?.spectralFlatness);
   }
 
   /**
    * Set the FFT data corrresponding to the convolved mic input when the
    * environment is quiet. This provides the baseline measurement to detect
    * other frogs in the acoustic environment
-   *
-   * To Do: make this measurement after the amplitude of the environment
-   * is held below a threshold value for a number of seconds?
    */
   private establishAmbientFFT() {
     // early return if ambientFFT has already been set
@@ -303,16 +300,10 @@ export class Frog {
 
     if (this.ambientTimeout) return;
 
-    // set ambientFFT if the environemnt has settled into quiet for 2.5 seconds
+    // set ambientFFT if the environment has settled into quiet for a certain period of time
     this.ambientTimeout = setTimeout(() => {
       this.setAmbientFFT();
     }, 2500);
-
-    console.log('this.ambientTimeout', this.ambientTimeout);
-
-    // if (this.loudness < this.loudnessThreshold) {
-    //   setTimeout()
-    // }
 
     // if (this.amplitude < this.amplitudeThreshold && this.amplitude > -120) {
     if (this.loudness < this.loudnessThreshold && this.loudness > 0) {
@@ -479,6 +470,7 @@ export class Frog {
 
     source.buffer = this.buffer;
     source.connect(this.audioConfig.ctx.destination);
+    source.detune.value = -1000;
     source.start();
   }
 

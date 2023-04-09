@@ -24,16 +24,15 @@
   let ampFontsize = 10;
   let environmentVolumeLevel = 0;
   let loudnessFontsize = 10;
-  let outlineColor = 'black';
   let showBaselineLoading = true;
-  let plotHeight = 200;
   let showNoisyWarning = false;
   let showExitMessage = false;
+  let shynessPlotEl, eagernessPlotEl;
 
   function plotInputFFT(data) {
-    if (!fftEl) return;
-
-    drawFFT(data, fftEl);
+    if (fftEl) {
+      drawFFT(data, fftEl);
+    }
   }
   
   /**
@@ -41,9 +40,9 @@
    * @param data
    */
   function plotConvolution(data) {
-    if (!convolutionEl) return;
-    
-    drawFFT(data, convolutionEl);
+    if (convolutionEl) {
+      drawFFT(data, convolutionEl);
+    }
   }
 
   /**
@@ -51,9 +50,9 @@
    * @param data
    */
   function plotBaseline(data) {
-    if (!ambientEl || !data) return;
+    // if (!ambientEl || !data) return;
 
-    if (showBaselineLoading) {
+    if (ambientEl && data && showBaselineLoading) {
       drawFFT(data, ambientEl);
       showBaselineLoading = false;
     }
@@ -69,20 +68,19 @@
   }
 
   function plotEagernessCurve() {
-    const functionPlot = window?.functionPlot;
+    const functionPlot = _.get(window, 'functionPlot', () => {});
 
     if (!functionPlot) return; // functionPlot library is loaded dynamically in debug mode
 
-    const el = document.querySelector('#eagerness-curve');
-    const box = el?.getBoundingClientRect();
+    const box = eagernessPlotEl?.getBoundingClientRect();
 
     if (!box) return;
 
-    window.functionPlot({
+    functionPlot({
       target: "#eagerness-curve",
       title: 'Eagerness',
       width: box.width,
-      height: plotHeight,
+      height: box.width * 0.75,
       xAxis: { domain: [0, 1] },
       yAxis: { domain: [0, 1.1] },
       grid: true,
@@ -104,20 +102,17 @@
   }
 
   function plotShynessCurve() {
-    const functionPlot = window?.functionPlot;
+    const functionPlot = _.get(window, 'functionPlot', () => {});
 
-    if (!functionPlot) return; // functionPlot library is loaded dynamically in debug mode
-
-    const el = document.querySelector('#shyness-curve');
-    const box = el?.getBoundingClientRect();
+    const box = shynessPlotEl?.getBoundingClientRect();
 
     if (!box) return;
 
-    window.functionPlot({
+    functionPlot({
       target: "#shyness-curve",
       title: 'Shyness',
       width: box.width,
-      height: plotHeight,
+      height: box.width * 0.75,
       xAxis: { domain: [0, 1] },
       yAxis: { domain: [0, 1.1] },
       grid: true,
@@ -159,15 +154,14 @@
   }
 
   $: {
-    plotInputFFT(directInputFFT);
-    plotConvolution(convolutionFFT);
-    plotBaseline(ambientFFT);
-    updateMetrics(amplitude);
-    
-    outlineColor = frogSignalDetected ? colors.background : colors.main;
-
-    updateEagernessCurve(eagerness);
-    updateShynessCurve(shyness);
+    if ($DEBUG_ON) {
+      plotInputFFT(directInputFFT);
+      plotConvolution(convolutionFFT);
+      plotBaseline(ambientFFT);
+      updateMetrics(amplitude);
+      updateEagernessCurve(eagerness);
+      updateShynessCurve(shyness);
+    }
 
     if (!showBaselineLoading) showNoisyWarning = false;
   }
@@ -221,10 +215,10 @@
       <header class="text-xl mt-2 mb-2">Behavior Curves</header>
       <div class="flex flex-wrap flex-row">
         <div class="basis-2/4 min-w-[150px]">
-          <div id="eagerness-curve" ></div>
+          <div bind:this={eagernessPlotEl} id="eagerness-curve"></div>
         </div>
         <div class="basis-2/4 min-w-[150px]">
-          <div id="shyness-curve"></div>
+          <div bind:this={shynessPlotEl} id="shyness-curve"></div>
         </div>
       </div>
       <header class="text-xl mt-2 mb-2">Audio Metrics</header>
@@ -232,8 +226,6 @@
         <div class="basis-full p-2 shrink">
           <header>FFT</header>
           <canvas bind:this={fftEl} class="w-full"></canvas>
-          <ul>
-          </ul>
         </div>
         <div class="basis-2/4 p-2 relative">
           <header>C-Baseline</header>
