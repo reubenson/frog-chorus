@@ -20,6 +20,7 @@
   export let baselineCentroid;
   export let baselineRolloff;
   export let chirpProbability;
+  export let detuneAmount;
   let fftEl, convolutionEl, ambientEl;
   let ampFontsize = 10;
   let environmentVolumeLevel = 0;
@@ -207,6 +208,7 @@
       <div class="mt-4">
         <header class="text-xl mt-2">Basic Metrics</header>
         <ul class="flex flex-row flex-wrap">
+          <li class="h-14 p-2 basis-2/4">Detune Amt: { detuneAmount }</li>
           <li class="h-14 p-2 basis-2/4">Shyness: {_.round(shyness, 2)}</li>
           <li class="h-14 p-2 basis-2/4">Eagerness: {_.round(eagerness, 2)}</li>
           <li class="h-14 p-2 basis-2/4">Chirp Probability: {_.round(chirpProbability, 2)}</li>

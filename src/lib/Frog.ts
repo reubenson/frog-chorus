@@ -37,8 +37,9 @@
 
 import type { MeydaAnalyzer } from 'meyda';
 import Meyda from 'meyda';
+import _ from 'lodash';
 import type { AudioConfig } from './AudioManager';
-import { FFT_SIZE, chirpAttemptRate, highpassFilterFrequency, inputSourceNode, loudnessThreshold } from './store';
+import { FFT_SIZE, chirpAttemptRate, highpassFilterFrequency, inputSourceNode, loudnessThreshold, rateOfLosingShyness } from './store';
 import { log, processFFT, calculateAmplitude, testProbability } from './utils';
 
 let idCounter = 0;
@@ -76,6 +77,8 @@ export class Frog {
   baselineCentroid: number;
   ambientTimeout: number;
   chirpProbability: number;
+  detuneAmount: number;
+  ambienceMetrics: Object;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -91,6 +94,11 @@ export class Frog {
     this.hasInitialized = false;
     this.frogSignalDetected = false;
     this.isCurrentlySinging = false;
+    this.detuneAmount = _.random(-100, 100);
+    this.ambienceMetrics = {
+      rolloff: [],
+      centroid: []
+    };
   }
 
   /**
@@ -200,7 +208,16 @@ export class Frog {
       bufferSize: 1024,
       featureExtractors: ['loudness', 'spectralRolloff', 'spectralCrest', 'spectralCentroid'],
       callback: features => {
+        const isAnalysingAmbience = !!this.ambientTimeout;
+
         this.audioFeatures = Object.assign(features);
+
+        if (isAnalysingAmbience) {
+          const { spectralRolloff, spectralCentroid } = features;
+
+          spectralRolloff && this.ambienceMetrics.rolloff.push(spectralRolloff);
+          spectralCentroid && this.ambienceMetrics.centroid.push(spectralCentroid);
+        }
       }
     });
 
@@ -260,7 +277,7 @@ export class Frog {
     this.convolutionFFT = convolutionFFT;
     this.directInputFFT = directInputFFT;
 
-    this.loudness = this?.audioFeatures?.loudness?.total;
+    this.loudness = this?.audioFeatures?.loudness?.total;    
     // this.diffFFT = convolutionFFT.map((item, i) => {
     //   // To Do: resolve the arbitary -60 value
     //   return this.ambientFFT ? item - this.ambientFFT[i] - 60 : -Infinity;
@@ -275,9 +292,20 @@ export class Frog {
     // this.amplitudeThreshold = this.amplitude;
     // this.loudnessThreshold = this.loudness;
     this.baselineRolloff = this.audioFeatures?.spectralRolloff;
+    console.log('this.baselineRolloff', this.baselineRolloff);
+    const averageRolloff = _.mean(this.ambienceMetrics.rolloff);
+    console.log('averageRolloff', averageRolloff);
+    this.baselineRolloff = averageRolloff;
+
     // this.baselineFlatness = this.audioFeatures?.spectralFlatness;
     // this.baselineSpread = this.audioFeatures?.spectralSpread;
     this.baselineCentroid = this.audioFeatures?.spectralCentroid;
+    console.log('this.baselineCentroid', this.baselineCentroid);
+    const averageCentroid = _.mean(this.ambienceMetrics.centroid);
+    console.log('this.ambienceMetrics.centroid', this.ambienceMetrics.centroid);
+    console.log('averageCentroid', averageCentroid);
+    this.baselineCentroid = averageCentroid;
+
     // log('amplitude threshold:', this.amplitudeThreshold);
     // log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
     // log('kurtosis', this.audioFeatures?.spectralFlatness);
@@ -295,6 +323,11 @@ export class Frog {
     if (this.loudness > this.loudnessThreshold) {
       clearTimeout(this.ambientTimeout);
       this.ambientTimeout = null;
+      // to do: refactor
+      this.ambienceMetrics = {
+        rolloff: [],
+        centroid: []
+      }
       return;
     }
 
@@ -399,8 +432,8 @@ export class Frog {
    * Update the frog's "shyness", which is the frog's tendency to be silent
    */
   private updateShyness() {
-    const rateOfLosingShyness = 0.1; // value to be tweaked
-    const rateOfIncreasingShyness = 0.4;
+    const rateOfIncreasingShyness = 0.8 * ((this.loudness || 0) / 40.);
+
     // const environmentIsQuiet = this.amplitude < (this.amplitudeThreshold + 40);
     const environmentIsQuiet = this.loudness < this.loudnessThreshold + 5;
 
@@ -470,7 +503,8 @@ export class Frog {
 
     source.buffer = this.buffer;
     source.connect(this.audioConfig.ctx.destination);
-    source.detune.value = -1000;
+
+    source.detune.value = this.detuneAmount;
     source.start();
   }
 
