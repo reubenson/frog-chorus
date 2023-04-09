@@ -36,12 +36,20 @@
     drawFFT(data, fftEl);
   }
   
+  /**
+   * Plot the convolved FFT data
+   * @param data
+   */
   function plotConvolution(data) {
     if (!convolutionEl) return;
     
     drawFFT(data, convolutionEl);
   }
 
+  /**
+   * Plot the ambient baseline FFT
+   * @param data
+   */
   function plotBaseline(data) {
     if (!ambientEl || !data) return;
 
