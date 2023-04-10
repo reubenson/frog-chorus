@@ -18,9 +18,8 @@
     colors
   } from './lib/store'
   import { longpress } from './lib/actions';
-  import './app.css'
+  import './app.css';
   import hess_diagram from './assets/hess_diagram.jpeg';
-  // import frog_jumping from './assets/frogjumping.gif';
   import frogmail from './assets/frogmail.gif';
   import grass from './assets/profolia-grass.gif';
   import { onMount } from 'svelte';
@@ -30,15 +29,14 @@
   window.addEventListener('hashchange', handleUrlUpdate);
 
   function scheduleSleep() {
-    const minutes = 60 * 1000;
-    const duration = 5 * minutes;
+    const minutes = val => val * 60 * 1000;
+    const duration = minutes(30);
 
     clearTimeout(sleepTimeout);
     sleepTimeout = setTimeout(goToSleep, duration);
   }
 
   function goToSleep() {
-    console.log('going to sleep');
     $FROGS.forEach(frog => frog.sleep());
     audio.stop();
   }
@@ -52,7 +50,6 @@
     const isActive = document.visibilityState === 'visible';
 
     if (isActive) {
-      console.log('clearing timeout', );
       clearTimeout(sleepTimeout);
     } else {
       scheduleSleep();
