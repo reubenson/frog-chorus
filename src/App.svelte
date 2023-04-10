@@ -6,6 +6,7 @@
   import NAV from './lib/Nav.svelte';
   import FROG from './lib/Frog.svelte';
   import {
+    audio,
     handleStart,
     hasStarted,
     FROGS,
@@ -23,18 +24,47 @@
   import frogmail from './assets/frogmail.gif';
   import grass from './assets/profolia-grass.gif';
   import { onMount } from 'svelte';
+
+  let sleepTimeout;
   
   window.addEventListener('hashchange', handleUrlUpdate);
+
+  function scheduleSleep() {
+    const minutes = 60 * 1000;
+    const duration = 5 * minutes;
+
+    clearTimeout(sleepTimeout);
+    sleepTimeout = setTimeout(goToSleep, duration);
+  }
+
+  function goToSleep() {
+    console.log('going to sleep');
+    $FROGS.forEach(frog => frog.sleep());
+    audio.stop();
+  }
 
   function handleLongpress() {
     toggleOnDebug();
     handleStart();
   }
 
+  function handleVisibilityChange() {
+    const isActive = document.visibilityState === 'visible';
+
+    if (isActive) {
+      console.log('clearing timeout', );
+      clearTimeout(sleepTimeout);
+    } else {
+      scheduleSleep();
+    }
+  }
+
   onMount(() => {
     if (document.location.search.includes('debug')) {
       toggleOnDebug();
     }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
   });
 </script>
 

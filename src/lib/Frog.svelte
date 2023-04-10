@@ -21,6 +21,7 @@
   export let baselineRolloff;
   export let chirpProbability;
   export let detuneAmount;
+  export let isSleeping;
   let fftEl, convolutionEl, ambientEl;
   let ampFontsize = 10;
   let environmentVolumeLevel = 0;
@@ -150,30 +151,26 @@
   }
 
   $: {
+    updateMetrics(amplitude);
+
     if ($DEBUG_ON) {
       plotInputFFT(directInputFFT);
       plotConvolution(convolutionFFT);
       plotBaseline(ambientFFT);
-      updateMetrics(amplitude);
       updateEagernessCurve(eagerness);
       updateShynessCurve(shyness);
     }
 
-    if (!showBaselineLoading) showNoisyWarning = false;
+    if (!showBaselineLoading) showNoisyWarning = false && !isSleeping;
   }
 
   onMount(() => {
-    if ($DEBUG_ON) {
-      // plotEagernessCurve();
-      // plotShynessCurve();
-    }
-
     // indicate to user that they're in a noisy environment
     const noisyTimeout = 10000;
     setTimeout(() => {
       // use showBaselineLoading as an indicator that ambient threshold has not been met
       if (showBaselineLoading) {
-        showNoisyWarning = true;
+        showNoisyWarning = true && !isSleeping;
       } else {
         showExitMessage = true;
       }
@@ -187,9 +184,13 @@
     <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div>
     <!-- circle inside frog representing its detecting of other frogs -->
     <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-opacity duration-500 {frogSignalDetected ? 'opacity-100' : 'opacity-0'}">&xcirc;</div>
-    <p>Your frog is listening ...</p>
+    {#if !isSleeping}
+      <p>Your frog is listening ...</p>
+    {:else}
+      <p>Your frog has gone to sleep due to inactvity. Please refresh this page to bring it back.</p>
+    {/if}
     <div class="border-bottom border-[1px] border-{colors.main} m-auto mt-4 width-full transition-transform duration-75" style="transform: scaleX({environmentVolumeLevel}%)"></div>
-    {#if showNoisyWarning}
+    {#if showNoisyWarning && !isSleeping}
       <p>(But it seems like it's a bit noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {:else if showExitMessage} 
       <p>(When you're done, you can refresh page or click the logo at the top to turn your frog off)</p>

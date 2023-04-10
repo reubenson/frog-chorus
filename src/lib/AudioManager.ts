@@ -7,13 +7,13 @@ import { log } from './utils';
  */
 export class AudioConfig {
   input: MediaStreamAudioSourceNode;
-  input2: MediaStreamAudioSourceNode;
   analyser: AnalyserNode;
   ctx: AudioContext;
   canvas: HTMLCanvasElement;
   deviceId: string;
   groupId: string;
   sampleRate: number;
+  stream: MediaStream;
 
   /**
    * Initialize Audio class instance
@@ -30,6 +30,12 @@ export class AudioConfig {
       .then(() => {
         console.log('audio start complete');
       });
+  }
+
+  public stop() {
+    this.stream
+      .getTracks()
+      .forEach(track => track.stop());
   }
 
   /**
@@ -76,6 +82,7 @@ export class AudioConfig {
       .then((stream: any) => {
         const input = ctx.createMediaStreamSource(stream);
 
+        this.stream = stream;
         this.input = input;
         this.analyser = ctx.createAnalyser();
         this.analyser.fftSize = FFT_SIZE;

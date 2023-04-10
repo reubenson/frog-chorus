@@ -79,6 +79,8 @@ export class Frog {
   chirpProbability: number;
   detuneAmount: number;
   ambienceMetrics: Object;
+  chirpInterval: number;
+  isSleeping: boolean;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -99,6 +101,7 @@ export class Frog {
       rolloff: [],
       centroid: []
     };
+    this.isSleeping = false;
   }
 
   /**
@@ -114,7 +117,7 @@ export class Frog {
     this.setUpAnalysers();
 
     // evaluate whether to chirp or not on every tick
-    setInterval(this.tryChirp.bind(this), attemptRate);
+    this.chirpInterval = setInterval(this.tryChirp.bind(this), attemptRate);
 
     this.hasInitialized = true;
 
@@ -127,7 +130,7 @@ export class Frog {
    * A loud environment with non-frog sounds will increase shyness.
    */
   public updateState() {
-    if (!this.hasInitialized) return;
+    if (!this.hasInitialized || this.isSleeping) return;
 
     this.analyseInputSignal();
 
@@ -147,6 +150,11 @@ export class Frog {
     this.updateEagerness();
 
     this.lastUpdated = this.currentTimestamp;
+  }
+
+  public sleep() {
+    this.isSleeping = true;
+    clearInterval(this.chirpInterval);
   }
 
   /**
