@@ -218,6 +218,8 @@ export class Frog {
       callback: features => {
         const isAnalysingAmbience = !!this.ambientTimeout;
 
+        console.log('meyda:  Date.now()', Date.now());
+
         this.audioFeatures = Object.assign(features);
 
         if (isAnalysingAmbience) {
