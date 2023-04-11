@@ -35,6 +35,7 @@ export let inputSourceNode;
 export const hash = writable('');
 
 const historyState = { foo: 'bar' };
+let startTime = Date.now();
 
 export const handleUrlUpdate = () => {
   const h = window.document.location.hash;
@@ -66,6 +67,7 @@ function handleUpdates(frog: Frog) {
   FROGS.update(val => [...val, frog]);
   setInterval(() => {
     // to do: investigate how this behavior changes when browser tab is inactive
+    console.log('updating frog state', Date.now() - startTime);
     frog.updateState();
 
     // update UI props
