@@ -228,6 +228,8 @@ export class Frog {
         if (isAnalysingAmbience) {
           const { spectralRolloff, spectralCentroid } = features;
 
+          console.log('meyda:', Date.now() - this.startTime);
+
           spectralRolloff && this.ambienceMetrics.rolloff.push(spectralRolloff);
           spectralCentroid && this.ambienceMetrics.centroid.push(spectralCentroid);
         }
