@@ -82,6 +82,7 @@ export class Frog {
   chirpInterval: number;
   isSleeping: boolean;
   startTime: number;
+  lastAttemptTime: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -104,6 +105,7 @@ export class Frog {
     };
     this.isSleeping = false;
     this.startTime = Date.now();
+    this.lastAttemptTime = this.startTime;
   }
 
   /**
@@ -559,10 +561,16 @@ export class Frog {
   }
 
   /**
-   * Determine whether the frog should chirp, or not
+   * Determine whether the frog should chirp, or not.
+   * Probability is calculated over a volume of time:
+   * likelihood of chirp per second.
+   * This is done to account for variable attempt rate, especially when interval timers are subject to throttling by the browser (e.g. when screen is inactive)
    */
   private tryChirp() {
-    this.chirpProbability = this.determineChirpProbability();
+    const time = Date.now();
+    const probabilityInterval = 1; // (unit: seconds)
+
+    this.chirpProbability = this.determineChirpProbability() * (time - this.lastAttemptTime) / probabilityInterval;
     const shouldChirp = testProbability(this.chirpProbability);
 
     if (shouldChirp) {
@@ -571,5 +579,7 @@ export class Frog {
       // reset eagerness to 0 so that the frog does not immediately chirp at the next invocation
       this.eagerness = 0;
     }
+
+    this.lastAttemptTime = time;
   }
 }
