@@ -63,7 +63,7 @@
     const fontMax = 72;
 
     ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
-    environmentVolumeLevel = Math.min(((amp + 110) / 80) * 100, 100); // roughly map it to a percentage
+    environmentVolumeLevel = Math.min(((amp + 90) / 80) * 100, 100); // roughly map it to a percentage
     loudnessFontsize = fontMin + (loudness / 20) * fontMax; 
   }
 

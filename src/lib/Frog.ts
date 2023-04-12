@@ -136,7 +136,6 @@ export class Frog {
    * A loud environment with non-frog sounds will increase shyness.
    */
   public updateState() {
-    console.log('updateState', Date.now() - this.startTime);
     if (!this.hasInitialized || this.isSleeping) return;
 
     this.analyseInputSignal();
@@ -227,7 +226,6 @@ export class Frog {
 
         this.audioFeatures = Object.assign(features);
 
-        console.log('meyda:', Date.now() - this.startTime);
         this.updateStateWithThrottle();
 
         if (isAnalysingAmbience) {
