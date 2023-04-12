@@ -39,7 +39,7 @@ import type { MeydaAnalyzer } from 'meyda';
 import Meyda from 'meyda';
 import _ from 'lodash';
 import type { AudioConfig } from './AudioManager';
-import { FFT_SIZE, chirpAttemptRate, highpassFilterFrequency, inputSourceNode, loudnessThreshold, rateOfLosingShyness } from './store';
+import { FFT_SIZE, chirpAttemptRate, highpassFilterFrequency, inputSamplingInterval, inputSourceNode, loudnessThreshold, rateOfLosingShyness } from './store';
 import { log, processFFT, calculateAmplitude, testProbability } from './utils';
 
 let idCounter = 0;
@@ -83,6 +83,7 @@ export class Frog {
   isSleeping: boolean;
   startTime: number;
   lastAttemptTime: number;
+  updateStateWithThrottle: Function;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -106,6 +107,7 @@ export class Frog {
     this.isSleeping = false;
     this.startTime = Date.now();
     this.lastAttemptTime = this.startTime;
+    this.updateStateWithThrottle = _.throttle(this.updateState, inputSamplingInterval);
   }
 
   /**
@@ -229,7 +231,7 @@ export class Frog {
           const { spectralRolloff, spectralCentroid } = features;
 
           console.log('meyda:', Date.now() - this.startTime);
-          this.updateState();
+          this.updateStateWithThrottle();
 
           spectralRolloff && this.ambienceMetrics.rolloff.push(spectralRolloff);
           spectralCentroid && this.ambienceMetrics.centroid.push(spectralCentroid);
