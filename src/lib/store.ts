@@ -7,7 +7,7 @@ import spring_peeper from '../assets/spring-peeper.mp3';
 // Important parameters for refining behavior
 export const inputSamplingInterval = 80; // time (ms) between audio analysis events
 export const FFT_SIZE = 1024;
-export const highpassFilterFrequency = 200; // (units: hz)
+export const highpassFilterFrequency = 1000; // (units: hz)
 export const loudnessThreshold = 21; // arbitrary units, following Meyda lib
 export const chirpAttemptRate = 250; // how often to attempt chirping (units: ms)
 export const rateOfLosingShyness = 0.05;
@@ -67,7 +67,6 @@ function handleUpdates(frog: Frog) {
   FROGS.update(val => [...val, frog]);
   setInterval(() => {
     // to do: investigate how this behavior changes when browser tab is inactive
-    console.log('updating frog state', Date.now() - startTime);
     frog.updateState();
 
     // update UI props

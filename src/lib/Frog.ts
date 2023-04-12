@@ -81,6 +81,7 @@ export class Frog {
   ambienceMetrics: Object;
   chirpInterval: number;
   isSleeping: boolean;
+  startTime: number;
 
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
     this.id = ++idCounter;
@@ -102,6 +103,7 @@ export class Frog {
       centroid: []
     };
     this.isSleeping = false;
+    this.startTime = Date.now();
   }
 
   /**
@@ -303,6 +305,7 @@ export class Frog {
     console.log('this.baselineRolloff', this.baselineRolloff);
     const averageRolloff = _.mean(this.ambienceMetrics.rolloff);
     console.log('averageRolloff', averageRolloff);
+    console.log('this.ambienceMetrics.rolloff', this.ambienceMetrics.rolloff);
     this.baselineRolloff = averageRolloff;
 
     // this.baselineFlatness = this.audioFeatures?.spectralFlatness;
@@ -325,8 +328,9 @@ export class Frog {
    * other frogs in the acoustic environment
    */
   private establishAmbientFFT() {
+    const convolvedInputHasSettled = Date.now() - this.startTime > this.sampleDuration * 1000;
     // early return if ambientFFT has already been set
-    if (this.ambientFFT) return;
+    if (this.ambientFFT || !convolvedInputHasSettled) return;
     
     if (this.loudness > this.loudnessThreshold) {
       clearTimeout(this.ambientTimeout);
