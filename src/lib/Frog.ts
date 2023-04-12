@@ -570,7 +570,7 @@ export class Frog {
     const time = Date.now();
     const probabilityInterval = 1; // (unit: seconds)
 
-    this.chirpProbability = this.determineChirpProbability() * (time - this.lastAttemptTime) / probabilityInterval;
+    this.chirpProbability = this.determineChirpProbability() * ((time - this.lastAttemptTime) / 1000) / probabilityInterval;
     const shouldChirp = testProbability(this.chirpProbability);
 
     if (shouldChirp) {
