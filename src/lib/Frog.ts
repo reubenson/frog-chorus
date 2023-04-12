@@ -227,11 +227,12 @@ export class Frog {
 
         this.audioFeatures = Object.assign(features);
 
+        console.log('meyda:', Date.now() - this.startTime);
+        this.updateStateWithThrottle();
+
         if (isAnalysingAmbience) {
           const { spectralRolloff, spectralCentroid } = features;
 
-          console.log('meyda:', Date.now() - this.startTime);
-          this.updateStateWithThrottle();
 
           spectralRolloff && this.ambienceMetrics.rolloff.push(spectralRolloff);
           spectralCentroid && this.ambienceMetrics.centroid.push(spectralCentroid);
