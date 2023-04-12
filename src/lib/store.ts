@@ -68,7 +68,8 @@ function handleUpdates(frog: Frog) {
   setInterval(() => {
     // to do: investigate how this behavior changes when browser tab is inactive
 
-    frog.updateState();
+    // temporary move to meyda callback
+    // frog.updateState();
 
     // update UI props
     // todo: more performant to selectively update props?
