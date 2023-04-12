@@ -67,6 +67,7 @@ function handleUpdates(frog: Frog) {
   FROGS.update(val => [...val, frog]);
   setInterval(() => {
     // to do: investigate how this behavior changes when browser tab is inactive
+
     frog.updateState();
 
     // update UI props

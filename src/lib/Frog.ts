@@ -132,6 +132,7 @@ export class Frog {
    * A loud environment with non-frog sounds will increase shyness.
    */
   public updateState() {
+    console.log('updateState', Date.now() - this.startTime);
     if (!this.hasInitialized || this.isSleeping) return;
 
     this.analyseInputSignal();
@@ -542,9 +543,7 @@ export class Frog {
   }
 
   /**
-   * Determine the likelihood that the frog should chirp.
-   * Currently a simple calculation, but curves can be adjusted
-   * to yield different frog chorus behaviors
+   * Determine the likelihood that the frog should chirp
    * @returns number - between 0 and 1
    */
   private determineChirpProbability() {
