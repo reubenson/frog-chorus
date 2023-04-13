@@ -4,6 +4,7 @@
   import { DEBUG_ON, colors } from './store';
   import { onMount } from 'svelte';
   import { Frog } from './Frog';
+  import spring_peeper from '../assets/spring-p.png';
   
   export let amplitude;
   export let convolutionAmplitude;
@@ -181,11 +182,20 @@
 <div class="frog-item w-full max-w-lg h-full m-auto rounded-md">
   <div class="text-center relative h-50">
     <!-- frog glyph -->
-    <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div>
+    <!-- <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div> -->
+    <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 relative">
+      <div class="rounded-full overflow-hidden">
+        <img src="{spring_peeper}" alt="spring peeper">
+        <!-- background animation to indicate when chirping -->
+        <div class="-z-10 rounded-full blur-xl w-full h-full absolute bottom-0 left-0 top-0 transition-colors duration-500 bg-{isCurrentlySinging ? 'emerald-700' : ''}"></div>
+        <div class="absolute bottom-0 left-0 right-0 top-0 rounded-full border-black duration-700 border-{frogSignalDetected ? '8': '2'}"></div>
+        <div class="invisible hidden border-black border-2 border-8"></div>
+      </div>
+    </div>
     <!-- circle inside frog representing its detecting of other frogs -->
-    <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-opacity duration-500 {frogSignalDetected ? 'opacity-100' : 'opacity-0'}">&xcirc;</div>
+    <!-- <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-opacity duration-500 {frogSignalDetected ? 'opacity-100' : 'opacity-0'}">&xcirc;</div> -->
     {#if !isSleeping}
-      <p>Your frog is listening ...</p>
+      <p>Your frog (a <a href="https://en.wikipedia.org/wiki/Spring_peeper" target="_blank">spring peeper</a> ) is listening ...</p>
     {:else}
       <p>Your frog has gone to sleep due to inactvity. Please refresh this page to bring it back.</p>
     {/if}
@@ -197,7 +207,8 @@
     {/if}
   </div>
   <!-- if only one frog: -->
-  <div class="-z-10 w-screen h-screen fixed bottom-0 left-0 top-0 transition-colors duration-500 bg-{isCurrentlySinging ? 'emerald-700' : ''}"></div>
+  <!-- background layer -->
+  <!-- <div class="-z-10 w-screen h-screen fixed bottom-0 left-0 top-0 transition-colors duration-500 bg-{isCurrentlySinging ? 'emerald-700' : ''}"></div> -->
   <div class="frog-debug-panel mt-4">
     {#if $DEBUG_ON}
     <div class="debug-panel">

@@ -80,7 +80,7 @@
     {#if !$hasStarted}
       {#if !$showError}
         <p>
-          <span class="italic">Frog Chorus</span> is an audio-based web-application that allows your laptop or mobile device to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank">chorus of frogs in the wild</a>. This app currently utilizes the sound of a <a href="https://en.wikipedia.org/wiki/Spring_peeper" target="_blank">spring peeper</a> to chirp.
+          <span class="italic">Frog Chorus</span> is an audio-based web-application that allows your laptop or mobile device to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank">chorus of frogs in the wild</a>.
           <!-- TODO: Try expanding UI to show video here? -->
         </p>
         <p>
