@@ -30,7 +30,7 @@
 
   function scheduleSleep() {
     const minutes = val => val * 60 * 1000;
-    const duration = minutes(30);
+    const duration = minutes(1);
 
     clearTimeout(sleepTimeout);
     sleepTimeout = setTimeout(goToSleep, duration);
@@ -46,6 +46,11 @@
     handleStart();
   }
 
+  /**
+   * Use visibility change to trigger auto-shutoff.
+   * This app is intended to be "actively" used, and not left on while
+   * the user is performing other activities on their device
+   */
   function handleVisibilityChange() {
     const isActive = document.visibilityState === 'visible';
 
