@@ -507,23 +507,23 @@ export class Frog {
    */
   private playSample() {
     const shouldPauseWhilePlaying = true; // remove after debugging
-
+    
     if (shouldPauseWhilePlaying) {
       this.isCurrentlySinging = true;
-      this.meydaAnalyser.stop();
-
+      // this.meydaAnalyser.stop();
+      
       setTimeout(() => {
         this.isCurrentlySinging = false;
-        this.meydaAnalyser.start();
+        // this.meydaAnalyser.start();
       }, 2 * this.sampleDuration * 1000);
     }
-
+    
     // Reference: https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode
     const source = this.audioConfig.ctx.createBufferSource();
-
+    
     source.buffer = this.buffer;
     source.connect(this.audioConfig.ctx.destination);
-
+    
     source.detune.value = this.detuneAmount;
     source.start();
   }

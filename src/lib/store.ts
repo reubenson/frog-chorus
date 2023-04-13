@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import NoSleep from 'nosleep.js';
 import { writable } from 'svelte/store';
 import { AudioConfig } from './AudioManager';
 import { Frog } from './Frog';
@@ -20,7 +21,7 @@ export const errorMessage = writable('');
 // UX
 export const colors = {
   background: 'emerald-900',
-  main: 'emerald-200'
+  main: 'emerald-100'
 };
 
 export const frogsCount = 1;
@@ -66,8 +67,6 @@ export const handleError = (msg) => {
 function handleUpdates(frog: Frog) {
   FROGS.update(val => [...val, frog]);
   setInterval(() => {
-    // to do: investigate how this behavior changes when browser tab is inactive
-
     // temporary move to meyda callback
     // frog.updateState();
 
@@ -79,6 +78,10 @@ function handleUpdates(frog: Frog) {
 
 export const handleStart = () => {
   // TODO: add GA event for click
+
+  const noSleep = new NoSleep();
+
+  noSleep.enable();
 
   return audio
     .start()
