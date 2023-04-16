@@ -80,4 +80,8 @@ section {
     padding-left: 1em;
     font-size: 0.9em;
   }
+
+  sup {
+    padding-left: .3em;
+  }
 }
