@@ -52,7 +52,7 @@ section {
 
   li {
     line-height: 1.5em;
-    padding: 10px;
+    padding: 15px;
   }
 
   li::before {
@@ -71,17 +71,25 @@ section {
     text-align: center;
   }
 
-  blockquote {
+  figure {
     border-bottom: none;
     border-right: none;
     border-top: none;
     border-width: 2px;
     margin-top: 1em;
     padding-left: 1em;
-    font-size: 0.9em;
+    font-size: .9em;
   }
 
   sup {
     padding-left: .3em;
+  }
+
+  .footnote {
+    font-size: .9em;
+
+    sup {
+      padding-right: 1em;
+    }
   }
 }

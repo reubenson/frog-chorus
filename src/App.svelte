@@ -116,13 +116,13 @@
           <p>In a gathering of five or more people with smartphones running this page in a browser, consider the following actions.</p>
           <ul>
             <li>
-              Walk in a slow, undirected manner with your frog until you find a good place to set your phone down.
+              Walk in a slow, undirected manner with your phone until you find a good place to set your it down.
             </li>
             <li>
-              Walk around between the phones, imagining traversing the "web" of phones.
+              Walk around, and between the phones, imagining traversing the "web" of phones.
             </li>
             <li>
-              Try to pick out the sound of your frog, apart from the other frogs. Walk further away from your phone, noticing how it becomes harder to pick your frog out from the chorus.
+              Try to pick out the sound of your phone, apart from the other phone. Walk further away from your phone, noticing how it becomes harder to pick your phone out from the chorus.
             </li>
             <li>
               Instead of a web, imagine a pond encircling the cluster of phones from a further distance. Imagine each phone sitting in that pond sending ripples back and forth. Notice how content the phones seem just chirping amongst themselves.
