@@ -15,20 +15,63 @@
   width: .4em;
 }
 
-section p {
-  margin-top: 1em;
+body {
+  p, li {
+    letter-spacing: -.3px;
+  }
 }
 
-section figure {
+/* section p {
   margin-top: 1em;
-}
+} */
 
-section a {
+/* section figure {
+  margin-top: 1em;
+} */
+
+/* section a {
   text-decoration: underline;
+} */
+
+section {
+  p {
+    margin-top: 1em;
+  }
+
+  figure {
+    margin-top: 1em;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    line-height: 1.5em;
+    padding: 10px;
+  }
+
+  li::before {
+    content: '𓆏';
+    font-size: .8em;
+    margin-right: .5em;
+  }
+
+  /* li {
+    display: block;
+  } */
+
+  /* list-style; */
 }
 
 /* styles for essay */
 .info {
+  letter-spacing: -.3px;
+
   h1 {
     font-size: 2em;
     text-align: center;
@@ -39,7 +82,8 @@ section a {
     border-right: none;
     border-top: none;
     border-width: 2px;
+    margin-top: 1em;
     padding-left: 1em;
-    font-size: 1.1em;
+    font-size: 0.9em;
   }
 }

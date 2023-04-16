@@ -27,7 +27,6 @@
   "dependencies": {
     "@types/meyda": "^4.3.3",
     "lodash": "^4.17.21",
-    "markdown-to-html": "^0.0.13",
     "markdown-to-html-converter": "^1.0.4",
     "meyda": "^5.6.0",
     "nosleep.js": "^0.12.0"

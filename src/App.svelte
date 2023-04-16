@@ -24,7 +24,6 @@
   import frogmail from './assets/frogmail.gif';
   import grass from './assets/profolia-grass.gif';
   import { onMount } from 'svelte';
-  // import { source } from './assets/essay';
 
   let sleepTimeout;
   
@@ -107,8 +106,32 @@
           For an introduction to current topics around the ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
         </p>
         <p>
-          This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank">Felix Hess</a> (1941 - 2022). To learn more about his installation work and the origins of this project, click <span class="inline-block rotate-[50deg]">&#10008</span> in the top left corner.
+          This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank">Felix Hess</a> (1941 - 2022). To learn more the origins of this project and intent of this project, click <span class="inline-block rotate-[50deg]">&#10008</span> in the top left corner.
         </p>
+        <p>
+          For a suggestion on how to use this app:
+        </p>
+        <div>
+          <!-- <h2>Suggestion for Performance</h2> -->
+          <p>In a gathering of five or more people with smartphones running this page in a browser, consider the following actions.</p>
+          <ul>
+            <li>
+              Walk in a slow, undirected manner with your frog until you find a good place to set your phone down.
+            </li>
+            <li>
+              Walk around between the phones, imagining traversing the "web" of phones.
+            </li>
+            <li>
+              Try to pick out the sound of your frog, apart from the other frogs. Walk further away from your phone, noticing how it becomes harder to pick your frog out from the chorus.
+            </li>
+            <li>
+              Instead of a web, imagine a pond encircling the cluster of phones from a further distance. Imagine each phone sitting in that pond sending ripples back and forth. Notice how content the phones seem just chirping amongst themselves.
+            </li>
+            <li>
+              After a while, consider leaving the pond, either bringing your phone with you, or not.
+            </li>
+          </ul>
+        </div>
       {:else}
         <div>
           <!-- <header>Error</header> -->
@@ -152,21 +175,22 @@
     <p>
       The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">Web Audio AnalyserNode</a>.
     </p> -->
-    <p>This project is open-source. For more information, check out the source code at <a href="https://github.com/reubenson/frog-chorus" target="_blank">GitHub</a>.</p>
+    <div class="border-[1px] border-{colors.main} mt-4"></div>
+    <p>This project is open-source. For a technical introduction to this project, check it out on <a href="https://github.com/reubenson/frog-chorus" target="_blank">GitHub</a>.</p>
     <p>For more information about the developer of this project, visit <a href="https://reubenson.com" target="_blank">https://reubenson.com</a>.</p>
-    <h6 class="mt-4 text-lg">References</h6>
+    <h6 class="mt-4 text-lg">Additional References for Felix Hess</h6>
     <ol class="list-disc">
-      <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank">A brief historical introduction to Felix on BLDG Blog</a></li>
+      <!-- <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank">A brief historical introduction to Felix on BLDG Blog</a></li> -->
       <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank">Artist talk by Felix Hess in 2010 (YouTube)</a></li>
       <li class="list-inside"><a href="https://www.kehrerverlag.com/en/felix-hess-light-as-air-978-3-933257-65-9" target="_blank">"Light as Air"</a> monograph published by Kehrer Verlag</li>
-      <li class="list-inside"><a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" target="_blank" class="italic">Electronic Sound Creatures by Felix Hess</a></li>
+      <!-- <li class="list-inside"><a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" target="_blank" class="italic">Electronic Sound Creatures by Felix Hess</a></li> -->
       <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank">Felix's audio recordings, recently reissued by Basic Function</a></li>
     </ol>
     <img class="mt-8 width-full" src="{frogmail}" alt="froggy email">
-    <p>Feedback, suggestions, and inquiries may be directed <a href="mailto:frogchor@gmail.com">to frogchor@gmail.com</a></p>
+    <p>Feedback, suggestions, and inquiries may be directed to <a href="mailto:frogchor@gmail.com">frogchor@gmail.com</a></p>
   </Section>
   <div class="-z-20 bg-{colors.background} fixed left-0 right-0 top-0 bottom-0"></div>
 
   <!-- embed tailwind color styles -->
-  <span class="invisble bg-emerald-900 bg-emerald-800 bg-emerald-700 bg-emerald-600 bg-emerald-500 bg-emerald-400 bg-emerald-300 bg-emerald-200 bg-emerald-100 text-emerald-900 text-emerald-800 text-emerald-700 text-emerald-600 text-emerald-500 text-emerald-400 text-emerald-300 text-emerald-200 text-emerald-100 border-emerald-900 border-emerald-800 border-emerald-700 border-emerald-600 border-emerald-500 border-emerald-400 border-emerald-300 border-emerald-200 border-emerald-100 from-emerald-900 from-emerald-800 from-emerald-700 from-emerald-600 from-emerald-500 from-emerald-400 from-emerald-300 from-emerald-200 from-emerald-100"></span>
+  <span class="invisble bg-emerald-900 bg-emerald-800 bg-emerald-700 bg-emerald-600 bg-emerald-500 bg-emerald-400 bg-emerald-300 bg-emerald-200 bg-emerald-100 text-emerald-900 text-emerald-800 text-emerald-700 text-emerald-600 text-emerald-500 text-emerald-400 text-emerald-300 text-emerald-200 text-emerald-100 border-emerald-900 border-emerald-800 border-emerald-700 border-emerald-600 border-emerald-500 border-emerald-400 border-emerald-300 border-emerald-200 border-emerald-100 from-emerald-900 from-emerald-800 from-emerald-700 from-emerald-600 from-emerald-500 from-emerald-400 from-emerald-300 from-emerald-200 from-emerald-100 divide-emerald-900 divide-emerald-800 divide-emerald-700 divide-emerald-600 divide-emerald-500 divide-emerald-400 divide-emerald-300 divide-emerald-200 divide-emerald-100"></span>
 </main>
