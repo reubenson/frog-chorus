@@ -5,6 +5,7 @@
   import Section from './lib/Section.svelte';
   import NAV from './lib/Nav.svelte';
   import FROG from './lib/Frog.svelte';
+  import ESSAY from './lib/Essay.svelte';
   import {
     audio,
     handleStart,
@@ -23,6 +24,7 @@
   import frogmail from './assets/frogmail.gif';
   import grass from './assets/profolia-grass.gif';
   import { onMount } from 'svelte';
+  // import { source } from './assets/essay';
 
   let sleepTimeout;
   
@@ -128,14 +130,17 @@
     {/if}
   </Section>
 
-  <Section hashString='#info'>
+  <Section hashString='#info' customClass="info">
+    <!-- <SvelteMarkdown {source} /> -->
+    <ESSAY />
+
   <div class="text-base">
-    <p>
+    <!-- <p>
       This project is a translation of a series of art installations by the late Dutch sound artist Felix Hess. The first such installation was developed in 1982, with a set of fifty robots, each outfitted with a microphone, speaker, and circuitry to allow each robot to listen to its environment and make sounds in the manner of a frog in a frog chorus. 
-    </p>
+    </p> -->
     <!-- blockquote -->
     <!-- The acoustic communications between animals like frogs, cicadas, or grasshoppers often give rise to group concerts or choruses. Both order and chaos appear to be present in the resulting sound patterns, and one may notice various rhythms and wavelike movements. Similar group processes can be realised with machines built specifically for such a purpose. - Felix Hess -->
-    <p>
+    <!-- <p>
       Hess' original designs for accomplishing this were are relatively straightfoward, in which the robot-frog's sounding behavior is predicated on "eagerness" and "shyness". When eagerness is high relative to shyness, the robot will emit a chirp, which is then "heard" by the other robots. Each robot will increase its eagerness when it hears another's chirp, and will increase its shyness when it hears non-chirping sounds. Through this simple set of rules, a dynamic chorus of sounds emerges, which is highly sensitive to environmental dynamics, much like if one were encountering a group of frogs in the wild.
     </p>
     <figure>
@@ -146,7 +151,7 @@
     </figure>
     <p>
       The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">Web Audio AnalyserNode</a>.
-    </p>
+    </p> -->
     <p>This project is open-source. For more information, check out the source code at <a href="https://github.com/reubenson/frog-chorus" target="_blank">GitHub</a>.</p>
     <p>For more information about the developer of this project, visit <a href="https://reubenson.com" target="_blank">https://reubenson.com</a>.</p>
     <h6 class="mt-4 text-lg">References</h6>

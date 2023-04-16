@@ -26,3 +26,20 @@ section figure {
 section a {
   text-decoration: underline;
 }
+
+/* styles for essay */
+.info {
+  h1 {
+    font-size: 2em;
+    text-align: center;
+  }
+
+  blockquote {
+    border-bottom: none;
+    border-right: none;
+    border-top: none;
+    border-width: 2px;
+    padding-left: 1em;
+    font-size: 1.1em;
+  }
+}

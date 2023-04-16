@@ -2,6 +2,7 @@
   import { fade } from 'svelte/transition';
   import { hash } from './store';
 
+  export let customClass = '';
   export let hashString;
   export let showSection = false;
 
@@ -10,6 +11,6 @@
   });
 </script>
 
-<section transition:fade class="{showSection ? '' : 'hidden'} max-w-xl m-auto pl-6 pr-6 text-left mt-20 mb-16 p-8 rounded-lg">
+<section transition:fade class="{showSection ? '' : 'hidden'} {customClass} max-w-xl m-auto pl-6 pr-6 text-left mt-20 mb-16 p-8 rounded-lg">
   <slot></slot>
 </section>
