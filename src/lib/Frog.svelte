@@ -167,7 +167,7 @@
 
   onMount(() => {
     // indicate to user that they're in a noisy environment
-    const noisyTimeout = 10000;
+    const noisyTimeout = 30000;
     setTimeout(() => {
       // use showBaselineLoading as an indicator that ambient threshold has not been met
       if (showBaselineLoading) {
