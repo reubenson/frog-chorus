@@ -179,15 +179,15 @@
   });
 </script>
 
-<div class="frog-item w-full max-w-lg h-full m-auto rounded-md overflow-hidden">
+<div class="frog-item w-full max-w-lg h-full m-auto rounded-md">
   <div class="text-center relative h-50">
     <!-- frog glyph -->
     <!-- <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div> -->
-    <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 relative">
+    <div class="mt-12 mb-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 relative">
       <div class="rounded-full overflow-hidden">
         <img src="{spring_peeper}" alt="spring peeper">
         <!-- background animation to indicate when chirping -->
-        <div class="-z-10 rounded-full blur-xl w-full h-full absolute bottom-0 left-0 top-0 transition-colors duration-700 bg-{isCurrentlySinging ? 'emerald-700' : ''}"></div>
+        <div class="-z-10 rounded-full blur-xl w-full h-full absolute bottom-0 left-0 top-0 transition-colors duration-700 bg-{isCurrentlySinging ? 'emerald-300' : 'emerald-300'}"></div>
         <div class="absolute bottom-0 left-0 right-0 top-0 rounded-full border-{colors.main} duration-700 border-{frogSignalDetected ? '8': '2'}"></div>
         <div class="invisible hidden border-black border-2 border-8"></div>
       </div>
@@ -199,7 +199,7 @@
     {:else}
       <p>Your frog has gone to sleep due to inactvity. Please refresh this page to bring it back.</p>
     {/if}
-    <div class="border-bottom border-[1px] border-{colors.main} m-auto mt-4 width-full transition-transform duration-75" style="transform: scaleX({environmentVolumeLevel}%)"></div>
+    <div class="border-bottom border-[1px] m-auto mt-4 width-full transition-transform duration-75" style="transform: scaleX({environmentVolumeLevel}%)"></div>
     {#if showNoisyWarning && !isSleeping}
       <p>(But it seems like it's a bit noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {:else if showExitMessage} 

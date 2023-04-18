@@ -22,7 +22,15 @@ export const errorMessage = writable('');
 export const colors = {
   // background: 'emerald-900',
   background: 'transparent',
-  main: 'emerald-900'
+  main: 'emerald-900',
+  darkMode: {
+    main: 'emerald-100',
+    background: 'emerald-900'
+  },
+  lightMode: {
+    main: 'emerald-900',
+    background: 'emerald-300'
+  }
 };
 
 export const frogsCount = 1;

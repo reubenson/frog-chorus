@@ -9,19 +9,19 @@
     });
     handleClose();
   }
+
+  let mainColor;
+
+  $: {
+    mainColor = $hasStarted ? colors.darkMode.main : colors.lightMode.main;
+  }
 </script>
 
-<nav class="z-10 h-32 text-{colors.main} top-0 body-font fixed w-screen bg-{colors.background}d">
-  <header class="text-xl text-left h-20 bg-{colors.background}">
+<nav class="text-{mainColor} w-screen relative">
+  <header class="text-xl text-left h-20 bg-{colors.background} mb-10">
     <ul
       class="pt-10"
-      class:open
     >
-      <li class="left-6 absolute">
-        {#if !$showCloseIcon}
-        <!-- <a href="#info">𝒾𝓃𝒻𝑜</a> -->
-        {/if}
-      </li>
       <li class="text-center text-4xl">
         <!-- https://www.fancytextpro.com/CursiveTextGenerator -->
         <!-- <a href="">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
@@ -38,16 +38,16 @@
     </ul>
     {#if $showCloseIcon}
       <button 
-        class="absolute left-6 top-4"
+        class="left-6 top-4 fixed"
         on:click={handleClick}>&#10008</button>
     {:else}
       <button 
-        class="absolute left-6 top-4 rotate-[50deg]"
+        class="left-6 top-4 rotate-[50deg] fixed"
         on:click={handleClick}
         >
           <a href="#info">&#10008</a>
       </button>
     {/if}
   </header>
-  <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-b from-{colors.background} to-transparent"></div>
+  <!-- <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-b from-{colors.background} to-transparent"></div> -->
 </nav>
