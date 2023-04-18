@@ -97,4 +97,18 @@ section {
     /* emerald-900 */
     border-color: #064e3b; 
   }
+
+  .no-border {
+    border: none;
+    padding-left: 0;
+  }
+
+  .content-divider {
+    margin: auto;
+    text-align: center;
+  }
+
+  hr {
+    border-color: #064e3b;
+  }
 }
