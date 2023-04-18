@@ -94,6 +94,7 @@ section {
   }
 
   figure {
+    margin: 2em auto;
     /* emerald-900 */
     border-color: #064e3b; 
   }
@@ -116,5 +117,14 @@ section {
 
   hr {
     border-color: #064e3b;
+  }
+  
+  @media screen and (min-width: 1024px) {
+    /* margin-left: -100px !important; */
+    max-width: 800px !important;
+
+    figure {
+      width: 600px;
+    }
   }
 }
