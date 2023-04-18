@@ -187,12 +187,12 @@
       <ol class="list-disc">
         <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank">Felix's audio recordings, recently reissued by Basic Function</a></li>
         <!-- <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank">A brief historical introduction to Felix on BLDG Blog</a></li> -->
-        <li class="list-inside"><a href="https://www.kehrerverlag.com/en/felix-hess-light-as-air-978-3-933257-65-9" target="_blank">"Light as Air"</a> monograph published by Kehrer Verlag</li>
+        <li class="list-inside"><a href="https://www.kehrerverlag.com/en/felix-hess-light-as-air-978-3-933257-65-9" target="_blank" class="italic">Light as Air</a> monograph published by Kehrer Verlag</li>
         <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank">Artist talk by Felix Hess in 2010 (YouTube)</a></li>
         <!-- <li class="list-inside"><a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" target="_blank" class="italic">Electronic Sound Creatures by Felix Hess</a></li> -->
       </ol>
-      <img class="mt-8 width-full" src="{frogmail}" alt="froggy email">
-      <p>Feedback, suggestions, and inquiries may be directed to <a href="mailto:frogchor@gmail.com">frogchor@gmail.com</a></p>
+      <img class="mt-8 w-full" src="{frogmail}" alt="froggy email">
+      <p>Feedback, bug reports, and general inquiries are very welcome at <a href="mailto:frogchor@gmail.com">frogchor@gmail.com</a></p>
     </Section>
   </div>
   

@@ -120,9 +120,6 @@ section {
   }
   
   @media screen and (min-width: 1024px) {
-    /* margin-left: -100px !important; */
-    max-width: 800px !important;
-
     figure {
       width: 600px;
     }
