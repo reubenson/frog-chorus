@@ -70,7 +70,7 @@
 
   function plotEagernessCurve() {
     // functionPlot library is loaded dynamically in debug mode
-    const functionPlot = _.get(window, 'functionPlot', () => {});
+    const functionPlot = _.get(window, 'functionPlot', (x) => {});
     const box = eagernessPlotEl?.getBoundingClientRect();
 
     if (!box) return;
@@ -101,7 +101,7 @@
   }
 
   function plotShynessCurve() {
-    const functionPlot = _.get(window, 'functionPlot', () => {});
+    const functionPlot = _.get(window, 'functionPlot', (x) => {});
     const box = shynessPlotEl?.getBoundingClientRect();
 
     if (!box) return;
@@ -179,7 +179,7 @@
   });
 </script>
 
-<div class="frog-item w-full max-w-lg h-full m-auto rounded-md">
+<div class="frog-item w-full max-w-lg h-full m-auto rounded-md overflow-hidden">
   <div class="text-center relative h-50">
     <!-- frog glyph -->
     <!-- <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div> -->
@@ -188,7 +188,7 @@
         <img src="{spring_peeper}" alt="spring peeper">
         <!-- background animation to indicate when chirping -->
         <div class="-z-10 rounded-full blur-xl w-full h-full absolute bottom-0 left-0 top-0 transition-colors duration-700 bg-{isCurrentlySinging ? 'emerald-700' : ''}"></div>
-        <div class="absolute bottom-0 left-0 right-0 top-0 rounded-full border-black duration-700 border-{frogSignalDetected ? '8': '2'}"></div>
+        <div class="absolute bottom-0 left-0 right-0 top-0 rounded-full border-{colors.main} duration-700 border-{frogSignalDetected ? '8': '2'}"></div>
         <div class="invisible hidden border-black border-2 border-8"></div>
       </div>
     </div>

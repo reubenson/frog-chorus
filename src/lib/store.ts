@@ -20,8 +20,9 @@ export const errorMessage = writable('');
 
 // UX
 export const colors = {
-  background: 'emerald-900',
-  main: 'emerald-100'
+  // background: 'emerald-900',
+  background: 'transparent',
+  main: 'emerald-900'
 };
 
 export const frogsCount = 1;

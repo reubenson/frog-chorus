@@ -8,9 +8,9 @@
 
 /* styles for frog glpyh */
 .header-frog {
-  bottom: -1.6em;
-  font-size: 9px;
-  left: -1.5em;
+  bottom: -1.8em;
+  font-size: 8px;
+  left: -1.3em;
   min-width: .4em;
   width: .4em;
 }
@@ -91,5 +91,10 @@ section {
     sup {
       padding-right: 1em;
     }
+  }
+
+  figure {
+    /* emerald-900 */
+    border-color: #064e3b; 
   }
 }
