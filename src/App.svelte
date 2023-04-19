@@ -23,7 +23,7 @@
   import hess_diagram from './assets/hess_diagram.jpeg';
   import frogmail from './assets/frogmail.gif';
   import frog_gif from './assets/frog03.gif';
-  import grass from './assets/profolia-grass.gif';
+  import button_background from './assets/moonrise_pond.gif';
   import { onMount } from 'svelte';
 
   let sleepTimeout;
@@ -94,18 +94,16 @@
           <p>
             It uses your device's built-in speaker and microphone to operate, without the aid of technologies like wi-fi and bluetooth. Due to the nature of the app, you should run this software with a group of friends, with each person operating their own "frog".
           </p>
-          <p>
-            Click <span class="font-sans">𝓼𝓽𝓪𝓻𝓽</span> below to begin!
-          </p>
+          <!-- https://bridgemom.tripod.com/Dragonfly.index.html -->
           <button
-            class="border-black border-2 text-white p-2 mt-6 mb-6 tracking-widest m-auto block font-sans w-48 border-black ring-2"
+            class="border-black border-2 text-emerald-100 p-2 mt-4 mb-6 tracking-[.2em] m-auto block font-mono h-[70px] w-[80px] border-black ring-2 bg-right-top rounded-full"
             on:click|once|capture|trusted={handleStart}
             use:longpress
             on:longpress={handleLongpress}
-            style="background-image: url('{grass}')">
-            <!-- START -->
+            style="background-image: url('{button_background}'); background-size: cover; background-repeat: no-repeat; cursor: url({frog_gif}), auto">
             <!-- 𝓈𝓉𝒶𝓇𝓉 -->
-            <span class="select-nonee">𝓼𝓽𝓪𝓻𝓽</span>
+            <!-- <span class="">𝓼𝓽𝓪𝓻𝓽</span> -->
+            start
           </button>
           <!-- <p>
             For an introduction to current topics around the ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
