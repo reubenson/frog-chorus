@@ -16,9 +16,17 @@
 }
 
 body {
+  /* overflow-y: hidden;
+  height: 100vh; */
+
   p, li {
     letter-spacing: -.3px;
   }
+}
+
+main {
+  /* height: calc(100vh - 80px); */
+  /* height: 100vh; */
 }
 
 /* section p {
@@ -106,6 +114,7 @@ section {
     img {
       border-width: 1px;
       border-color: #064e3b;
+      box-shadow: 2px 2px 2px #064e3b;
       padding: 1em;
     }
   }

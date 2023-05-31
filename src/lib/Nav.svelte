@@ -17,7 +17,7 @@
   }
 </script>
 
-<nav class="text-{mainColor} w-screen relative">
+<nav class="text-{mainColor} w-screen">
   <header class="text-xl text-left h-20 bg-{colors.background} mb-10">
     <ul
       class="pt-10"
@@ -38,11 +38,11 @@
     </ul>
     {#if $showCloseIcon}
       <button 
-        class="left-6 top-4 fixed"
+        class="left-2 top-0 fixed"
         on:click={handleClick}>&#10008</button>
     {:else}
       <button 
-        class="left-6 top-4 rotate-[50deg] fixed"
+        class="left-2 top-0 rotate-[50deg] fixed"
         on:click={handleClick}
         >
           <a href="#info">&#10008</a>

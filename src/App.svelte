@@ -88,15 +88,14 @@
       {#if !$hasStarted}
         {#if !$showError}
           <p>
-            <span class="italic">Frog Chorus</span> is an audio-based web-application that allows your laptop or mobile device to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank">chorus of frogs in the wild</a>.
-            <!-- TODO: Try expanding UI to show video here? -->
+            <span class="italic">Frog Chorus</span> is an audio-based web-app that allows your mobile device or laptop to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank">chorus of frogs in the wild</a>.
           </p>
           <p>
             It uses your device's built-in speaker and microphone to operate, without the aid of technologies like wi-fi and bluetooth. Due to the nature of the app, you should run this software with a group of friends, with each person operating their own "frog".
           </p>
           <!-- https://bridgemom.tripod.com/Dragonfly.index.html -->
           <button
-            class="border-black border-2 text-emerald-100 p-2 mt-4 mb-6 tracking-[.2em] m-auto block font-mono h-[70px] w-[80px] border-black ring-2 bg-right-top rounded-full"
+            class="border-black font-bold border-2 text-emerald-100 p-2 mt-4 mb-6 tracking-[.2em] m-auto block font-mono h-[70px] w-[80px] border-black ring-2 bg-right-top rounded-full"
             on:click|once|capture|trusted={handleStart}
             use:longpress
             on:longpress={handleLongpress}
@@ -119,16 +118,16 @@
             <p>In a gathering of five or more people with smartphones running this page in a browser, consider the following actions.</p>
             <ul>
               <li>
-                Walk in a slow, undirected manner with your phone until you find a good place to set your it down.
+                Walk in a slow, undirected manner with your frog until you find a good place to set it down.
               </li>
               <li>
-                Walk around, and between the phones, imagining traversing the "web" of phones.
+                Walk around, and between the frogs, imagining traversing the "web" of frogs.
               </li>
               <li>
-                Try to pick out the sound of your phone, apart from the other phone. Walk further away from your phone, noticing how it becomes harder to pick your phone out from the chorus.
+                Try to pick out the sound of your frog, apart from the other frogs. Wander further away from your frog, until you can no longer distinguish which which frog is yours.
               </li>
               <li>
-                Instead of a web, imagine a pond encircling the cluster of phones from a further distance. Imagine each phone sitting in that pond sending ripples back and forth. Notice how content the phones seem just chirping amongst themselves.
+                Instead of a web, imagine a pond encircling the cluster of frogs from a further distance. Imagine each frog sitting in that pond sending ripples back and forth. Notice how content the frogs seem just chirping amongst themselves.
               </li>
               <li>
                 After a while, consider leaving the pond, either bringing your phone with you, or not.
@@ -182,8 +181,8 @@
       <p>This project is open-source. For a technical introduction to this project, check it out on <a href="https://github.com/reubenson/frog-chorus" target="_blank">GitHub</a>.</p>
       <p>For more information about the developer of this project, visit <a href="https://reubenson.com" target="_blank">https://reubenson.com</a>.</p>
       <h6 class="mt-4 text-lg">Additional References for Felix Hess</h6>
-      <ol class="list-disc">
-        <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank">Felix's audio recordings, recently reissued by Basic Function</a></li>
+      <ol class="">
+        <li class="list-inside"><a href="https://basicfunction-releases.bandcamp.com/album/frog-night" target="_blank">Felix's audio recordings</a>, recently reissued by Basic Function</li>
         <!-- <li class="list-inside"><a href="https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/" target="_blank">A brief historical introduction to Felix on BLDG Blog</a></li> -->
         <li class="list-inside"><a href="https://www.kehrerverlag.com/en/felix-hess-light-as-air-978-3-933257-65-9" target="_blank" class="italic">Light as Air</a> monograph published by Kehrer Verlag</li>
         <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank">Artist talk by Felix Hess in 2010 (YouTube)</a></li>

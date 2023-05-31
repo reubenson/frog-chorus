@@ -1,12 +1,20 @@
 <script>
   import convertToHTML from 'markdown-to-html-converter';
   import hess_diagram from '../assets/hess_diagram.jpeg';
+  import frog_comp from '../assets/frogcomp_riso.png';
 
   const content = `
+  <figure class="no-border">
+    <img src="${frog_comp}" alt="frog at the computer">
+    <figcaption class="text-sm text-center">
+      <!-- image adapted from https://frogina.tripod.com/ -->
+    </figcaption>
+  </figure>
+
   In 1982, the Dutch physicist and sound artist, Felix Hess, presented the first of his [sound installations based on frogs](https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/). In these installations, consisting of a set of over thirty robots, each robot-frog is outfitted with a microphone, speaker, and circuitry to allow it to listen to its environment and chirp together in the manner of a [frog chorus](https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html).
 
   <figure class="no-border">
-    <img src="${hess_diagram}" alt="Flow diagram of the frog behavior">
+    <img src="${hess_diagram}" alt="flow diagram of the frog behavior">
     <figcaption class="text-sm text-center">
       Flow diagram of robot-frog behavior, <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic" target="_blank">Electronic Sound Creatures</a>
     </figcaption>
