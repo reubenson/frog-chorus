@@ -1,4 +1,4 @@
-export let source = `
+export const source = `
 # We Are Sitting In A Pond
 
 In 1982, the Dutch physicist and sound artist, Felix Hess, presented the first of his sound installations based on frogs, in which each, in a set of over thirty robots, is outfitted with a microphone, speaker, and circuitry to allow it to listen to its environment and chirp together in the manner of a frog chorus. 
@@ -42,4 +42,4 @@ In a gathering of five or more people:
 Walk in a slow undirected manner with your frog until you find a good place to set your phone down. Walk around between the phones, imagining traversing the ‘web’ of phones. Try to pick out the sound of your frog, apart from the other frogs. Walk further away from your phone, noticing how it becomes harder to pick your frog out from the crowd. Instead of a web, imagine a pond encircling the cluster of phones from a further distance. Imagine each phone sitting in that pond sending ripples back and forth. Notice how content the phones seem just chirping amongst themselves. After a while, consider either leaving the pond, or leaving your phone indefinitely.
 
 
-`;
+`

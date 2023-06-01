@@ -9,10 +9,10 @@ export default {
       wider: '0.05em',
       widest: '0.4em'
     },
-    extend: {},
+    extend: {}
   },
   content: ['./src/**/*.{svelte,js,ts}'], // for unused CSS
   variants: {
-    extend: {},
-  },
+    extend: {}
+  }
 }
