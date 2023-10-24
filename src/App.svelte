@@ -26,6 +26,8 @@
   import button_background from './assets/moonrise_pond.gif';
   import { onMount } from 'svelte';
 
+  const timestamp = (new Date).toLocaleDateString();
+
   let sleepTimeout;
   
   window.addEventListener('hashchange', handleUrlUpdate);
@@ -84,7 +86,7 @@
   <NAV />
   <div class="main-content">
     <Section hashString=''>
-      <marquee behavior="scroll" direction="left" class="mt-2 {$hasStarted ? 'hidden' : ''}">&#128679; work in progress &#128679;</marquee>
+      <marquee behavior="scroll" direction="left" class="mt-2 {$hasStarted ? 'hidden' : ''}">&#128679; Under Construction (last updated: {timestamp}) &#128679;</marquee>
       {#if !$hasStarted}
         {#if !$showError}
           <p>
