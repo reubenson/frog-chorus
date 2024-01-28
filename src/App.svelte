@@ -86,7 +86,6 @@
   <NAV />
   <div class="main-content">
     <Section hashString=''>
-      <marquee behavior="scroll" direction="left" class="mt-2 {$hasStarted ? 'hidden' : ''}">&#128679; Under Construction (last updated: {timestamp}) &#128679;</marquee>
       {#if !$hasStarted}
         {#if !$showError}
           <p>
