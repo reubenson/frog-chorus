@@ -187,7 +187,7 @@
       <div class="rounded-full overflow-hidden">
         <img src="{spring_peeper}" alt="spring peeper">
         <!-- background animation to indicate when chirping -->
-        <div class="-z-10 rounded-full blur-xl w-full h-full absolute bottom-0 left-0 top-0 transition-colors duration-700 bg-{isCurrentlySinging ? colors.darkMode.main : colors.darkMode.background}"></div>
+        <div class="-z-10 rounded-full blur-xl w-full h-full absolute bottom-0 left-0 top-0 transition-colors duration-700 bg-{isCurrentlySinging ? colors.darkMode.main : colors.darkMode.background} blur-fix"></div>
         <div class="absolute bottom-0 left-0 right-0 top-0 rounded-full border-{colors.main} duration-700 border-{frogSignalDetected ? '8': '2'}"></div>
         <div class="invisible hidden border-black border-2 border-8"></div>
       </div>
