@@ -55,7 +55,6 @@
   function plotBaseline(data) {
     if (ambientEl && data && showBaselineLoading) {
       drawFFT(data, ambientEl);
-      showBaselineLoading = false;
     }
   }
 
@@ -65,7 +64,7 @@
 
     ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
     environmentVolumeLevel = Math.min(((amp + 90) / 80) * 100, 100); // roughly map it to a percentage
-    loudnessFontsize = fontMin + (loudness / 20) * fontMax; 
+    loudnessFontsize = fontMin + (loudness / 20) * fontMax;
   }
 
   function plotEagernessCurve() {
@@ -154,6 +153,11 @@
   $: {
     updateMetrics(amplitude);
 
+    if (ambientFFT && showBaselineLoading) {
+      showBaselineLoading = false;
+      showNoisyWarning = false && !isSleeping;
+    }
+
     if ($DEBUG_ON) {
       plotInputFFT(directInputFFT);
       plotConvolution(convolutionFFT);
@@ -161,13 +165,11 @@
       updateEagernessCurve(eagerness);
       updateShynessCurve(shyness);
     }
-
-    if (!showBaselineLoading) showNoisyWarning = false && !isSleeping;
   }
 
   onMount(() => {
     // indicate to user that they're in a noisy environment
-    const noisyTimeout = 30000;
+    const noisyTimeout = 15000;
     setTimeout(() => {
       // use showBaselineLoading as an indicator that ambient threshold has not been met
       if (showBaselineLoading) {
