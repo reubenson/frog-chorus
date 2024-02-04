@@ -6,7 +6,7 @@ import { Frog } from './Frog'
 import spring_peeper from '../assets/spring-peeper.mp3'
 
 // Important parameters for refining behavior
-export const inputSamplingInterval = 80 // time (ms) between audio analysis events
+export const inputSamplingInterval = 200 // time (ms) between audio analysis events
 export const FFT_SIZE = 1024
 export const highpassFilterFrequency = 1000 // (units: hz)
 export const loudnessThreshold = 25 // arbitrary units, following Meyda lib
