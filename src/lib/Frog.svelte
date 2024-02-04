@@ -6,7 +6,14 @@
   import { Frog } from './Frog';
   import spring_peeper from '../assets/spring-p.png';
   
+  // props defined by FrogProps interface
   export let amplitude;
+  export let isSleeping;
+  export let frogSignalDetected;
+  export let isCurrentlySinging;
+
+  // props defined by FrogPropsAll interface
+  // (only used if DEBUG_ON is true)
   export let convolutionAmplitude;
   export let shyness;
   export let eagerness;
@@ -14,19 +21,15 @@
   export let convolutionFFT;
   export let ambientFFT;
   export let audioFeatures;
-  export let isCurrentlySinging;
-  export let frogSignalDetected;
   export let loudnessThreshold;
   export let loudness;
   export let baselineCentroid;
   export let baselineRolloff;
   export let chirpProbability;
   export let detuneAmount;
-  export let isSleeping;
+
   let fftEl, convolutionEl, ambientEl;
-  let ampFontsize = 10;
   let environmentVolumeLevel = 0;
-  let loudnessFontsize = 10;
   let showBaselineLoading = true;
   let showNoisyWarning = false;
   let showExitMessage = false;
@@ -59,12 +62,7 @@
   }
 
   function updateMetrics(amp) {
-    const fontMin = 0;
-    const fontMax = 72;
-
-    ampFontsize = fontMin + ((amp + 110) / 80) * fontMax;
     environmentVolumeLevel = Math.min(((amp + 90) / 80) * 100, 100); // roughly map it to a percentage
-    loudnessFontsize = fontMin + (loudness / 20) * fontMax;
   }
 
   function plotEagernessCurve() {
@@ -130,26 +128,6 @@
     });
   }
 
-  function updateEagernessCurve(eagerness) {
-    plotEagernessCurve();
-
-    const annotationEl = document.body.querySelector('#eagerness-curve .annotations text');
-
-    if (!annotationEl) return;
-
-    // annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateEagernessFactor(eagerness), 2)}`;
-  }
-
-  function updateShynessCurve(shyness) {
-    plotShynessCurve();
-
-    const annotationEl = document.body.querySelector('#shyness-curve .annotations text');
-
-    if (!annotationEl) return;
-
-    // annotationEl.innerHTML = `y = ${_.round(Frog.prototype.calculateShynessFactor(shyness), 2)}`;
-  }
-
   $: {
     updateMetrics(amplitude);
 
@@ -162,8 +140,8 @@
       plotInputFFT(directInputFFT);
       plotConvolution(convolutionFFT);
       plotBaseline(ambientFFT);
-      updateEagernessCurve(eagerness);
-      updateShynessCurve(shyness);
+      plotEagernessCurve();
+      plotShynessCurve();
     }
   }
 
@@ -183,8 +161,6 @@
 
 <div class="frog-item w-full max-w-lg h-full m-auto rounded-md">
   <div class="text-center relative h-50">
-    <!-- frog glyph -->
-    <!-- <div class="mt-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000">&#78223;</div> -->
     <div class="mt-12 mb-12 text-8xl font-normal p-4 opacity-80 transition-colors duration-1000 relative">
       <div class="rounded-full overflow-hidden">
         <img src="{spring_peeper}" alt="spring peeper">
@@ -195,7 +171,6 @@
       </div>
     </div>
     <!-- circle inside frog representing its detecting of other frogs -->
-    <!-- <div style="font-size: {ampFontsize}px; transform: translateY(calc(40px + {-ampFontsize/2}px));" class="absolute m-auto left-0 right-0 top-0 blur-sm transition-opacity duration-500 {frogSignalDetected ? 'opacity-100' : 'opacity-0'}">&xcirc;</div> -->
     {#if !isSleeping}
       <p>Your frog (a <a href="https://en.wikipedia.org/wiki/Spring_peeper" target="_blank">spring peeper</a> ) is listening ...</p>
     {:else}
@@ -208,9 +183,6 @@
       <p>(When you're done, you can refresh page or click the logo at the top to turn your frog off)</p>
     {/if}
   </div>
-  <!-- if only one frog: -->
-  <!-- background layer -->
-  <!-- <div class="-z-10 w-screen h-screen fixed bottom-0 left-0 top-0 transition-colors duration-500 bg-{isCurrentlySinging ? 'emerald-700' : ''}"></div> -->
   <div class="frog-debug-panel mt-4">
     {#if $DEBUG_ON}
     <div class="debug-panel">

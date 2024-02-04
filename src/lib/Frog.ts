@@ -39,12 +39,46 @@ import type { MeydaAnalyzer } from 'meyda'
 import Meyda from 'meyda'
 import _ from 'lodash'
 import type { AudioConfig } from './AudioManager'
-import { FFT_SIZE, chirpAttemptRate, highpassFilterFrequency, inputSamplingInterval, inputSourceNode, loudnessThreshold, rateOfLosingShyness } from './store'
-import { log, processFFT, calculateAmplitude, testProbability } from './utils'
+import {
+  DEBUG_ON,
+  FFT_SIZE,
+  chirpAttemptRate,
+  highpassFilterFrequency,
+  inputSamplingInterval,
+  inputSourceNode,
+  loudnessThreshold,
+  rateOfLosingShyness
+} from './store'
+import { log, calculateAmplitude, testProbability } from './utils'
 
 let idCounter = 0
+let debugOn = false
 
-export class Frog {
+interface FrogProps {
+  amplitude: number
+  isCurrentlySinging: boolean
+  frogSignalDetected: boolean
+  isSleeping: boolean
+}
+
+interface FrogPropsAll extends FrogProps {
+  convolutionAmplitude: number
+  shyness: number
+  eagerness: number
+  directInputFFT: Float32Array
+  convolutionFFT: Float32Array
+  ambientFFT: Float32Array
+  audioFeatures: object
+  loudnessThreshold: number
+  loudness: number
+  baselineCentroid: number
+  baselineRolloff: number
+  chirpProbability: number
+  detuneAmount: number
+}
+
+export class Frog implements FrogPropsAll {
+  amplitude: number
   id: number
   audioFilepath: string
   audioConfig: AudioConfig
@@ -64,7 +98,6 @@ export class Frog {
   convolutionAnalyser: AnalyserNode
   directInputAnalyser: AnalyserNode
   meydaAnalyser: MeydaAnalyzer
-  amplitude: number
   loudness: number
   convolutionAmplitude: number
   convolver: ConvolverNode
@@ -78,14 +111,17 @@ export class Frog {
   ambientTimeout: number
   chirpProbability: number
   detuneAmount: number
-  ambienceMetrics: Object
-  chirpInterval: number
+  ambienceMetrics: object
+  chirpTimer: NodeJS.Timeout
   isSleeping: boolean
   startTime: number
   lastAttemptTime: number
   updateStateWithThrottle: Function
 
   constructor (audioConfig: AudioConfig, audioFilepath: string) {
+    DEBUG_ON.subscribe(val => {
+      debugOn = val
+    })
     this.id = ++idCounter
     this.audioConfig = audioConfig
     this.audioFilepath = audioFilepath
@@ -115,7 +151,7 @@ export class Frog {
    * feed in order to determine the level of match in the frequency spectrum and thereby calcuate
    * the frog's shyness and eagerness
    */
-  public async initialize () {
+  public async initialize (): Promise<void> {
     const attemptRate = chirpAttemptRate
 
     await this.fetchAudioBuffer()
@@ -123,11 +159,9 @@ export class Frog {
     this.setUpAnalysers()
 
     // evaluate whether to chirp or not on every tick
-    this.chirpInterval = setInterval(this.tryChirp.bind(this), attemptRate)
+    this.chirpTimer = setInterval(this.tryChirp.bind(this), attemptRate)
 
     this.hasInitialized = true
-
-    log('frog initialized!', this)
   }
 
   /**
@@ -135,7 +169,7 @@ export class Frog {
    * Hearing other frogs will increase eagerness.
    * A loud environment with non-frog sounds will increase shyness.
    */
-  public updateState () {
+  public updateState (): void {
     if (!this.hasInitialized || this.isSleeping) return
 
     this.analyseInputSignal()
@@ -157,16 +191,16 @@ export class Frog {
     this.lastUpdated = this.currentTimestamp
   }
 
-  public sleep () {
+  public sleep (): void {
     this.isSleeping = true
-    clearInterval(this.chirpInterval)
+    clearInterval(this.chirpTimer)
   }
 
   /**
    * Set up the convolver node, which will use the audio sample of the frog
    * chirp to process incoming audio from the microphone
    */
-  private async createConvolver () {
+  private async createConvolver (): Promise<void> {
     this.convolver = this.audioConfig.ctx.createConvolver()
     this.convolver.normalize = false
 
@@ -186,7 +220,7 @@ export class Frog {
    *
    * Ref: https://www.w3.org/TR/2013/WD-webaudio-20131010/convolution.html
    */
-  private setUpAnalysers () {
+  private setUpAnalysers (): void {
     const smoothingConstant = 0.8 // value to be tweaked
 
     // set up direct input analyser
@@ -245,7 +279,7 @@ export class Frog {
   /**
    * Determine length of audio sample, in seconds
    */
-  private async fetchAudioBuffer () {
+  private async fetchAudioBuffer (): Promise<void> {
     await new Promise<void>(resolve => {
       const req = new XMLHttpRequest()
 
@@ -277,7 +311,7 @@ export class Frog {
    * Ref: ref: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/getFloatFrequencyData
    * To Do: try extracting more audio features (https://meyda.js.org/audio-features)
    */
-  private analyseInputSignal () {
+  private analyseInputSignal (): void {
     // todo: don't re-instantiate
     const convolutionFFT = new Float32Array(FFT_SIZE / 2)
     const directInputFFT = new Float32Array(FFT_SIZE / 2)
@@ -293,38 +327,19 @@ export class Frog {
     this.directInputFFT = directInputFFT
 
     this.loudness = this?.audioFeatures?.loudness?.total
-    // this.diffFFT = convolutionFFT.map((item, i) => {
-    //   // To Do: resolve the arbitary -60 value
-    //   return this.ambientFFT ? item - this.ambientFFT[i] - 60 : -Infinity;
-    // });
   }
 
-  private setAmbientFFT () {
+  private setAmbientFFT (): void {
     this.ambientFFT = this.convolutionFFT
     this.convolutionAmplitudeThreshold = this.convolutionAmplitude
 
-    // dynamically reset amplitude threshold to lower values as the environment gets quieter
-    // this.amplitudeThreshold = this.amplitude;
-    // this.loudnessThreshold = this.loudness;
+    // TODO?: dynamically reset amplitude threshold to lower values as the environment gets quieter
     this.baselineRolloff = this.audioFeatures?.spectralRolloff
-    console.log('this.baselineRolloff', this.baselineRolloff)
     const averageRolloff = _.mean(this.ambienceMetrics.rolloff)
-    console.log('averageRolloff', averageRolloff)
-    console.log('this.ambienceMetrics.rolloff', this.ambienceMetrics.rolloff)
     this.baselineRolloff = averageRolloff
-
-    // this.baselineFlatness = this.audioFeatures?.spectralFlatness;
-    // this.baselineSpread = this.audioFeatures?.spectralSpread;
     this.baselineCentroid = this.audioFeatures?.spectralCentroid
-    console.log('this.baselineCentroid', this.baselineCentroid)
     const averageCentroid = _.mean(this.ambienceMetrics.centroid)
-    console.log('this.ambienceMetrics.centroid', this.ambienceMetrics.centroid)
-    console.log('averageCentroid', averageCentroid)
     this.baselineCentroid = averageCentroid
-
-    // log('amplitude threshold:', this.amplitudeThreshold);
-    // log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
-    // log('kurtosis', this.audioFeatures?.spectralFlatness);
   }
 
   /**
@@ -332,7 +347,7 @@ export class Frog {
    * environment is quiet. This provides the baseline measurement to detect
    * other frogs in the acoustic environment
    */
-  private establishAmbientFFT () {
+  private establishAmbientFFT (): void {
     const convolvedInputHasSettled = Date.now() - this.startTime > this.sampleDuration * 1000
     // early return if ambientFFT has already been set
     if (this.ambientFFT || !convolvedInputHasSettled) return
@@ -354,23 +369,6 @@ export class Frog {
     this.ambientTimeout = setTimeout(() => {
       this.setAmbientFFT()
     }, 2500)
-
-    // if (this.amplitude < this.amplitudeThreshold && this.amplitude > -120) {
-    if (this.loudness < this.loudnessThreshold && this.loudness > 0) {
-      // this.ambientFFT = this.convolutionFFT;
-      // this.convolutionAmplitudeThreshold = this.convolutionAmplitude;
-
-      // // dynamically reset amplitude threshold to lower values as the environment gets quieter
-      // this.amplitudeThreshold = this.amplitude;
-      // // this.loudnessThreshold = this.loudness;
-      // this.baselineRolloff = this.audioFeatures?.spectralRolloff;
-      // this.baselineFlatness = this.audioFeatures?.spectralFlatness;
-      // this.baselineSpread = this.audioFeatures?.spectralSpread;
-      // this.baselineCentroid = this.audioFeatures?.spectralCentroid;
-      // log('amplitude threshold:', this.amplitudeThreshold);
-      // log('spectral rolloff:', this.audioFeatures?.spectralRolloff);
-      // log('kurtosis', this.audioFeatures?.spectralFlatness);
-    }
   }
 
   /**
@@ -407,7 +405,7 @@ export class Frog {
    * - Use a library like Meyda to extract more complex audio features (https://meyda.js.org/audio-features)
    * - Try statistical measurements https://www.npmjs.com/package/stat-fns
    */
-  private detectFrogSignal () {
+  private detectFrogSignal (): void {
     const convolutionPeakBin = this.findPeakBin(this.convolutionFFT)
     const ambientPeakBin = this.findPeakBin(this.ambientFFT)
 
@@ -435,21 +433,12 @@ export class Frog {
     const centroidIsSimilar = relativeCentroid < 1.0
 
     this.frogSignalDetected = convolutionMatches && hasSharpCrest && centroidIsSimilar && rolloffIsSimilar
-    if (this.frogSignalDetected) {
-      // these logs can be helpful for dialing in appropriate threshold values
-      // console.log('relativeCentroid', relativeCentroid);
-      // console.log('crest', crest);
-      // console.log('convolutionAmplitude', convolutionAmplitude);
-      console.log('deltaRolloff', deltaRolloff)
-    } else {
-      // console.log('convolutionMatches');
-    }
   }
 
   /**
    * Update the frog's "shyness", which is the frog's tendency to be silent
    */
-  private updateShyness () {
+  private updateShyness (): void {
     const rateOfIncreasingShyness = 0.8 * ((this.loudness || 0) / 40.0)
 
     // const environmentIsQuiet = this.amplitude < (this.amplitudeThreshold + 40);
@@ -474,7 +463,7 @@ export class Frog {
   /**
    * Update the frog's "eagerness", which is the tendency of the frog to chirp
    */
-  private updateEagerness () {
+  private updateEagerness (): void {
     if (this.frogSignalDetected) {
       // increase eagerness if other frogs are heard
       // TODO: make a function of amount of signal detected?
@@ -496,14 +485,14 @@ export class Frog {
    * Calculate time since the last state update, in units of seconds
    * @returns number
    */
-  private timeSinceLastUpdate () {
+  private timeSinceLastUpdate (): number {
     return (this.currentTimestamp - this.lastUpdated) / 1000
   }
 
   /**
    * Make the frog chirp, by playing audio sample
    */
-  private playSample () {
+  private playSample (): void {
     const shouldPauseWhilePlaying = true // remove after debugging
 
     if (shouldPauseWhilePlaying) {
@@ -531,7 +520,7 @@ export class Frog {
    * @param eagerness - value 0 to 1
    * @returns - 0 to 1
    */
-  public calculateEagernessFactor (eagerness) {
+  public calculateEagernessFactor (eagerness): number {
     const eagernessBaseFactor = 0.01
 
     return eagernessBaseFactor + Math.pow(eagerness, 1 / 2) * (1 - eagernessBaseFactor)
@@ -542,7 +531,7 @@ export class Frog {
    * @param shyness - value 0 to 1
    * @returns - 0 to 1
    */
-  public calculateShynessFactor (shyness) {
+  public calculateShynessFactor (shyness): number {
     return 1 - Math.pow(shyness, 2 / 3)
   }
 
@@ -550,16 +539,12 @@ export class Frog {
    * Determine the likelihood that the frog should chirp
    * @returns number - between 0 and 1
    */
-  private determineChirpProbability () {
+  private determineChirpProbability (): number {
     if (this.eagerness === 1) {
       return 1
     } else {
       return this.calculateEagernessFactor(this.eagerness) * this.calculateShynessFactor(this.shyness)
     }
-    // else { // shyness === 0
-    //   // frog may be too insensitive to other frog sounds, but at least it's not shy, so boost eagerness
-    //   return this.eagerness + 0.005;
-    // }
   }
 
   /**
@@ -568,7 +553,7 @@ export class Frog {
    * likelihood of chirp per second.
    * This is done to account for variable attempt rate, especially when interval timers are subject to throttling by the browser (e.g. when screen is inactive)
    */
-  private tryChirp () {
+  private tryChirp (): void {
     const time = Date.now()
     const probabilityInterval = 1 // (unit: seconds)
 
@@ -583,5 +568,39 @@ export class Frog {
     }
 
     this.lastAttemptTime = time
+  }
+
+  /**
+   * Handy function for returning just the props needed for rendering UI
+   * (many of these are for debug/diagnostics, not for the primary view)
+   * @returns FrogProps
+   */
+  public getProps (): FrogProps | FrogPropsAll {
+    return debugOn
+      ? {
+          amplitude: this.amplitude,
+          convolutionAmplitude: this.convolutionAmplitude,
+          shyness: this.shyness,
+          eagerness: this.eagerness,
+          directInputFFT: this.directInputFFT,
+          convolutionFFT: this.convolutionFFT,
+          ambientFFT: this.ambientFFT,
+          audioFeatures: this.audioFeatures,
+          isCurrentlySinging: this.isCurrentlySinging,
+          frogSignalDetected: this.frogSignalDetected,
+          loudnessThreshold: this.loudnessThreshold,
+          loudness: this.loudness,
+          baselineCentroid: this.baselineCentroid,
+          baselineRolloff: this.baselineRolloff,
+          chirpProbability: this.chirpProbability,
+          detuneAmount: this.detuneAmount,
+          isSleeping: this.isSleeping
+        }
+      : {
+          frogSignalDetected: this.frogSignalDetected,
+          isCurrentlySinging: this.isCurrentlySinging,
+          isSleeping: this.isSleeping,
+          amplitude: this.amplitude
+        }
   }
 }

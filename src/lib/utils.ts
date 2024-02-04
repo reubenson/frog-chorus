@@ -6,7 +6,7 @@ import { PRINT_LOGS } from './store'
  * @param message - first string
  * @param additionalMessage - optional string
  */
-export function log (message: string, additionalMessage?: any) {
+export function log (message: string, additionalMessage?: any): void {
   if (PRINT_LOGS) {
     console.log(message, additionalMessage || '')
   }
@@ -17,7 +17,7 @@ export function log (message: string, additionalMessage?: any) {
  * @param data - fft array
  * @returns number
  */
-export function calculateAmplitude (data: Float32Array) {
+export function calculateAmplitude (data: Float32Array): number {
   const fftSum = _.sum(_.map(data, item => Math.pow(10, item)))
 
   return Math.log10(fftSum) // convert back to log decibel scale;
@@ -29,13 +29,11 @@ export function calculateAmplitude (data: Float32Array) {
  * @param opts - options
  * @returns array
  */
-export function processFFT (data: Float32Array, opts: { normalize: boolean, forceMax?: number }) {
+export function processFFT (data: Float32Array, opts: { normalize: boolean, forceMax?: number }): Float32Array {
   const { normalize, forceMax } = opts
 
   // default to normalizing to -30 db
   let max = normalize ? _.max(data) || -30 : -30
-
-  // console.log('max', max);
 
   if (forceMax) max = forceMax
 
@@ -54,14 +52,12 @@ export function processFFT (data: Float32Array, opts: { normalize: boolean, forc
   })
 }
 
-export function linearToLog (data: number[]) {
+export function linearToLog (data: number[]): number[] {
   return data.map(item => {
     const newValue = Math.log10(item)
 
     if (Number.isNaN(newValue)) {
       console.error('NaN original value', item)
-    } else {
-      // console.log('this is fine', item);
     }
 
     return newValue
@@ -73,7 +69,7 @@ export function linearToLog (data: number[]) {
  * @param dataArray - fft data to be plotted
  * @param canvasElement - canvas element to plot onto
  */
-export function drawFFT (dataArray: Float32Array, canvasElement: HTMLCanvasElement) {
+export function drawFFT (dataArray: Float32Array, canvasElement: HTMLCanvasElement): void {
   const canvasCtx = canvasElement.getContext('2d')
 
   if (!canvasCtx) {
@@ -104,8 +100,7 @@ export function drawFFT (dataArray: Float32Array, canvasElement: HTMLCanvasEleme
  * @param dataArray - fft data to be plotted
  * @param canvasElement - canvas element to plot onto
  */
-export function drawHistogram (dataArray: number[], canvasElement: HTMLCanvasElement) {
-  // console.log('drawing', dataArray);
+export function drawHistogram (dataArray: number[], canvasElement: HTMLCanvasElement): void {
   const canvasCtx = canvasElement.getContext('2d')
 
   if (!canvasCtx) {
@@ -136,17 +131,15 @@ export function drawHistogram (dataArray: number[], canvasElement: HTMLCanvasEle
  * @param data - array of data to operate on
  * @param label - string to label log with
  */
-export function logMinMax (data: number[], label: string) {
+export function logMinMax (data: number[], label: string): void {
   const min = _.min(data)
   const max = _.max(data)
 
   log(`${label} min:`, min)
   log(`${label} max:`, max)
-
-  // if (!min || !max) console.error('Error processing data', data);
 }
 
-export function matchToHash (str) {
+export function matchToHash (str: string): boolean {
   const hash = window.document.location.hash
 
   return hash === `#${str}`
@@ -157,6 +150,6 @@ export function matchToHash (str) {
  * @param probability - number between 0 and 1
  * @returns boolean
  */
-export function testProbability (probability = 0) {
+export function testProbability (probability = 0): boolean {
   return probability >= Math.random()
 }
