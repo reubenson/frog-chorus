@@ -38,6 +38,7 @@ export const audio = new AudioConfig()
 export const audioFile = spring_peeper
 export const hasStarted = writable(false)
 export const DEBUG_ON = writable(false)
+export const frogInstances = []
 export const FROGS = writable([])
 export const PRINT_LOGS = writable(true)
 export const url = writable('')
@@ -45,9 +46,8 @@ export let inputSourceNode
 export const hash = writable('')
 
 const historyState = { foo: 'bar' }
-const startTime = Date.now()
 
-export const handleUrlUpdate = () => {
+export const handleUrlUpdate = (): void => {
   const h = window.document.location.hash
 
   hash.set(h)
@@ -55,12 +55,12 @@ export const handleUrlUpdate = () => {
   showCloseIcon.set(h.includes('#'))
 }
 
-export const handleClose = () => {
+export const handleClose = (): void => {
   history.pushState(historyState, null, '/')
   handleUrlUpdate() // update UI to url sta
 }
 
-export const handleError = (msg) => {
+export const handleError = (msg: string): void => {
   console.error('Rendering error to user:', msg)
   showError.set(true)
   errorMessage.set(msg)
@@ -73,19 +73,19 @@ export const handleError = (msg) => {
   }
 }
 
-function handleUpdates (frog: Frog) {
-  FROGS.update(val => [...val, frog])
+/**
+ * Update UI props
+ */
+function setUpdateInterval (): void {
   setInterval(() => {
-    // temporary move to meyda callback
-    // frog.updateState();
-
-    // update UI props
-    // todo: more performant to selectively update props?
-    FROGS.update(state => state)
+    FROGS.update(state => {
+      state = frogInstances.map(frog => frog.getProps())
+      return state
+    })
   }, inputSamplingInterval)
 }
 
-export const handleStart = async () => {
+export const handleStart = async (): Promise<void> => {
   // TODO: add GA event for click
 
   const noSleep = new NoSleep()
@@ -102,7 +102,10 @@ export const handleStart = async () => {
 
         await frog.initialize()
           .then(() => {
-            handleUpdates(frog)
+            const frogProps = frog.getProps()
+            frogInstances.push(frog)
+            FROGS.update(val => [...val, frogProps])
+            setUpdateInterval()
           })
       })
 
@@ -116,8 +119,12 @@ export const handleStart = async () => {
     })
 }
 
-export const toggleOnDebug = () => {
+export const toggleOnDebug = (): void => {
   DEBUG_ON.set(true)
+}
+
+export const sendFrogsToBed = (): void => {
+  frogInstances.forEach(frog => frog.sleep())
 }
 
 // on initialization

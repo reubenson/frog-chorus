@@ -17,6 +17,7 @@
     toggleOnDebug,
     DEBUG_ON,
     colors,
+    sendFrogsToBed
   } from './lib/store'
   import { longpress } from './lib/actions';
   import './app.css';
@@ -41,7 +42,7 @@
   }
 
   function goToSleep() {
-    $FROGS.forEach(frog => frog.sleep());
+    sendFrogsToBed();
     audio.stop();
   }
 
@@ -137,7 +138,6 @@
           </div>
         {:else}
           <div>
-            <!-- <header>Error</header> -->
             <p class="mt-4 text-base">
               There was an error setting up your frog:
             </p>
@@ -157,7 +157,6 @@
     </Section>
   
     <Section hashString='#info' customClass="info">
-      <!-- <SvelteMarkdown {source} /> -->
       <ESSAY />
   
     <div class="text-base">
