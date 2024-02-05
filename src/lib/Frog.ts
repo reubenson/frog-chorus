@@ -69,10 +69,12 @@ interface AudioFeaturesOverTime {
 }
 
 interface FrogProps {
+  id: number
   amplitude: number
   isCurrentlySinging: boolean
   frogSignalDetected: boolean
   isSleeping: boolean
+  environmentIsQuiet: boolean
 }
 
 interface FrogPropsExtended extends FrogProps {
@@ -92,8 +94,8 @@ interface FrogPropsExtended extends FrogProps {
 }
 
 export class Frog implements FrogPropsExtended {
-  amplitude: number
   id: number
+  amplitude: number
   audioFilepath: string
   audioConfig: AudioConfig
   shyness: number // 0. - 1.
@@ -116,6 +118,7 @@ export class Frog implements FrogPropsExtended {
   convolutionAmplitude: number
   convolver: ConvolverNode
   ambientFFT: Float32Array
+  environmentIsQuiet: boolean
   frogSignalDetected: boolean
   isCurrentlySinging: boolean
   audioFeatures: AudioFeatures
@@ -383,6 +386,7 @@ export class Frog implements FrogPropsExtended {
     // set ambientFFT if the environment has settled into quiet for a certain period of time
     this.ambientTimeout = setTimeout(() => {
       this.setAmbientFFT()
+      this.environmentIsQuiet = true
     }, 2500)
   }
 
@@ -612,10 +616,12 @@ export class Frog implements FrogPropsExtended {
           isSleeping: this.isSleeping
         }
       : {
+          id: this.id,
           frogSignalDetected: this.frogSignalDetected,
           isCurrentlySinging: this.isCurrentlySinging,
           isSleeping: this.isSleeping,
-          amplitude: this.amplitude
+          amplitude: this.amplitude,
+          environmentIsQuiet: this.environmentIsQuiet
         }
   }
 }
