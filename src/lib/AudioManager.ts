@@ -19,7 +19,7 @@ export class AudioConfig {
    * Initialize Audio class instance
    * @returns Promise
    */
-  public async start () {
+  public async start (): Promise<void> {
     (window as any).AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext
     this.ctx = new AudioContext()
     this.sampleRate = this.ctx.sampleRate
@@ -32,7 +32,7 @@ export class AudioConfig {
       })
   }
 
-  public stop () {
+  public stop (): void {
     this.stream
       .getTracks()
       .forEach(track => { track.stop() })
@@ -42,7 +42,7 @@ export class AudioConfig {
    * Determine the audio input device id
    * @returns Promise
    */
-  private async setInputDeviceId () {
+  private async setInputDeviceId (): Promise<void> {
     await navigator.mediaDevices.enumerateDevices()
       .then(devices => {
         const audioInputDevices = devices.filter(device => device.kind === 'audioinput')
@@ -70,7 +70,7 @@ export class AudioConfig {
    * Connect audio input to webAudio analyser and set up
    * an interval timer to measure FFT of realtime audio
    */
-  private async initializeAudio () {
+  private async initializeAudio (): Promise<void> {
     const ctx = this.ctx
     const constraints = { audio: {} }
 
@@ -92,47 +92,4 @@ export class AudioConfig {
         return await Promise.reject(err)
       })
   }
-
-  /**
-   * Analyze incoming audio and generate an FFT signature to be used
-   * to compare against other signals
-   * Note: see https://stackoverflow.com/questions/14169317/interpreting-web-audio-api-fft-results
-   * @param audio - audio elemnt with src to be analysed
-   * @param sourceNode - source node corresponding to audio
-   * @param duration - audio sample duration (seconds)
-   * @returns Float32Array
-   */
-  // public async analyseSample(
-  //   audio: HTMLAudioElement,
-  //   sourceNode: MediaElementAudioSourceNode,
-  //   duration: number
-  // ): Promise<Float32Array> {
-  //   // create analyser node
-  //   const analyserNode = this.ctx.createAnalyser();
-
-  //   analyserNode.fftSize = FFT_SIZE;
-  //   analyserNode.smoothingTimeConstant = 0.97; // this can be tweaked
-
-  //   // set up audio node network
-  //   sourceNode.connect(analyserNode);
-
-  //   // measure the FFT of the audio sample n times, at equal time intervals across the duration of the sample
-  //   const bufferLength = analyserNode.frequencyBinCount;
-  //   const fft = new Float32Array(bufferLength);
-  //   const numberOfSteps = 5; // can be tweaked
-  //   const intervalLength = Math.floor((duration * 1000) / numberOfSteps);
-
-  //   for (let index = 0; index < numberOfSteps; index++) {
-  //     await new Promise(resolve => setTimeout(resolve, intervalLength));
-  //     analyserNode.getFloatFrequencyData(fft);
-
-  //     if (_.max(fft) === -Infinity) console.warn(`issue occurred analysing sample on step ${index}`);
-  //   }
-
-  //   return fft;
-  // }
-
-  // public setCanvas(canvas: HTMLCanvasElement) {
-  //   this.canvas = canvas;
-  // }
 }
