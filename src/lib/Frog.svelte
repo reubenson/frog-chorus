@@ -176,7 +176,7 @@
     {:else}
       <p>Your frog has gone to sleep due to inactvity. Please refresh this page to bring it back.</p>
     {/if}
-    <div class="border-bottom border-[1px] m-auto mt-4 width-full transition-transform duration-75 border-{colors.darkMode.main}" style="transform: scaleX({environmentVolumeLevel}%)"></div>
+    <div class="border-bottom border-[1px] m-auto mt-4 width-full transition-transform duration-100 border-{colors.darkMode.main}" style="transform: scaleX({environmentVolumeLevel}%)"></div>
     {#if showNoisyWarning && !isSleeping}
       <p>(But it seems like it's a bit noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
     {:else if showExitMessage} 

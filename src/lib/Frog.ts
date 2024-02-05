@@ -54,6 +54,20 @@ import { log, calculateAmplitude, testProbability } from './utils'
 let idCounter = 0
 let debugOn = false
 
+interface AudioFeatures {
+  loudness: { total: number, specific: number }
+  spectralCrest: number
+  spectralRolloff: number
+  spectralCentroid: number
+  // averageRolloff: number // calculated over time, not provided by Meyda
+  // averageCentroid: number // calculated over time, not provided by Meyda
+}
+
+interface AudioFeaturesOverTime {
+  spectralRolloff: number[]
+  spectralCentroid: number[]
+}
+
 interface FrogProps {
   amplitude: number
   isCurrentlySinging: boolean
@@ -61,14 +75,14 @@ interface FrogProps {
   isSleeping: boolean
 }
 
-interface FrogPropsAll extends FrogProps {
+interface FrogPropsExtended extends FrogProps {
   convolutionAmplitude: number
   shyness: number
   eagerness: number
   directInputFFT: Float32Array
   convolutionFFT: Float32Array
   ambientFFT: Float32Array
-  audioFeatures: object
+  audioFeatures: AudioFeatures
   loudnessThreshold: number
   loudness: number
   baselineCentroid: number
@@ -77,7 +91,7 @@ interface FrogPropsAll extends FrogProps {
   detuneAmount: number
 }
 
-export class Frog implements FrogPropsAll {
+export class Frog implements FrogPropsExtended {
   amplitude: number
   id: number
   audioFilepath: string
@@ -104,20 +118,19 @@ export class Frog implements FrogPropsAll {
   ambientFFT: Float32Array
   frogSignalDetected: boolean
   isCurrentlySinging: boolean
-  audioFeatures: object
+  audioFeatures: AudioFeatures
+  audioFeaturesOverTime: AudioFeaturesOverTime
   buffer: AudioBuffer
   baselineRolloff: number
   baselineCentroid: number
   ambientTimeout: number
   chirpProbability: number
   detuneAmount: number
-  ambienceMetrics: object
   chirpTimer: NodeJS.Timeout
   isSleeping: boolean
   startTime: number
   lastAttemptTime: number
   updateStateWithThrottle: Function
-
   constructor (audioConfig: AudioConfig, audioFilepath: string) {
     DEBUG_ON.subscribe(val => {
       debugOn = val
@@ -136,9 +149,9 @@ export class Frog implements FrogPropsAll {
     this.frogSignalDetected = false
     this.isCurrentlySinging = false
     this.detuneAmount = _.random(-100, 100)
-    this.ambienceMetrics = {
-      rolloff: [],
-      centroid: []
+    this.audioFeaturesOverTime = {
+      spectralCentroid: [],
+      spectralRolloff: []
     }
     this.isSleeping = false
     this.startTime = Date.now()
@@ -192,8 +205,9 @@ export class Frog implements FrogPropsAll {
   }
 
   public sleep (): void {
-    this.isSleeping = true
+    this.meydaAnalyser.stop()
     clearInterval(this.chirpTimer)
+    this.isSleeping = true
   }
 
   /**
@@ -264,14 +278,13 @@ export class Frog implements FrogPropsAll {
         if (isAnalysingAmbience) {
           const { spectralRolloff, spectralCentroid } = features
 
-          spectralRolloff && this.ambienceMetrics.rolloff.push(spectralRolloff)
-          spectralCentroid && this.ambienceMetrics.centroid.push(spectralCentroid)
+          if (typeof spectralRolloff === 'number') this.audioFeaturesOverTime.spectralRolloff.push(spectralRolloff)
+          if (typeof spectralCentroid === 'number') this.audioFeaturesOverTime.spectralCentroid.push(spectralCentroid)
         }
       }
     })
 
     this.meydaAnalyser.start()
-
     // Debug: send convolved input through audio output
     // this.convolutionAnalyser.connect(this.audioConfig.ctx.destination);
   }
@@ -285,10 +298,10 @@ export class Frog implements FrogPropsAll {
 
       req.open('GET', this.audioFilepath, true)
       req.responseType = 'arraybuffer'
-      req.onload = () => {
+      req.onload = async () => {
         const data = req.response
 
-        this.audioConfig.ctx.decodeAudioData(data, buffer => {
+        await this.audioConfig.ctx.decodeAudioData(data, buffer => {
           this.buffer = buffer
           this.sampleDuration = buffer.duration
           log('Sample Duration:', this.sampleDuration)
@@ -334,12 +347,14 @@ export class Frog implements FrogPropsAll {
     this.convolutionAmplitudeThreshold = this.convolutionAmplitude
 
     // TODO?: dynamically reset amplitude threshold to lower values as the environment gets quieter
-    this.baselineRolloff = this.audioFeatures?.spectralRolloff
-    const averageRolloff = _.mean(this.ambienceMetrics.rolloff)
+    // this.baselineRolloff = this.audioFeatures?.spectralRolloff
+    const averageRolloff = _.mean(this.audioFeaturesOverTime.spectralRolloff)
     this.baselineRolloff = averageRolloff
-    this.baselineCentroid = this.audioFeatures?.spectralCentroid
-    const averageCentroid = _.mean(this.ambienceMetrics.centroid)
+    // this.audioFeatures.averageRolloff = averageRolloff
+    // this.baselineCentroid = this.audioFeatures?.spectralCentroid
+    const averageCentroid = _.mean(this.audioFeaturesOverTime.spectralCentroid)
     this.baselineCentroid = averageCentroid
+    // this.audioFeatures.averageCentroid = averageCentroid
   }
 
   /**
@@ -356,9 +371,9 @@ export class Frog implements FrogPropsAll {
       clearTimeout(this.ambientTimeout)
       this.ambientTimeout = null
       // to do: refactor
-      this.ambienceMetrics = {
-        rolloff: [],
-        centroid: []
+      this.audioFeaturesOverTime = {
+        spectralRolloff: [],
+        spectralCentroid: []
       }
       return
     }
@@ -377,7 +392,7 @@ export class Frog implements FrogPropsAll {
    * @param arr - expects an array of FFT values
    * @returns object
    */
-  private findPeakBin (arr: Float32Array) {
+  private findPeakBin (arr: Float32Array): { index: number, value: number } {
     const defaultValue = { index: 0, value: -Infinity }
 
     if (!arr) return defaultValue
@@ -575,7 +590,7 @@ export class Frog implements FrogPropsAll {
    * (many of these are for debug/diagnostics, not for the primary view)
    * @returns FrogProps
    */
-  public getProps (): FrogProps | FrogPropsAll {
+  public getProps (): FrogProps | FrogPropsExtended {
     return debugOn
       ? {
           amplitude: this.amplitude,
