@@ -6,7 +6,7 @@ import { Frog } from './Frog'
 import spring_peeper from '../assets/spring-peeper.mp3'
 
 // Important parameters for refining behavior
-export const inputSamplingInterval = 200 // time (ms) between audio analysis events
+export const inputSamplingInterval = 120 // time (ms) between audio analysis events
 export const FFT_SIZE = 1024
 export const highpassFilterFrequency = 1000 // (units: hz)
 export const loudnessThreshold = 25 // arbitrary units, following Meyda lib
@@ -79,9 +79,12 @@ export const handleError = (msg: string): void => {
 function setUpdateInterval (): void {
   setInterval(() => {
     FROGS.update(state => {
-      state = frogInstances.map(frog => frog.getProps())
+      // why frogInstances here
+      state = frogInstances.map(frog => ({ ...frog.getProps() }))
+      // console.log('before state', state)
       return state
     })
+    // FROGS.update(frogs => frogs.map(frog => ({ ...frog.getProps() })))
   }, inputSamplingInterval)
 }
 
