@@ -2,44 +2,13 @@
   import _ from 'lodash'
   import { drawFFT } from './utils'
   import { Frog } from './Frog'
-  // import { FROGS } from './store';
-
-  // let frog = FROGS[0]
-
-  // export let id
-  // export let chirpProbability
-  // export let detuneAmount
-  // export let eagerness
-  // export let shyness
-  // export let baselineRolloff
-  // export let baselineCentroid
-  // export let loudnessThreshold
-  // export let amplitude
-  // export let convolutionAmplitude
-  // export let loudness
-  // export let audioFeatures
-
-  // not sure if these should come from somewhere else
-  // currently these are getting defined in Frog.ts, and then passed through Frog.svelte, to here ...
-  // export let directInputFFT
-  // export let convolutionFFT
-  // export let ambientFFT
 
   let shynessPlotEl, eagernessPlotEl, fftEl, convolutionEl, ambientEl
   let showBaselineLoading = true
-
-  // FROGS.subscribe(val => {
-    // showSection = val === hashString;
-    // console.log('val', val);
-  // });
   
   export let frog;
 
   $: {
-    // if (frog.ambientFFT && showBaselineLoading) {
-    //   showBaselineLoading = false;
-    // }
-
     plotInputFFT(frog.directInputFFT);
     plotConvolution(frog.convolutionFFT);
     plotBaseline(frog.ambientFFT);

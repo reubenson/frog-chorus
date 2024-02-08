@@ -15,10 +15,6 @@
   export let frogSignalDetected;
   export let isCurrentlySinging;
 
-  // props defined by FrogPropsAll interface
-  // (only used if DEBUG_ON is true)
-  // export let convolutionAmplitude;
-  // export let ambientFFT;
   export let environmentIsQuiet;
 
   let environmentVolumeLevel = 0;
