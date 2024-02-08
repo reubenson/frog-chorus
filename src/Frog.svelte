@@ -1,10 +1,10 @@
 <script lang="ts">
   import _ from 'lodash';
   import DebugPanel from './DebugPanel.svelte';
-  import { FROGS, DEBUG_ON, colors } from './store';
+  import { FROGS, DEBUG_ON, colors } from './lib/store';
   import { onMount } from 'svelte';
-  import { Frog } from './Frog';
-  import spring_peeper from '../assets/spring-p.png';
+  import { Frog } from './lib/Frog';
+  import spring_peeper from './assets/spring-p.png';
   
   let frog = $FROGS[0]; // subscribe to FROGS and get the first frog
   

@@ -1,7 +1,7 @@
 <script>
   import convertToHTML from 'markdown-to-html-converter';
-  import hess_diagram from '../assets/hess_diagram.jpeg';
-  import frog_comp from '../assets/frogcomp_riso.png';
+  import hess_diagram from './assets/hess_diagram.jpeg';
+  import frog_comp from './assets/frogcomp_riso.png';
 
   const content = `
   ## A Brief Essay

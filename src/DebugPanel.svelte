@@ -1,7 +1,7 @@
 <script lang="ts">
   import _ from 'lodash'
-  import { drawFFT } from './utils'
-  import { Frog } from './Frog'
+  import { drawFFT } from './lib/utils'
+  import { Frog } from './lib/Frog'
 
   let shynessPlotEl, eagernessPlotEl, fftEl, convolutionEl, ambientEl
   let showBaselineLoading = true

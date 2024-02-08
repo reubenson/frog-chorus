@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { showCloseIcon, handleClose, colors, hasStarted } from "./store";
+  import { showCloseIcon, handleClose, colors, hasStarted } from "./lib/store";
 
   function handleClick() {
     window.scrollTo({

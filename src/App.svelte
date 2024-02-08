@@ -1,11 +1,11 @@
 <script lang="ts">
   import _ from 'lodash';
   import { fade } from 'svelte/transition';
-  import Tailwind from './lib/Tailwind.svelte';
-  import Section from './lib/Section.svelte';
-  import NAV from './lib/Nav.svelte';
-  import FROG from './lib/Frog.svelte';
-  import ESSAY from './lib/Essay.svelte';
+  import Tailwind from './Tailwind.svelte';
+  import Section from './Section.svelte';
+  import NAV from './Nav.svelte';
+  import FROG from './Frog.svelte';
+  import ESSAY from './Essay.svelte';
   import {
     audio,
     handleStart,

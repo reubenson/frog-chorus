@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import { hash, hasStarted, colors } from './store';
+  import { hash, hasStarted, colors } from './lib/store';
 
   export let customClass = '';
   export let hashString;
