@@ -4,6 +4,8 @@
   import frog_comp from '../assets/frogcomp_riso.png';
 
   const content = `
+  ## A Brief Essay
+
   <figure class="no-border">
     <img src="${frog_comp}" alt="frog at the computer">
     <figcaption class="text-sm text-center">
@@ -16,11 +18,13 @@
   <figure class="no-border">
     <img src="${hess_diagram}" alt="flow diagram of the frog behavior">
     <figcaption class="text-sm text-center">
-      Flow diagram of robot-frog behavior, <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic" target="_blank">Electronic Sound Creatures</a>
+      Flow diagram of robot-frog behavior. Source: <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic" target="_blank">Electronic Sound Creatures</a>
     </figcaption>
   </figure>
 
-  That same year, he published his first cassette tape of Australian frog field recordings, <italic>[Frogs 1](https://www.discogs.com/release/2383064-Felix-Hess-Frogs-1)</italic>, on the enigmatic [Taal Beeld Geluid](https://www.discogs.com/label/204315-Taal-Beeld-Geluid) tape label, better known for publishing recordings of kinetic guitar sculptures by the computational linguist [Remko Scha](https://blacktruffle.bandcamp.com/album/guitar-mural-1-feat-the-machines). Like Remko, Felix's interest seemed to lie in the emergent complexity of a dynamic system composed of simple agents. And while Remko's work on [Data-oriented Parsing](https://press.uchicago.edu/ucp/books/book/distributed/D/bo3619719.html) has been foundational to the development of large language models like GPT<sup>1</sup>, Felix's work, too, has engaged questions of how a machine can be like a living creature.
+  That same year, he published his first cassette tape of Australian frog field recordings, <italic>[Frogs 1](https://www.discogs.com/release/2383064-Felix-Hess-Frogs-1)</italic>, on the short-lived cassette label [Taal Beeld Geluid](https://www.discogs.com/label/204315-Taal-Beeld-Geluid), better known for publishing recordings of kinetic guitar sculptures by the computational linguist [Remko Scha](https://blacktruffle.bandcamp.com/album/guitar-mural-1-feat-the-machines). 
+  
+  Like Remko, Felix's interest seemed to lie in the emergent complexity of a dynamic system composed of simple agents. And while Remko's work on [Data-oriented Parsing](https://press.uchicago.edu/ucp/books/book/distributed/D/bo3619719.html) has been foundational to the development of large language models like GPT<sup>1</sup>, Felix's work, too, has engaged questions of how a machine can be like a living creature.
 
   <figure>
     > The acoustic communications between animals like frogs, cicadas, or grasshoppers often give rise to group concerts or choruses. Both order and chaos appear to be present in the resulting sound patterns, and one may notice various rhythms and wavelike movements. Similar group processes can be realised with machines built specifically for such a purpose.

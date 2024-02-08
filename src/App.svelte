@@ -93,15 +93,15 @@
             <span class="italic">Frog Chorus</span> is an audio-based web-app that allows your mobile device or laptop to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank">chorus of frogs in the wild</a>.
           </p>
           <p>
-            It uses your device's built-in speaker and microphone to operate, without the aid of technologies like wi-fi and bluetooth. Due to the nature of the app, you should run this software with a group of friends, with each person operating their own "frog".
+            This app uses your device's built-in speaker and microphone to communicate with other devices running the app, through sound only. No data is sent over the internet, and no data is stored on any server. While you <em>can</em> run this app alone, your frog will not make much sound unless you're in a relatively quiet environment with lots of other frogs (phones) around.
           </p>
-          <!-- https://bridgemom.tripod.com/Dragonfly.index.html -->
           <button
             class="border-black font-bold border-2 text-emerald-100 p-2 mt-4 mb-6 tracking-[.2em] m-auto block font-mono h-[70px] w-[80px] border-black ring-2 bg-right-top rounded-full"
             on:click|once|capture|trusted={handleStart}
             use:longpress
             on:longpress={handleLongpress}
             style="background-image: url('{button_background}'); background-size: cover; background-repeat: no-repeat; cursor: url({frog_gif}), auto">
+            <!-- button gif source: https://bridgemom.tripod.com/Dragonfly.index.html -->
             <!-- 𝓈𝓉𝒶𝓇𝓉 -->
             <!-- <span class="">𝓼𝓽𝓪𝓻𝓽</span> -->
             start
@@ -113,11 +113,11 @@
             This project is dedicated to the memory of the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank">Felix Hess</a> (1941 - 2022). To learn more the origins of this project and intent of this project, click <span class="inline-block rotate-[50deg] pl-1 pr-1">&#10008</span> in the top left corner.
           </p>
           <p>
-            For a suggestion on how to use this app:
+            <!-- A suggestion for using this app: -->
           </p>
           <div>
-            <!-- <h2>Suggestion for Performance</h2> -->
-            <p>In a gathering of five or more people with smartphones running this page in a browser, consider the following actions.</p>
+            <!-- <h3>Suggestion for Performance</h3> -->
+            <p>A suggestion for running this app: in a gathering of five or more people with smartphones running this app in a browser, consider the following actions.</p>
             <ul>
               <li>
                 Walk in a slow, undirected manner with your frog until you find a good place to set it down.
