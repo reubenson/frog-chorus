@@ -20,7 +20,7 @@
     To accomplish this, I've adapted Felix's original designs for the robot-frogs' behavior predicated on "eagerness" and "shyness". When eagerness is high relative to shyness, the robot will emit a chirp, which is then "heard" by the other robots. Each robot will increase its eagerness when it hears another's chirp, and will increase its shyness when it hears non-frog sounds. Through this simple set of rules, a dynamic chorus of singing emerges, much like if one were encountering a group of frogs in the wild.
     <!-- This project is a translation of a series of art installations by the late Dutch sound artist Felix Hess. The first such installation was developed in 1982, with a set of fifty robots, each outfitted with a microphone, speaker, and circuitry to allow each robot to listen to its environment and make sounds in the manner of a frog in a frog chorus.  -->
   </p>
-  <figure class="m-auto mt-5 mb-5">
+  <figure class="m-auto mt-5 mb-5 border-{mainColor}">
     <img src="{hess_diagram}" alt="Flow diagram of the frog behavior">
     <figcaption class="text-sm text-center">
       Flow diagram of the frog-robot behavior; source: <a href="https://isea-archives.siggraph.org/art-events/electronic-sound-creatures-by-felix-hess/" class="italic" target="_blank">Electronic Sound Creatures</a>
@@ -57,7 +57,7 @@
   </ol>
   <!-- <img class="mt-8 w-full" src="{frogmail}" alt="froggy email"> -->
   <p>Feedback, bug reports, and general inquiries are very welcome at <a href="mailto:frogchor@gmail.com">frogchor@gmail.com</a></p>
-  <figure class="m-auto mt-5 mb-5">
+  <figure class="m-auto mt-5 mb-5 border-{mainColor}">
     <img src="{frog_comp}" alt="frog at the computer">
   </figure>
 </Section>

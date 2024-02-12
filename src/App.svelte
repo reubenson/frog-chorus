@@ -41,7 +41,7 @@
     &#9888; Please enable javascript on your browser to use this app &#9888;
   </noscript>
   <Nav />
-  <header class="text-5xl text-center h-20 bg-{colors.background} mt-10 text-{mainColor}">
+  <header class="text-5xl text-center h-14 bg-{colors.background} mt-8 text-{mainColor}">
     <a href="/">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
       <span class="absolute header-frog font-bold {$hasStarted ? 'invisible' : ''}">&#78223;</span>ṳṧ
     </a>
@@ -59,8 +59,8 @@
 <style>
   /* styles for frog glpyh */
   .header-frog {
-    bottom: 0.1em;
-    font-size: 8px;
+    bottom: 0.5em;
+    font-size: 10px;
     left: -1.3em;
     min-width: .4em;
     width: .4em;
