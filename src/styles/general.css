@@ -15,7 +15,7 @@ section {
   li {
     letter-spacing: -.3px;
     line-height: 1.5em;
-    padding: 10px;
+    padding: 6px;
   }
   
   li::before {
