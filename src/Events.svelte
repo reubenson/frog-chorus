@@ -8,7 +8,11 @@
   }
   
   const upcomingEvents = events
-    .filter(event => new Date(event.date) > new Date())
+    .filter(event => {
+      console.log('event', event);
+      console.log('new Date(event.date)', new Date(event.date));
+      return new Date(event.date) > new Date()
+    })
     .map(event => {
       return {
         ...event,
@@ -18,7 +22,7 @@
 </script>
 
 <Section>
-  <h2 class="text-2xl">Upcoming Events</h2>
+  <h2 class="text-2xl mt-5">Upcoming Events</h2>
   {#if upcomingEvents.length > 0}
     <ul>
       {#each upcomingEvents as event}
@@ -32,7 +36,7 @@
   <p>There are no official upcoming events scheduled! But you can organize your own Frog Chorus event and use the suggestion below.</p>
   {/if}
 
-  <h3 class="text-xl mt-5">What to expect for a ḟԻ✺❡ ḉℏ✺Իṳṧ event</h3>
+  <h3 class="text-xl mt-5">What to expect for a Frog Chorus event</h3>
   <p>In a gathering of five or more people with smartphones running this app in a browser, consider the following actions.</p>
   <ul>
     <li>

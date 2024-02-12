@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { colors, hasStarted } from "./lib/store";
 
   let mainColor;
@@ -10,11 +11,15 @@
 
   window.addEventListener('hashchange', handleHashChange);
 
-  function handleHashChange(ev) {
+  function handleHashChange() {
     const hash = window.location.hash || '';
     activeNavItem = hash.replace('#/', '')
     console.log('activeNavItem', activeNavItem);
   }
+
+  onMount(() => {
+    handleHashChange()
+  });
 </script>
 
 <nav class="text-{mainColor} w-screen mt-5 lg:w-[50rem] m-auto top-5">
@@ -33,6 +38,8 @@
 
 <style>
   li {
+    font-family: cursive;
+    font-weight: bold;
     list-style: none;
   }
   li a {
