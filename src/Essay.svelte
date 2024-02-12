@@ -1,7 +1,12 @@
 <script>
   import convertToHTML from 'markdown-to-html-converter';
-  import hess_diagram from '../assets/hess_diagram.jpeg';
-  import frog_comp from '../assets/frogcomp_riso.png';
+  import hess_diagram from './assets/hess_diagram.jpeg';
+  
+  // const md = markdownit();
+  // import { test } from './writing/essay.md';
+
+  // const result = md.render('# markdown-it rulezz!');
+  let result = '';
 
   const content = `
   ## A Brief Essay
@@ -82,9 +87,21 @@
   let html = convertToHTML(content);
 
   html = html.replaceAll('<br/>', '');
+
+  
+  // onMount(async () => {
+  //   const response = await fetch('./writing/essay.md');
+  //   const text = await response.text();
+  //   result = md.render(text);
+  //   console.log('result', result);
+  // });
   </script>
 
 <section>
+  <!-- {@html test} -->
+  <!-- <p>
+    For an introduction to current topics around the ecology of frog choruses, check out <a href="https://www.nytimes.com/2022/04/28/science/frogs-mating-songs.html" target="_blank">Now That's What I Call Frog Mating Music</a> and <a href="https://www.nytimes.com/2023/03/27/opinion/frogs-vernal-pools-ecosystem-climate.html" target="_blank">Why Tiny Ponds and Singing Frogs Matter So Much</a>.
+  </p> -->
   {@html html}
 </section>
 

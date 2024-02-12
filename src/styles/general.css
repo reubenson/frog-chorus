@@ -1,0 +1,51 @@
+section {
+  p {
+    margin-top: 1em;
+    letter-spacing: -.3px;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  li {
+    letter-spacing: -.3px;
+    line-height: 1.5em;
+    padding: 10px;
+  }
+  
+  li::before {
+    content: '𓆏';
+    font-size: .8em;
+    margin-right: .5em;
+  }
+  
+  blockquote {
+    padding-left: 10px;
+    font-size: .9em;
+    text-align: justify;
+    letter-spacing: -.3px;
+    border-bottom: none;
+    border-right: none;
+    border-top: none;
+    border-width: 2px;
+    margin-top: 10px;
+    padding-left: 1em;
+    font-size: .9em;
+    border-color: #064e3b; 
+  }
+  
+  figure {
+    border-width: 1px;
+    border-color: #064e3b;
+    border-top: solid;
+    box-shadow: 2px 2px 2px #064e3b;
+    margin-top: 1em;
+    padding: 1em;
+    max-width: 450px;
+  }
+}
