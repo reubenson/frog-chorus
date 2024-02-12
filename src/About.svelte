@@ -17,7 +17,7 @@
     <!-- The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">Web Audio AnalyserNode</a> -->
   </p>
   <p>
-    To accomplish this, I've adapted Felix's original designs for the robot-frogs' behavior predicated on "eagerness" and "shyness". When eagerness is high relative to shyness, the robot will emit a chirp, which is then "heard" by the other robots. Each robot will increase its eagerness when it hears another's chirp, and will increase its shyness when it hears non-frog sounds. Through this simple set of rules, a dynamic chorus of singing emerges, much like if one were encountering a group of frogs in the wild.
+    To accomplish this, I've adapted Felix's original designs for the robot-frogs' behavior predicated on “eagerness” and “shyness”. When eagerness is high relative to shyness, the robot will emit a chirp, which is then "heard" by the other robots. Each robot will increase its eagerness when it hears another's chirp, and will increase its shyness when it hears non-frog sounds. Through this simple set of rules, a dynamic chorus of singing emerges, much like if one were encountering a group of frogs in the wild.
     <!-- This project is a translation of a series of art installations by the late Dutch sound artist Felix Hess. The first such installation was developed in 1982, with a set of fifty robots, each outfitted with a microphone, speaker, and circuitry to allow each robot to listen to its environment and make sounds in the manner of a frog in a frog chorus.  -->
   </p>
   <figure class="m-auto mt-5 mb-5 border-{mainColor}">
