@@ -10,7 +10,7 @@
 
   window.addEventListener('hashchange', handleHashChange);
 
-  function handleHashChange(ev) {
+  function handleHashChange() {
     const hash = window.location.hash || '';
     activeNavItem = hash.replace('#/', '')
     console.log('activeNavItem', activeNavItem);
