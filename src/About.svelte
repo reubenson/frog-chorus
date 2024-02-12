@@ -12,12 +12,12 @@
 
 <Section>
   <p>
-    This project is dedicated to the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank">Felix Hess</a> (1941 - 2022). In the 1980s and 1990s, Felix developed a series of art installations in which groups of robots communicated with each other through sound, much like a group of frogs in a chorus. In translating Felix's robot-frogs into a browser-based application, <strong>Frog Chorus</strong> allows a set of users in physical proximity to have their mobile devices <em>listen</em> and <em>sing</em> to each other as if they were frogs. 
+    This project is dedicated to the Dutch physicist and sound artist, <a href="https://simple.wikipedia.org/wiki/Felix_Hess" target="_blank">Felix Hess</a> (1941 - 2022). In the 1980s, Felix began developing a series of art installations in which groups of frog-robots communicated with each other through sound, modeled after frogs in a chorus. In translating Felix's frogs into a browser-based application, <strong>Frog Chorus</strong> allows a set of users in physical proximity to have their mobile devices <em>listen</em> and <em>sing</em> to each other as if they were frogs. 
     
     <!-- The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">Web Audio AnalyserNode</a> -->
   </p>
   <p>
-    To accomplish this, I've adapted Felix's original designs for the robot-frogs' behavior predicated on “eagerness” and “shyness”. When eagerness is high relative to shyness, the robot will emit a chirp, which is then "heard" by the other robots. Each robot will increase its eagerness when it hears another's chirp, and will increase its shyness when it hears non-frog sounds. Through this simple set of rules, a dynamic chorus of singing emerges, much like if one were encountering a group of frogs in the wild.
+    To accomplish this, sounds from the environment are analysed for frog-likeness, which then influences each phone-frog's behavior. Felix's original designs have been adapted here, in which a frog's “eagerness” increases when other frogs are heard, and its “shyness” increases when loud non-frog sounds are heard. Through a simple set of non-deterministic rules, a dynamic chorus of singing emerges between multiple phones, much like if one were encountering a group of frogs in the wild.
     <!-- This project is a translation of a series of art installations by the late Dutch sound artist Felix Hess. The first such installation was developed in 1982, with a set of fifty robots, each outfitted with a microphone, speaker, and circuitry to allow each robot to listen to its environment and make sounds in the manner of a frog in a frog chorus.  -->
   </p>
   <figure class="m-auto mt-5 mb-5 border-{mainColor}">
@@ -27,7 +27,7 @@
     </figcaption>
   </figure>
   <p>
-    In using <strong>Frog Chorus</strong>, I invite participants to put their phones down and join in active listening, as they walk around the chorus of phones, an ad-hoc, dynamic sound sculpture. While remaining faithful to Felix’s original work, this project extends it with a critique of what it means to live in a world increasingly of machines talking to each other. In actuality, frogs behave through phonotaxis (the movement of an organism with respect to sound), which I take as a poetic metaphor for how we might navigate algorithmically-governed environments. In an age where machines more convincingly give an impression of aliveness, the simple act of listening may serve as an act of resistance, a place from which to understand how our own aliveness is not like that of a machine.
+    In using <strong>Frog Chorus</strong>, I invite participants to give their phones some space, and join in active listening, as they walk around the chorus of phones, and to think of it as a kind of ad-hoc sound sculpture. While remaining faithful to Felix’s original work, this project extends it with a critique of what it means to live in a world increasingly of machines talking to each other. In actuality, frogs behave through <em>phonotaxis</em> (the movement of an organism using sound), which I take as a poetic metaphor for how we might navigate algorithmically-governed environments. In an age where machines more convincingly give an impression of aliveness, the simple act of listening may serve as an act of resistance, a place from which to understand how our own aliveness is not like that of a machine.
   </p>
   <p>
     Felix writes it best himself:
@@ -48,6 +48,7 @@
       The project presented here utilizes the Web Audio API to make a browser-based translation of Hess' robot-frogs, allowing a set of users in physical, acoustic proximity to have their mobile devices "sing" to each other as if they were frogs. The implementation of "hearing" is predicated here on relatively unsophisticated FFT (fast fourier transform) analysis via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">Web Audio AnalyserNode</a>.
     </p> -->
     <p>For a technical introduction to this project, check it out on <a href="https://github.com/reubenson/frog-chorus" target="_blank">GitHub</a>, and for more information about the developer of this project, visit <a href="https://reubenson.com" target="_blank">https://reubenson.com</a>.</p>
+    <p>Feedback, bug reports, and general inquiries are very welcome at <a href="mailto:frogchor@gmail.com">frogchor@gmail.com</a></p>
 
   <h6 class="mt-4 text-lg">Additional References for Felix Hess</h6>
   <ol class="">
@@ -56,7 +57,7 @@
     <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank">Artist talk by Felix Hess in 2010 (YouTube)</a></li>
   </ol>
   <!-- <img class="mt-8 w-full" src="{frogmail}" alt="froggy email"> -->
-  <p>Feedback, bug reports, and general inquiries are very welcome at <a href="mailto:frogchor@gmail.com">frogchor@gmail.com</a></p>
+  
   <figure class="m-auto mt-5 mb-5 border-{mainColor}">
     <img src="{frog_comp}" alt="frog at the computer">
   </figure>
