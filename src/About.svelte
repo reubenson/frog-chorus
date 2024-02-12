@@ -57,7 +57,6 @@
     <li class="list-inside"><a href="https://www.youtube.com/watch?v=rMnFKYHzm2k" target="_blank">Artist talk by Felix Hess in 2010 (YouTube)</a></li>
   </ol>
   <!-- <img class="mt-8 w-full" src="{frogmail}" alt="froggy email"> -->
-  
   <figure class="m-auto mt-5 mb-5 border-{mainColor}">
     <img src="{frog_comp}" alt="frog at the computer">
   </figure>
