@@ -34,9 +34,12 @@
   },
   "dependencies": {
     "@types/meyda": "^4.3.3",
+    "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
+    "markdown-it": "^14.0.0",
     "markdown-to-html-converter": "^1.0.4",
     "meyda": "^5.6.0",
-    "nosleep.js": "^0.12.0"
+    "nosleep.js": "^0.12.0",
+    "svelte-spa-router": "^4.0.1"
   }
 }

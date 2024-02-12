@@ -20,7 +20,6 @@ export const errorMessage = writable('')
 
 // UX
 export const colors = {
-  // background: 'emerald-900',
   background: 'transparent',
   main: 'emerald-900',
   darkMode: {
@@ -43,22 +42,6 @@ export const FROGS = writable([])
 export const PRINT_LOGS = writable(true)
 export const url = writable('')
 export let inputSourceNode
-export const hash = writable('')
-
-const historyState = { foo: 'bar' }
-
-export const handleUrlUpdate = (): void => {
-  const h = window.document.location.hash
-
-  hash.set(h)
-  // show a close icon when hash content is being rendered
-  showCloseIcon.set(h.includes('#'))
-}
-
-export const handleClose = (): void => {
-  history.pushState(historyState, null, '/')
-  handleUrlUpdate() // update UI to url sta
-}
 
 export const handleError = (msg: string): void => {
   console.error('Rendering error to user:', msg)
@@ -79,12 +62,9 @@ export const handleError = (msg: string): void => {
 function setUpdateInterval (): void {
   setInterval(() => {
     FROGS.update(state => {
-      // why frogInstances here
       state = frogInstances.map(frog => ({ ...frog.getProps() }))
-      // console.log('before state', state)
       return state
     })
-    // FROGS.update(frogs => frogs.map(frog => ({ ...frog.getProps() })))
   }, inputSamplingInterval)
 }
 
@@ -107,6 +87,7 @@ export const handleStart = async (): Promise<void> => {
           .then(() => {
             const frogProps = frog.getProps()
             frogInstances.push(frog)
+            console.log('frogProps', frogProps);
             FROGS.update(val => [...val, frogProps])
             setUpdateInterval()
           })
@@ -129,6 +110,3 @@ export const toggleOnDebug = (): void => {
 export const sendFrogsToBed = (): void => {
   frogInstances.forEach(frog => frog.sleep())
 }
-
-// on initialization
-handleUrlUpdate()

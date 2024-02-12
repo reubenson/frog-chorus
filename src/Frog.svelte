@@ -1,12 +1,9 @@
 <script lang="ts">
   import _ from 'lodash';
   import DebugPanel from './DebugPanel.svelte';
-  import { FROGS, DEBUG_ON, colors } from './lib/store';
+  import { DEBUG_ON, colors } from './lib/store';
   import { onMount } from 'svelte';
-  import { Frog } from './lib/Frog';
   import spring_peeper from './assets/spring-p.png';
-  
-  let frog = $FROGS[0]; // subscribe to FROGS and get the first frog
   
   // props defined by FrogProps interface
   export let id;
@@ -14,7 +11,6 @@
   export let isSleeping;
   export let frogSignalDetected;
   export let isCurrentlySinging;
-
   export let environmentIsQuiet;
 
   let environmentVolumeLevel = 0;
@@ -26,7 +22,6 @@
   }
 
   $: {
-    frog = $FROGS[0]
     updateMetrics(amplitude)
   }
 
@@ -58,7 +53,7 @@
     {#if !isSleeping}
       <p>Your frog (a <a href="https://en.wikipedia.org/wiki/Spring_peeper" target="_blank">spring peeper</a> ) is listening ...</p>
     {:else}
-      <p>Your frog has gone to sleep due to inactvity. Please refresh this page to bring it back.</p>
+      <p>Your frog has gone to sleep due to inactvity ... Frog Chorus does not work in the background. Please refresh this page to return to your frog!</p>
     {/if}
     <div class="border-bottom border-[1px] m-auto mt-4 width-full transition-transform duration-100 border-{colors.darkMode.main}" style="transform: scaleX({environmentVolumeLevel}%)"></div>
     {#if showNoisyWarning && !isSleeping}
@@ -69,7 +64,17 @@
   </div>
   <div class="frog-debug-panel mt-4">
     {#if $DEBUG_ON}
-      <DebugPanel {frog} />
+      <DebugPanel {id}/>
     {/if}
   </div>
 </div>
+
+<style>
+  /* // https://stackoverflow.com/questions/70138527/css-filter-blur-not-working-properly-on-safari */
+  .blur-fix {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+  }
+</style>

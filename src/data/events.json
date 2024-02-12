@@ -1,0 +1,16 @@
+{
+    "events": [
+        {
+            "date": "01-01-2017",
+            "location": "Groningen, Netherlands",
+            "title": "",
+            "description": ""
+        },
+        {
+            "date": "02-29-2024",
+            "location": "New York City",
+            "title": "Leap Day Launch",
+            "description": "Come join in a special Leap Day launch event in New York City! More details to come."
+        }
+    ]
+}

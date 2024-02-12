@@ -1,43 +1,45 @@
 <script lang="ts">
-  import { showCloseIcon, handleClose, colors, hasStarted } from "./lib/store";
-
-  function handleClick() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-    handleClose();
-  }
+  import { colors, hasStarted } from "./lib/store";
 
   let mainColor;
+  let activeNavItem = ''
 
   $: {
     mainColor = $hasStarted ? colors.darkMode.main : colors.lightMode.main;
   }
+
+  window.addEventListener('hashchange', handleHashChange);
+
+  function handleHashChange(ev) {
+    const hash = window.location.hash || '';
+    activeNavItem = hash.replace('#/', '')
+    console.log('activeNavItem', activeNavItem);
+  }
 </script>
 
-<nav class="text-{mainColor} w-screen">
-  <header class="text-xl text-left h-20 bg-{colors.background} mb-10">
-    <ul
-      class="pt-10"
-    >
-      <li class="text-center text-4xl">
-        <!-- https://www.fancytextpro.com/CursiveTextGenerator -->
-        <a href="/">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
-          <span class="absolute header-frog font-bold {$hasStarted ? 'invisible' : ''}">&#78223;</span>ṳṧ</a>
-      </li>
-    </ul>
-    {#if $showCloseIcon}
-      <button 
-        class="left-2 top-0 fixed"
-        on:click={handleClick}>&#10008</button>
-    {:else}
-      <button 
-        class="left-2 top-0 rotate-[50deg] fixed"
-        on:click={handleClick}
-        >
-          <a href="#info">&#10008</a>
-      </button>
-    {/if}
-  </header>
+<nav class="text-{mainColor} w-screen mt-5 lg:w-[50rem] m-auto top-5">
+  <ul class="flex flex-row">
+    <li class="flex-1 {activeNavItem === '' ? 'active' : ''} border-color:{mainColor}" id="home" >
+      <a href="#/">Home</a>
+    </li>
+    <li class="flex-1 {activeNavItem === 'about' ? 'active' : ''} border-color:{mainColor}" id="about">
+      <a href="#/about">About</a>
+    </li>
+    <li class="flex-1 {activeNavItem === 'events' ? 'active' : ''} border-color:{mainColor}" id="events">
+      <a href="#/events">Events</a>
+    </li>
+  </ul>
 </nav>
+
+<style>
+  li {
+    list-style: none;
+  }
+  li a {
+    text-decoration: none;
+  }
+  .active a {
+    padding: 10px;
+    border-bottom: solid 1px;
+  }
+</style>

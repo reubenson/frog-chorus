@@ -1,22 +1,31 @@
 <script lang="ts">
   import _ from 'lodash'
-  import { drawFFT } from './lib/utils'
+  import { FROGS } from './lib/store';
+  import { drawFFT, log } from './lib/utils'
   import { Frog } from './lib/Frog'
 
   let shynessPlotEl, eagernessPlotEl, fftEl, convolutionEl, ambientEl
   let showBaselineLoading = true
-  
-  export let frog;
+
+  export let id
+  $: frog = $FROGS[0];
 
   $: {
-    plotInputFFT(frog.directInputFFT);
-    plotConvolution(frog.convolutionFFT);
-    plotBaseline(frog.ambientFFT);
-    plotEagernessCurve();
-    plotShynessCurve();
+    // if (!!frog) {
+      plotInputFFT(frog.directInputFFT);
+      plotConvolution(frog.convolutionFFT);
+      plotBaseline(frog.ambientFFT);
+      plotEagernessCurve();
+      plotShynessCurve();
+    // }
   }
 
   function plotInputFFT(data) {
+    if (!data) {
+      console.warn('No FFT data to plot');
+      return;
+    }
+
     if (fftEl) {
       drawFFT(data, fftEl);
     }
@@ -27,6 +36,11 @@
    * @param data
    */
    function plotConvolution(data) {
+    if (!data) {
+      console.warn('No convolution data to plot');
+      return;
+    }
+
     if (convolutionEl) {
       drawFFT(data, convolutionEl);
     }
@@ -45,7 +59,7 @@
 
   function plotEagernessCurve() {
     // functionPlot library is loaded dynamically in debug mode
-    const functionPlot = _.get(window, 'functionPlot', (x) => {});
+    const functionPlot = _.get(window, 'functionPlot', (y: any) => {});
     const box = eagernessPlotEl?.getBoundingClientRect();
 
     if (!box) return;
@@ -109,6 +123,7 @@
 </script>
 
 <div class="debug-panel">
+  <script src="https://unpkg.com/function-plot/dist/function-plot.js"></script>
   <div class="mt-4">
     <header class="text-xl mt-2">Basic Metrics</header>
     <ul class="flex flex-row flex-wrap">

@@ -43,11 +43,6 @@ export function processFFT (data: Float32Array, opts: { normalize: boolean, forc
   return data.map(item => {
     const newValue = Math.pow(10, item - max) // need to be mindful of float32 precision limits
 
-    // console.log('item', item);
-    // if (Number.isNaN(newValue)) {
-    //   console.error('NaN original value', item);
-    // }
-
     return newValue
   })
 }

@@ -597,6 +597,7 @@ export class Frog implements FrogPropsExtended {
   public getProps (): FrogProps | FrogPropsExtended {
     return debugOn
       ? {
+          id: this.id,
           amplitude: this.amplitude,
           convolutionAmplitude: this.convolutionAmplitude,
           shyness: this.shyness,
