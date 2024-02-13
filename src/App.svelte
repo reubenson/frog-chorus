@@ -41,7 +41,7 @@
     &#9888; Please enable javascript on your browser to use this app &#9888;
   </noscript>
   <Nav />
-  <header class="text-5xl text-center h-14 bg-{colors.background} mt-8 text-{mainColor}">
+  <header class="text-5xl text-center bg-{colors.background} mt-12 mb-8 text-{mainColor}">
     <a href="/">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
       <span class="absolute header-frog font-bold {$hasStarted ? 'invisible' : ''}">&#78223;</span>ṳṧ
     </a>
