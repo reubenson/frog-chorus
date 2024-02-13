@@ -48,3 +48,9 @@ section {
     max-width: 450px;
   }
 }
+
+/* @media screen and (min-width: 1024px) { */
+  p, li {
+    font-size: 1.1em;
+  }
+/* } */

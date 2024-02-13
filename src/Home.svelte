@@ -63,11 +63,8 @@
       <p>
         <span class="italic">Frog Chorus</span> is an audio-based web-app that allows your mobile device or laptop to chirp in a “chorus” of other devices, as if they were a <a href="https://www.youtube.com/watch?v=aPAchkz76c8" target="_blank">chorus of frogs in the wild</a>.
       </p>
-      <p>
-        The app uses the built-in speaker and microphone to have devices listen to and interact with each other, generating a dynamic and spatialized work of sound sculpture. While you <em>can</em> run this app alone, your frog will not make much sound unless you're in a relatively quiet environment with lots of other frogs (phones) around.
-      </p>
       <button
-        class="border-black font-bold border-2 text-emerald-100 p-2 mt-10 tracking-[.2em] m-auto block font-mono h-[70px] w-[80px] border-black ring-2 bg-right-top rounded-full"
+        class="border-black font-bold border-2 text-emerald-100 p-2 mt-6 mb-6 tracking-[.2em] m-auto block font-mono h-[70px] w-[80px] border-black ring-2 bg-right-top rounded-full"
         on:click|once|capture|trusted={handleStart}
         use:longpress
         on:longpress={handleLongpress}
@@ -75,6 +72,9 @@
         <!-- button gif source: https://bridgemom.tripod.com/Dragonfly.index.html -->
         start
       </button>
+      <p>
+        The app uses the built-in speaker and microphone to have devices listen to and interact with each other, generating a dynamic and spatialized work of sound sculpture. While you <em>can</em> run this app alone, your frog will not make much sound unless you're in a relatively quiet environment with lots of other frogs (phones) around.
+      </p>
     {:else}
       <div>
         <p class="mt-4 text-base">
