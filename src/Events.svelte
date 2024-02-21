@@ -28,7 +28,7 @@
       {#each upcomingEvents as event}
         <li>
           {event.title} on {event.date} in {event.location}
-          <p>{event.description}</p>
+          <p>{@html event.description}</p>
         </li>
       {/each}
     </ul>
