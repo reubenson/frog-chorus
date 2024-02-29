@@ -11,7 +11,7 @@ export const FFT_SIZE = 1024
 export const highpassFilterFrequency = 1000 // (units: hz)
 export const loudnessThreshold = 25 // arbitrary units, following Meyda lib
 export const chirpAttemptRate = 250 // how often to attempt chirping (units: ms)
-export const rateOfLosingShyness = 0.05
+export const rateOfLosingShyness = 0.08
 
 // UI state
 export const showCloseIcon = writable(false)
