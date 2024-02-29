@@ -43,7 +43,9 @@
   <Nav />
   <header class="text-5xl text-center bg-{colors.background} mt-12 mb-8 text-{mainColor}">
     <a href="/">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
-      <span class="absolute header-frog font-bold {$hasStarted ? 'invisible' : ''}">&#78223;</span>ṳṧ
+      <span class="absolute header-frog {$hasStarted ? 'invisible' : ''}">
+        <img src="/public/images/frog-glyph.png" class="bg-{mainColor}" alt="frog glyph">
+      </span>ṳṧ
     </a>
   </header>
   <div class="main-content">
@@ -57,12 +59,14 @@
 </main>
 
 <style>
-  /* styles for frog glpyh */
   .header-frog {
-    bottom: 0.5em;
-    font-size: 10px;
-    left: -1.3em;
-    min-width: .4em;
-    width: .4em;
+    bottom: 4px;
+    left: -16px;
+    width: 14px;
+  }
+
+  .header-frog img {
+    -webkit-mask:url("/public/images/frog-glyph.png") center/contain;
+    mask:url("/public/images/frog-glyph.png") center/contain;
   }
 </style>
