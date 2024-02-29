@@ -1,7 +1,6 @@
 <script lang="ts">
   import Section from './Section.svelte';
   import { colors, hasStarted } from "./lib/store";
-  import frogmail from './assets/frogmail.gif';
   import hess_diagram from './assets/hess_diagram.jpeg';
   import frog_comp from './assets/frogcomp_riso.png';
   let mainColor;
