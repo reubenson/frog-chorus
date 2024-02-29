@@ -42,11 +42,7 @@
   </noscript>
   <Nav />
   <header class="text-5xl text-center bg-{colors.background} mt-12 mb-8 text-{mainColor}">
-    <a href="/">ḟԻ✺❡ ḉℏ✺Ի<span class="relative">
-      <span class="absolute header-frog {$hasStarted ? 'invisible' : ''}">
-        <img src="/public/images/frog-glyph.png" class="bg-{mainColor}" alt="frog glyph">
-      </span>ṳṧ
-    </a>
+    <a href="/">ḟԻ✺❡ ḉℏ✺Իṳṧ<span class="relative"></a>
   </header>
   <div class="main-content">
     <Router {routes} />
