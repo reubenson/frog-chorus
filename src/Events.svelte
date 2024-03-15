@@ -16,19 +16,22 @@
     .map(event => {
       return {
         ...event,
-        date: new Date(event.date).toLocaleDateString()
+        date: new Date(event.date).toDateString()
       }
     });
 </script>
 
 <Section>
-  <h2 class="text-2xl mt-5">Upcoming Events</h2>
+  <h2 class="text-xl mt-5 border-b-2 border-{mainColor}">Upcoming Events</h2>
   {#if upcomingEvents.length > 0}
-    <ul>
+    <ul class="event-list">
       {#each upcomingEvents as event}
-        <li>
-          {event.title} on {event.date} in {event.location}
-          <p>{@html event.description}</p>
+        <li class="event-item">
+          <p>{event.date} at {event.time}</p>
+          <p class="mt-0">{event.location}</p>
+          <p>
+            {@html event.description}
+          </p>
         </li>
       {/each}
     </ul>
@@ -36,7 +39,7 @@
   <p>There are no official upcoming events scheduled! But you can organize your own Frog Chorus event and use the suggestion below.</p>
   {/if}
 
-  <h3 class="text-xl mt-5">What to expect for a Frog Chorus event</h3>
+  <h3 class="text-xl mt-5 border-b-2 border-{mainColor}">What to expect for a Frog Chorus event</h3>
   <p>In a gathering of five or more people with smartphones running this app in a browser, consider the following actions.</p>
   <ul>
     <li>

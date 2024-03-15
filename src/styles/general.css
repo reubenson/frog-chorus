@@ -23,6 +23,11 @@ section {
     font-size: .8em;
     margin-right: .5em;
   }
+
+  .event-item::before {
+    content: '';
+    display: none;
+  }
   
   blockquote {
     padding-left: 10px;
