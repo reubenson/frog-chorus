@@ -58,7 +58,7 @@
     <div class="border-bottom border-[1px] m-auto mt-4 width-full transition-transform duration-100 border-{colors.darkMode.main}" style="transform: scaleX({environmentVolumeLevel}%)"></div>
     {#if showNoisyWarning && !isSleeping}
       <p>(But it seems like it's a bit noisy where you are. Please try turning off some sounds, or try again in a quieter environment)</p>
-    {:else if showExitMessage} 
+    {:else if showExitMessage && !isSleeping} 
       <p>(When you're done, you can refresh page or click the logo at the top to turn your frog off)</p>
     {/if}
   </div>
