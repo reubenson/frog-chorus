@@ -562,7 +562,8 @@ export class Frog implements FrogPropsExtended {
     if (this.eagerness === 1) {
       return 1
     } else {
-      return this.calculateEagernessFactor(this.eagerness) * this.calculateShynessFactor(this.shyness)
+      return this.calculateEagernessFactor(this.eagerness)
+      // return this.calculateEagernessFactor(this.eagerness) * this.calculateShynessFactor(this.shyness)
     }
   }
 
