@@ -11,7 +11,8 @@
     .filter(event => {
       console.log('event', event);
       console.log('new Date(event.date)', new Date(event.date));
-      return new Date(event.date) > new Date()
+      return true;
+      // return new Date(event.date) >= new Date()
     })
     .map(event => {
       return {
