@@ -6,14 +6,21 @@
   $: {
     mainColor = $hasStarted ? colors.darkMode.main : colors.lightMode.main;
   }
+
+  const currentDate = new Date( (new Date()).toLocaleDateString() )
   
   const upcomingEvents = events
     .filter(event => {
-      console.log('event', event);
-      console.log('new Date(event.date)', new Date(event.date));
-      return true;
-      // return new Date(event.date) >= new Date()
+      return new Date(event.date).getDate() >= currentDate.getDate()
     })
+    .map(event => {
+      return {
+        ...event,
+        date: new Date(event.date).toDateString()
+      }
+    });
+
+  const pastEvents = events.filter(event => new Date(event.date).getDate() < currentDate.getDate())
     .map(event => {
       return {
         ...event,
@@ -37,10 +44,10 @@
       {/each}
     </ul>
   {:else}
-  <p>There are no official upcoming events scheduled! But you can organize your own Frog Chorus event and use the suggestion below.</p>
+    <p>There are no official upcoming events scheduled! But you can organize your own Frog Chorus event and use the suggestion below.</p>
   {/if}
 
-  <h3 class="text-xl mt-5 border-b-2 border-{mainColor}">What to expect for a Frog Chorus event</h3>
+  <h2 class="text-xl mt-5 border-b-2 border-{mainColor}">What to expect for a Frog Chorus event</h2>
   <p>In a gathering of five or more people with smartphones running this app in a browser, consider the following actions.</p>
   <ul>
     <li>
@@ -74,5 +81,20 @@
       After a while, consider leaving the pond, either bringing your phone with you, or not.
     </li> -->
   </ul>
+
+  <h2 class="text-xl mt-5 border-b-2 border-{mainColor}">Past Events</h2>
+  {#if pastEvents.length > 0}
+    <ul class="event-list">
+      {#each pastEvents as event}
+        <li class="event-item">
+          <p>{event.date} at {event.time}</p>
+          <p class="mt-0">{event.location}</p>
+          <p>
+            {@html event.description}
+          </p>
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </Section>
   
