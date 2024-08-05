@@ -36,6 +36,7 @@
  */
 
 import type { MeydaAnalyzer } from 'meyda';
+import { EventEmitter } from 'eventemitter3';
 import Meyda from 'meyda';
 import _ from 'lodash';
 import type { AudioConfig } from './AudioManager';
@@ -51,6 +52,7 @@ import {
 } from './store';
 import { log, calculateAmplitude, testProbability } from './utils';
 
+const sharedEmitter = new EventEmitter();
 let idCounter = 0;
 let debugOn = false;
 
@@ -93,9 +95,260 @@ interface FrogPropsExtended extends FrogProps {
   detuneAmount: number;
 }
 
+class AudioConfiguration {
+  private emitter: EventEmitter
+  audioFilepath: string;
+  audioConfig: AudioConfig;
+  callback: Function;
+  convolutionAnalyser: AnalyserNode;
+  convolutionAmplitude: number;
+  amplitude: number;
+  convolutionFFT: Float32Array;
+  directInputFFT: Float32Array;
+  loudness: number;
+  directInputAnalyser: AnalyserNode;
+  meydaAnalyser: MeydaAnalyzer;
+  convolver: ConvolverNode;
+  buffer: AudioBuffer;
+  audioFeatures: AudioFeatures;
+  updateStateWithThrottle: Function;
+
+  constructor(audioConfig, audioFilepath) {
+    // super();
+    this.audioConfig = audioConfig;
+    this.audioFilepath = audioFilepath;
+    this.emitter = sharedEmitter;
+    // this.audioConfig = new AudioConfig();
+    // this.audioConfig.start();
+    this.updateStateWithThrottle = _.throttle(
+      this.updateState,
+      inputSamplingInterval,
+    );
+  }
+
+  public async init(): Promise<void> {
+    const buffer = await this.fetchAudioBuffer(this.audioConfig.ctx);
+    log('buffer', buffer);
+    this.setUpAnalysers();
+  }
+
+  public setCallback(callback): void {
+    this.callback = callback;
+  }
+
+  private async fetchAudioBuffer(ctx): Promise<void> {
+    return await new Promise<void>((resolve) => {
+      const req = new XMLHttpRequest();
+
+      req.open('GET', this.audioFilepath, true);
+      req.responseType = 'arraybuffer';
+      req.onload = async () => {
+        const data = req.response;
+
+        await ctx.decodeAudioData(data, (buffer) => {
+          // this.buffer = buffer;
+          // this.sampleDuration = buffer.duration;
+          log('Sample Duration:',  buffer.duration);
+
+          resolve(buffer);
+        });
+      };
+
+      req.send();
+    });
+  }
+
+    /**
+     * Set up the convolver node, which will use the audio sample of the frog
+     * chirp to process incoming audio from the microphone
+     */
+    private async createConvolver(): Promise<void> {
+      this.convolver = this.audioConfig.ctx.createConvolver();
+      this.convolver.normalize = false;
+  
+      // load impulse response from file
+      const response = await fetch(this.audioFilepath);
+      const arraybuffer = await response.arrayBuffer();
+  
+      this.convolver.buffer =
+        await this.audioConfig.ctx.decodeAudioData(arraybuffer);
+    }
+
+  /**
+   * Configure the Web Audio analyser nodes, which are responsible for measuring
+   * FFT data on the microphone input. One of these analysers is responsible for
+   * measuring the mic input directly, and the other is responsible for measuring
+   * the mic input convolved with the frog's chirp itself. The latter is used to
+   * perform operations to detect frog chirping in the mic input
+   *
+   * Ref: https://www.w3.org/TR/2013/WD-webaudio-20131010/convolution.html
+   */
+  private setUpAnalysers(): void {
+    const smoothingConstant = 0.8; // value to be tweaked
+
+    // set up direct input analyser
+    this.directInputAnalyser = this.audioConfig.ctx.createAnalyser();
+    this.directInputAnalyser.fftSize = FFT_SIZE;
+    this.directInputAnalyser.smoothingTimeConstant = smoothingConstant; // this can be tweaked
+
+    inputSourceNode.connect(this.directInputAnalyser);
+
+    // set up convolved input analyser
+    this.createConvolver();
+    this.convolutionAnalyser = this.audioConfig.ctx.createAnalyser();
+    this.convolutionAnalyser.fftSize = FFT_SIZE;
+    this.convolutionAnalyser.smoothingTimeConstant = smoothingConstant; // this can be tweaked
+
+    // set up high-pass filter, to minimize handling noise and energy in the very low frequency spectrum
+    const filter = this.audioConfig.ctx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.setValueAtTime(highpassFilterFrequency, 0); // to be tweaked
+    filter.Q.setValueAtTime(0.01, 0);
+
+    // connect input to filter, and then to convolver for analysis
+    inputSourceNode.connect(filter);
+    filter.connect(this.convolver);
+    this.convolver.connect(this.convolutionAnalyser);
+
+    // create Meyda analyser
+    this.meydaAnalyser = Meyda.createMeydaAnalyzer({
+      audioContext: this.audioConfig.ctx,
+      sampleRate: this.audioConfig.ctx.sampleRate,
+      source: this.convolver,
+      bufferSize: 1024,
+      featureExtractors: [
+        'loudness',
+        'spectralRolloff',
+        'spectralCrest',
+        'spectralCentroid',
+      ],
+      // callback: this.callback,
+      callback: (features) => {
+        this.analyserCallback(features);
+        // log('emitting', features);
+      //   const isAnalysingAmbience = !!this.ambientTimeout;
+
+      //   this.audioFeatures = Object.assign(features);
+
+      //   this.updateStateWithThrottle();
+
+      //   if (isAnalysingAmbience) {
+      //     const { spectralRolloff, spectralCentroid } = features;
+
+      //     if (typeof spectralRolloff === 'number')
+      //       this.audioFeaturesOverTime.spectralRolloff.push(spectralRolloff);
+      //     if (typeof spectralCentroid === 'number')
+      //       this.audioFeaturesOverTime.spectralCentroid.push(spectralCentroid);
+      //   }
+      },
+    });
+
+    this.meydaAnalyser.start();
+    // log('callback', this.callback);
+    // Debug: send convolved input through audio output
+    // this.convolutionAnalyser.connect(this.audioConfig.ctx.destination);
+  }
+
+  private analyseInputSignal(): void {
+    // todo: don't re-instantiate
+    const convolutionFFT = new Float32Array(FFT_SIZE / 2);
+    const directInputFFT = new Float32Array(FFT_SIZE / 2);
+
+    this.convolutionAnalyser.getFloatFrequencyData(convolutionFFT);
+    this.convolutionAmplitude = calculateAmplitude(convolutionFFT);
+
+    // the direct input analyser is currently just used for diagnostics, and is not being actively used
+    this.directInputAnalyser.getFloatFrequencyData(directInputFFT);
+    this.amplitude = calculateAmplitude(directInputFFT);
+
+    this.convolutionFFT = convolutionFFT;
+    this.directInputFFT = directInputFFT;
+
+    this.loudness = this?.audioFeatures?.loudness?.total;
+  }
+
+  /**
+   * Periodically update frog's shyness and eagerness
+   * Hearing other frogs will increase eagerness.
+   * A loud environment with non-frog sounds will increase shyness.
+   */
+  public updateState(): void {
+    this.analyseInputSignal();
+    this.emitter.emit('audioFeatures', {
+      audioFeatures: this.audioFeatures,
+      convolutionAmplitude: this.convolutionAmplitude,
+      amplitude: this.amplitude,
+      convolutionFFT: this.convolutionFFT,
+      directInputFFT: this.directInputFFT,
+      loudness: this.loudness
+    });
+    // if (!this.hasInitialized || this.isSleeping) return;
+
+
+    // if (this.isCurrentlySinging) {
+    //   // log('pausing update state while chirping');
+    //   return;
+    // }
+
+    // this.currentTimestamp = Date.now();
+
+    // // To Do: move this to initialize fn instead?
+    // this.establishAmbientFFT();
+
+    // this.detectFrogSignal();
+    // this.updateShyness();
+    // this.updateEagerness();
+
+    // this.lastUpdated = this.currentTimestamp;
+  }
+
+  public analyserCallback(features): void {
+    // log('features___', features);
+    const isAnalysingAmbience = !!this.ambientTimeout;
+
+    this.audioFeatures = Object.assign(features);
+
+    this.updateStateWithThrottle();
+
+    if (isAnalysingAmbience) {
+      const { spectralRolloff, spectralCentroid } = features;
+
+      if (typeof spectralRolloff === 'number')
+        this.audioFeaturesOverTime.spectralRolloff.push(spectralRolloff);
+      if (typeof spectralCentroid === 'number')
+        this.audioFeaturesOverTime.spectralCentroid.push(spectralCentroid);
+    }
+  }
+
+  /**
+   * For a given array, return an object containing the index-value pair
+   * corresponding to the largest value in the array
+   * @param arr - expects an array of FFT values
+   * @returns object
+   */
+  private findPeakBin(arr: Float32Array): { index: number; value: number } {
+    const defaultValue = { index: 0, value: -Infinity };
+
+    if (!arr) return defaultValue;
+
+    return arr.reduce(
+      (acc: { index: number; value: number }, item: number, i: number) => {
+        if (item > acc.value) {
+          return { index: i, value: item };
+        } else {
+          return acc;
+        }
+      },
+      defaultValue,
+    );
+  }
+}
+
 export class Frog implements FrogPropsExtended {
+  private emitter: EventEmitter;
   id: number;
   amplitude: number;
+  audioConfiguration: any;
   audioFilepath: string;
   audioConfig: AudioConfig;
   shyness: number; // 0. - 1.
@@ -134,19 +387,22 @@ export class Frog implements FrogPropsExtended {
   startTime: number;
   lastAttemptTime: number;
   updateStateWithThrottle: Function;
+
   constructor(audioConfig: AudioConfig, audioFilepath: string) {
+    // super();
     DEBUG_ON.subscribe((val) => {
       debugOn = val;
     });
     this.id = ++idCounter;
-    this.audioConfig = audioConfig;
-    this.audioFilepath = audioFilepath;
+    this.emitter = sharedEmitter;
+    // this.audioConfig = audioConfig;
+    // this.audioFilepath = audioFilepath;
+    this.audioConfiguration = new AudioConfiguration(audioConfig, audioFilepath);
     this.shyness = 1.0; // initiaize to 1 (maximum shyness)
     this.eagerness = 0.0; // initialize to 0 (minimum eagerness)
     this.lastUpdated = Date.now();
     this.currentTimestamp = Date.now();
     this.rateOfStateChange = 0.2; // to be tweaked
-    // this.amplitudeThreshold = -65; // to be tweaked
     this.loudnessThreshold = loudnessThreshold;
     this.hasInitialized = false;
     this.frogSignalDetected = false;
@@ -163,6 +419,9 @@ export class Frog implements FrogPropsExtended {
       this.updateState,
       inputSamplingInterval,
     );
+
+    this.emitter.on('audioFeatures', this.updateStateWithThrottle.bind(this));
+    // this.emitter.on('audioFeatures', this.analyserCallback.bind(this));
   }
 
   /**
@@ -173,14 +432,18 @@ export class Frog implements FrogPropsExtended {
   public async initialize(): Promise<void> {
     const attemptRate = chirpAttemptRate;
 
-    await this.fetchAudioBuffer();
+    this.audioConfiguration.setCallback(this.analyserCallback.bind(this));
+    await this.audioConfiguration.init();
+    // await this.fetchAudioBuffer();
 
-    this.setUpAnalysers();
+    // this.setUpAnalysers();
 
     // evaluate whether to chirp or not on every tick
     this.chirpTimer = setInterval(this.tryChirp.bind(this), attemptRate);
 
     this.hasInitialized = true;
+
+    // this.emitter.emit('audioFeatures', 'test')
   }
 
   /**
@@ -188,10 +451,11 @@ export class Frog implements FrogPropsExtended {
    * Hearing other frogs will increase eagerness.
    * A loud environment with non-frog sounds will increase shyness.
    */
-  public updateState(): void {
+  public updateState(audioFeatures): void {
+    console.log('frog should update state', audioFeatures)
     if (!this.hasInitialized || this.isSleeping) return;
 
-    this.analyseInputSignal();
+    // this.analyseInputSignal();
 
     if (this.isCurrentlySinging) {
       // log('pausing update state while chirping');
@@ -203,9 +467,16 @@ export class Frog implements FrogPropsExtended {
     // To Do: move this to initialize fn instead?
     this.establishAmbientFFT();
 
-    this.detectFrogSignal();
+    this.loudness = audioFeatures.audioFeatures?.loudness?.total;
+    this.amplitude = audioFeatures.amplitude;
+    log('loudness', this.loudness);
+
+    this.detectFrogSignal(audioFeatures);
     this.updateShyness();
     this.updateEagerness();
+
+    log('shyness', this.shyness);
+    log('eagerness', this.eagerness);
 
     this.lastUpdated = this.currentTimestamp;
   }
@@ -214,6 +485,24 @@ export class Frog implements FrogPropsExtended {
     this.meydaAnalyser.stop();
     clearInterval(this.chirpTimer);
     this.isSleeping = true;
+  }
+
+  public analyserCallback(features): void {
+    // log('features___', features);
+    const isAnalysingAmbience = !!this.ambientTimeout;
+
+    this.audioFeatures = Object.assign(features);
+
+    this.updateStateWithThrottle();
+
+    if (isAnalysingAmbience) {
+      const { spectralRolloff, spectralCentroid } = features;
+
+      if (typeof spectralRolloff === 'number')
+        this.audioFeaturesOverTime.spectralRolloff.push(spectralRolloff);
+      if (typeof spectralCentroid === 'number')
+        this.audioFeaturesOverTime.spectralCentroid.push(spectralCentroid);
+    }
   }
 
   /**
@@ -439,15 +728,15 @@ export class Frog implements FrogPropsExtended {
    * - Use a library like Meyda to extract more complex audio features (https://meyda.js.org/audio-features)
    * - Try statistical measurements https://www.npmjs.com/package/stat-fns
    */
-  private detectFrogSignal(): void {
-    const convolutionPeakBin = this.findPeakBin(this.convolutionFFT);
-    const ambientPeakBin = this.findPeakBin(this.ambientFFT);
+  private detectFrogSignal(audioFeatures): void {
+    const convolutionPeakBin = this.findPeakBin(audioFeatures.convolutionFFT);
+    const ambientPeakBin = this.findPeakBin(audioFeatures.ambientFFT);
 
     // simple calculation: determine whether the peak frequency bin is similar,
     // between convolutionFFT and ambientFFT
     const peaksAreSimilar =
       Math.abs(convolutionPeakBin.index - ambientPeakBin.index) < 4;
-    const convolutionAmplitude = calculateAmplitude(this.convolutionFFT);
+    const convolutionAmplitude = calculateAmplitude(audioFeatures.convolutionFFT);
     const convolutionIsLouder =
       convolutionAmplitude - this.convolutionAmplitudeThreshold > 20;
 
@@ -455,16 +744,16 @@ export class Frog implements FrogPropsExtended {
     const convolutionMatches = peaksAreSimilar && convolutionIsLouder;
 
     // spectral rolloff: "The frequency below which is contained 99% of the energy of the spectrum". This is useful for ensuring that the spectrum is similar, without a bunch of energy added to non-frog parts of the spectrun
-    const rolloff = this.audioFeatures?.spectralRolloff;
+    const rolloff = audioFeatures.audioFeatures?.spectralRolloff;
     const deltaRolloff = Math.abs(rolloff - this.baselineRolloff);
     const rolloffIsSimilar = deltaRolloff < 600;
 
     // spectral crest: "This is the ratio of the loudest magnitude over the RMS of the whole frame. A high number is an indication of a loud peak compared out to the overall curve of the spectrum".  This is useful for ensuring that there are still sharp peaks in the audio. This is only useful for frogs like spring peepers, which have a strong dominant frequency
-    const crest = this.audioFeatures?.spectralCrest;
+    const crest = audioFeatures.audioFeatures?.spectralCrest;
     const hasSharpCrest = crest > 10;
 
     // spectral centroid: "An indicator of the “brightness” of a given sound, representing the spectral centre of gravity. If you were to take the spectrum, make a wooden block out of it and try to balance it on your finger (across the X axis), the spectral centroid would be the frequency that your finger “touches” when it successfully balances." This is very useful, because it ensures that the majority of activity in the spectrum is close to the frog's dominant frequency
-    const centroid = this.audioFeatures?.spectralCentroid;
+    const centroid = audioFeatures.audioFeatures?.spectralCentroid;
     const relativeCentroid = Math.abs(centroid - this.baselineCentroid);
     const centroidIsSimilar = relativeCentroid < 1.0;
 
