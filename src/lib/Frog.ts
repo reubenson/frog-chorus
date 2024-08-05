@@ -35,10 +35,10 @@
  * Pitchy lib: https://www.npmjs.com/package/pitchy
  */
 
-import type { MeydaAnalyzer } from "meyda";
-import Meyda from "meyda";
-import _ from "lodash";
-import type { AudioConfig } from "./AudioManager";
+import type { MeydaAnalyzer } from 'meyda';
+import Meyda from 'meyda';
+import _ from 'lodash';
+import type { AudioConfig } from './AudioManager';
 import {
   DEBUG_ON,
   FFT_SIZE,
@@ -48,8 +48,8 @@ import {
   inputSourceNode,
   loudnessThreshold,
   rateOfLosingShyness,
-} from "./store";
-import { log, calculateAmplitude, testProbability } from "./utils";
+} from './store';
+import { log, calculateAmplitude, testProbability } from './utils';
 
 let idCounter = 0;
 let debugOn = false;
@@ -259,7 +259,7 @@ export class Frog implements FrogPropsExtended {
 
     // set up high-pass filter, to minimize handling noise and energy in the very low frequency spectrum
     const filter = this.audioConfig.ctx.createBiquadFilter();
-    filter.type = "highpass";
+    filter.type = 'highpass';
     filter.frequency.setValueAtTime(highpassFilterFrequency, 0); // to be tweaked
     filter.Q.setValueAtTime(0.01, 0);
 
@@ -275,10 +275,10 @@ export class Frog implements FrogPropsExtended {
       source: this.convolver,
       bufferSize: 1024,
       featureExtractors: [
-        "loudness",
-        "spectralRolloff",
-        "spectralCrest",
-        "spectralCentroid",
+        'loudness',
+        'spectralRolloff',
+        'spectralCrest',
+        'spectralCentroid',
       ],
       callback: (features) => {
         const isAnalysingAmbience = !!this.ambientTimeout;
@@ -290,9 +290,9 @@ export class Frog implements FrogPropsExtended {
         if (isAnalysingAmbience) {
           const { spectralRolloff, spectralCentroid } = features;
 
-          if (typeof spectralRolloff === "number")
+          if (typeof spectralRolloff === 'number')
             this.audioFeaturesOverTime.spectralRolloff.push(spectralRolloff);
-          if (typeof spectralCentroid === "number")
+          if (typeof spectralCentroid === 'number')
             this.audioFeaturesOverTime.spectralCentroid.push(spectralCentroid);
         }
       },
@@ -310,15 +310,15 @@ export class Frog implements FrogPropsExtended {
     await new Promise<void>((resolve) => {
       const req = new XMLHttpRequest();
 
-      req.open("GET", this.audioFilepath, true);
-      req.responseType = "arraybuffer";
+      req.open('GET', this.audioFilepath, true);
+      req.responseType = 'arraybuffer';
       req.onload = async () => {
         const data = req.response;
 
         await this.audioConfig.ctx.decodeAudioData(data, (buffer) => {
           this.buffer = buffer;
           this.sampleDuration = buffer.duration;
-          log("Sample Duration:", this.sampleDuration);
+          log('Sample Duration:', this.sampleDuration);
 
           resolve();
         });

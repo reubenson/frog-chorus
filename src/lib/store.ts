@@ -1,9 +1,9 @@
-import _ from "lodash";
-import NoSleep from "nosleep.js";
-import { writable } from "svelte/store";
-import { AudioConfig } from "./AudioManager";
-import { Frog } from "./Frog";
-import spring_peeper from "../assets/spring-peeper.mp3";
+import _ from 'lodash';
+import NoSleep from 'nosleep.js';
+import { writable } from 'svelte/store';
+import { AudioConfig } from './AudioManager';
+import { Frog } from './Frog';
+import spring_peeper from '../assets/spring-peeper.mp3';
 
 // Important parameters for refining behavior
 export const inputSamplingInterval = 120; // time (ms) between audio analysis events
@@ -16,19 +16,19 @@ export const rateOfLosingShyness = 0.08;
 // UI state
 export const showCloseIcon = writable(false);
 export const showError = writable(false);
-export const errorMessage = writable("");
+export const errorMessage = writable('');
 
 // UX
 export const colors = {
-  background: "transparent",
-  main: "emerald-900",
+  background: 'transparent',
+  main: 'emerald-900',
   darkMode: {
-    main: "emerald-100",
-    background: "emerald-900",
+    main: 'emerald-100',
+    background: 'emerald-900',
   },
   lightMode: {
-    main: "emerald-900",
-    background: "emerald-300",
+    main: 'emerald-900',
+    background: 'emerald-300',
   },
 };
 
@@ -40,17 +40,17 @@ export const DEBUG_ON = writable(false);
 export const frogInstances = [];
 export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
-export const url = writable("");
+export const url = writable('');
 export let inputSourceNode;
 
 export const handleError = (msg: string): void => {
-  console.error("Rendering error to user:", msg);
+  console.error('Rendering error to user:', msg);
   showError.set(true);
   errorMessage.set(msg);
 
   // send error to GA
   if (window.gtag) {
-    window.gtag("event", "error_rendered", {
+    window.gtag('event', 'error_rendered', {
       msg,
     });
   }
@@ -86,7 +86,7 @@ export const handleStart = async (): Promise<void> => {
         await frog.initialize().then(() => {
           const frogProps = frog.getProps();
           frogInstances.push(frog);
-          console.log("frogProps", frogProps);
+          console.log('frogProps', frogProps);
           FROGS.update((val) => [...val, frogProps]);
           setUpdateInterval();
         });

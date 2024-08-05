@@ -1,22 +1,22 @@
 // postcss.config.js
-import tailwindcss from "file:///Users/reubenson/Projects/frog-chorus/node_modules/tailwindcss/lib/index.js";
-import nesting from "file:///Users/reubenson/Projects/frog-chorus/node_modules/tailwindcss/nesting/index.js";
+import tailwindcss from 'file:///Users/reubenson/Projects/frog-chorus/node_modules/tailwindcss/lib/index.js';
+import nesting from 'file:///Users/reubenson/Projects/frog-chorus/node_modules/tailwindcss/nesting/index.js';
 
 // tailwind.config.js
 var tailwind_config_default = {
   plugins: [],
   theme: {
     letterSpacing: {
-      tighter: -"0.05em",
-      tight: -"0.025em",
-      normal: "0em",
-      wide: "0.025em",
-      wider: "0.05em",
-      widest: "0.4em",
+      tighter: -'0.05em',
+      tight: -'0.025em',
+      normal: '0em',
+      wide: '0.025em',
+      wider: '0.05em',
+      widest: '0.4em',
     },
     extend: {},
   },
-  content: ["./src/**/*.{svelte,js,ts}"],
+  content: ['./src/**/*.{svelte,js,ts}'],
   // for unused CSS
   variants: {
     extend: {},
@@ -24,18 +24,18 @@ var tailwind_config_default = {
 };
 
 // postcss.config.js
-import autoprefixer from "file:///Users/reubenson/Projects/frog-chorus/node_modules/autoprefixer/lib/autoprefixer.js";
+import autoprefixer from 'file:///Users/reubenson/Projects/frog-chorus/node_modules/autoprefixer/lib/autoprefixer.js';
 var postcss_config_default = {
   plugins: [tailwindcss(tailwind_config_default), autoprefixer, nesting],
 };
 
 // vite.config.ts
-import { defineConfig } from "file:///Users/reubenson/Projects/frog-chorus/node_modules/vite/dist/node/index.js";
-import { svelte } from "file:///Users/reubenson/Projects/frog-chorus/node_modules/@sveltejs/vite-plugin-svelte/dist/index.js";
+import { defineConfig } from 'file:///Users/reubenson/Projects/frog-chorus/node_modules/vite/dist/node/index.js';
+import { svelte } from 'file:///Users/reubenson/Projects/frog-chorus/node_modules/@sveltejs/vite-plugin-svelte/dist/index.js';
 var vite_config_default = defineConfig({
   plugins: [svelte()],
   build: {
-    outDir: "./docs",
+    outDir: './docs',
   },
   css: {
     postcss: postcss_config_default,

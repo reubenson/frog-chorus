@@ -1,6 +1,6 @@
-import _ from "lodash";
-import { FFT_SIZE, handleError } from "./store";
-import { log } from "./utils";
+import _ from 'lodash';
+import { FFT_SIZE, handleError } from './store';
+import { log } from './utils';
 
 /**
  * The AudioConfig class is responsible for managing audio input and output devices
@@ -24,12 +24,12 @@ export class AudioConfig {
       (window as any).AudioContext || (window as any).webkitAudioContext;
     this.ctx = new AudioContext();
     this.sampleRate = this.ctx.sampleRate;
-    log("Audio Sample Rate:", this.sampleRate);
+    log('Audio Sample Rate:', this.sampleRate);
 
     await this.setInputDeviceId()
       .then(this.initializeAudio.bind(this))
       .then(() => {
-        console.log("audio start complete");
+        console.log('audio start complete');
       });
   }
 
@@ -48,7 +48,7 @@ export class AudioConfig {
       .enumerateDevices()
       .then((devices) => {
         const audioInputDevices = devices.filter(
-          (device) => device.kind === "audioinput",
+          (device) => device.kind === 'audioinput',
         );
         const audioInputDevice = audioInputDevices[0];
 
@@ -56,7 +56,7 @@ export class AudioConfig {
         // throw new Error('testing error');
 
         if (!audioInputDevice) {
-          console.error("no audio input device found");
+          console.error('no audio input device found');
           return;
         } else if (audioInputDevices.length > 1) {
           console.warn(

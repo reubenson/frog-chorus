@@ -19,13 +19,13 @@ section {
   }
 
   li::before {
-    content: "𓆏";
+    content: '𓆏';
     font-size: 0.8em;
     margin-right: 0.5em;
   }
 
   .event-item::before {
-    content: "";
+    content: '';
     display: none;
   }
 

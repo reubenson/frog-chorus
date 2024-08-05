@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { PRINT_LOGS } from "./store";
+import _ from 'lodash';
+import { PRINT_LOGS } from './store';
 
 /**
  * Wrapper function around console.log
@@ -8,7 +8,7 @@ import { PRINT_LOGS } from "./store";
  */
 export function log(message: string, additionalMessage?: any): void {
   if (PRINT_LOGS) {
-    console.log(message, additionalMessage || "");
+    console.log(message, additionalMessage || '');
   }
 }
 
@@ -55,7 +55,7 @@ export function linearToLog(data: number[]): number[] {
     const newValue = Math.log10(item);
 
     if (Number.isNaN(newValue)) {
-      console.error("NaN original value", item);
+      console.error('NaN original value', item);
     }
 
     return newValue;
@@ -71,15 +71,15 @@ export function drawFFT(
   dataArray: Float32Array,
   canvasElement: HTMLCanvasElement,
 ): void {
-  const canvasCtx = canvasElement.getContext("2d");
+  const canvasCtx = canvasElement.getContext('2d');
 
   if (!canvasCtx) {
-    console.error("error getting canvas context");
+    console.error('error getting canvas context');
     return;
   }
 
   // Draw black background
-  canvasCtx.fillStyle = "rgb(0, 0, 0)";
+  canvasCtx.fillStyle = 'rgb(0, 0, 0)';
   canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
   // Draw spectrum
@@ -90,7 +90,7 @@ export function drawFFT(
   for (let i = 0; i < bufferLength; i++) {
     const barHeight = (dataArray[i] + 140) * 2;
 
-    canvasCtx.fillStyle = "rgb(" + Math.floor(barHeight + 100) + ", 50, 50)";
+    canvasCtx.fillStyle = 'rgb(' + Math.floor(barHeight + 100) + ', 50, 50)';
     canvasCtx.fillRect(
       posX,
       canvasElement.height - barHeight / 2,
@@ -110,15 +110,15 @@ export function drawHistogram(
   dataArray: number[],
   canvasElement: HTMLCanvasElement,
 ): void {
-  const canvasCtx = canvasElement.getContext("2d");
+  const canvasCtx = canvasElement.getContext('2d');
 
   if (!canvasCtx) {
-    console.error("error getting canvas context");
+    console.error('error getting canvas context');
     return;
   }
 
   // Draw black background
-  canvasCtx.fillStyle = "rgb(0, 0, 0)";
+  canvasCtx.fillStyle = 'rgb(0, 0, 0)';
   canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
   // Draw spectrum
@@ -129,7 +129,7 @@ export function drawHistogram(
   for (let i = 0; i < bufferLength; i++) {
     const barHeight = (dataArray[i] + 140) * 2;
 
-    canvasCtx.fillStyle = "rgb(" + Math.floor(barHeight + 100) + ", 50, 50)";
+    canvasCtx.fillStyle = 'rgb(' + Math.floor(barHeight + 100) + ', 50, 50)';
     canvasCtx.fillRect(
       posX,
       canvasElement.height - barHeight / 2,

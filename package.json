@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint --ext .js,.ts .",
+    "format": "prettier --write .",
     "build": "vite build && npm run build-stg",
     "build-stg": "vite build --outDir docs/stg --assetsDir stg && mv -v ./docs/stg/stg/* ./docs/stg && npm run add-cname",
     "preview": "vite preview",
