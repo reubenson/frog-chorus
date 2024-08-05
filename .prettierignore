@@ -1,0 +1,4 @@
+# Ignore artifacts:
+docs
+node_modules
+public
