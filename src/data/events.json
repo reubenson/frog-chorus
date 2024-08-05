@@ -1,11 +1,11 @@
 {
-    "events": [
-        {
-            "date": "03/20/2024",
-            "time": "6:30 PM EST",
-            "location": "New York City (Pier 3 Plaza, Brooklyn Bridge Park)",
-            "title": "Listening event",
-            "description": "Come join in a special <em>Vernal Equinox</em> launch event in New York City, presented with Fruitful School (<a href='https://fruitful.school/blog/2024-03-13.html' target='blank'>event link</a>, <a href='https://reubenson.com/posters/frog-chorus-vernal-equinox-2024/' target='blank'>poster</a>)."
-        }
-    ]
+  "events": [
+    {
+      "date": "03/20/2024",
+      "time": "6:30 PM EST",
+      "location": "New York City (Pier 3 Plaza, Brooklyn Bridge Park)",
+      "title": "Listening event",
+      "description": "Come join in a special <em>Vernal Equinox</em> launch event in New York City, presented with Fruitful School (<a href='https://fruitful.school/blog/2024-03-13.html' target='blank'>event link</a>, <a href='https://reubenson.com/posters/frog-chorus-vernal-equinox-2024/' target='blank'>poster</a>)."
+    }
+  ]
 }
