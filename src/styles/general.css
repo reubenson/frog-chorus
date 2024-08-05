@@ -1,49 +1,49 @@
 section {
   p {
     margin-top: 1em;
-    letter-spacing: -.3px;
+    letter-spacing: -0.3px;
   }
-  
+
   a {
     text-decoration: underline;
   }
-  
+
   ul {
     list-style: none;
   }
-  
+
   li {
-    letter-spacing: -.3px;
+    letter-spacing: -0.3px;
     line-height: 1.5em;
     padding: 6px;
   }
-  
+
   li::before {
-    content: '𓆏';
-    font-size: .8em;
-    margin-right: .5em;
+    content: "𓆏";
+    font-size: 0.8em;
+    margin-right: 0.5em;
   }
 
   .event-item::before {
-    content: '';
+    content: "";
     display: none;
   }
-  
+
   blockquote {
     padding-left: 10px;
-    font-size: .9em;
+    font-size: 0.9em;
     text-align: justify;
-    letter-spacing: -.3px;
+    letter-spacing: -0.3px;
     border-bottom: none;
     border-right: none;
     border-top: none;
     border-width: 2px;
     margin-top: 10px;
     padding-left: 1em;
-    font-size: .9em;
-    border-color: #064e3b; 
+    font-size: 0.9em;
+    border-color: #064e3b;
   }
-  
+
   figure {
     border-width: 1px;
     border-top: solid;
@@ -55,7 +55,8 @@ section {
 }
 
 /* @media screen and (min-width: 1024px) { */
-  p, li {
-    font-size: 1em;
-  }
+p,
+li {
+  font-size: 1em;
+}
 /* } */
