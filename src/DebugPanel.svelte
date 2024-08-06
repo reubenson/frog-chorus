@@ -14,7 +14,7 @@
   $: {
     plotInputFFT(analyser.realtimeAudioFeatures?.directInputFFT);
     plotConvolution(analyser.realtimeAudioFeatures?.convolutionFFT);
-    plotBaseline(analyser.ambientAudioFeatures?.convolutionFFT);
+    plotBaseline(analyser.baselineAudioFeatures?.convolutionFFT);
     plotEagernessCurve();
     plotShynessCurve();
   }
