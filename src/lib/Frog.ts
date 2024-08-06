@@ -159,7 +159,7 @@ export class Frog implements FrogProps {
     // of the spectrum". This is useful for ensuring that the spectrum is similar,
     // without a bunch of energy added to non-frog parts of the spectrum
     const rolloff = audioFeatures.spectralRolloff;
-    const deltaRolloff = Math.abs(rolloff - this.audioAnalyser.baselineRolloff);
+    const deltaRolloff = Math.abs(rolloff - this.audioAnalyser.baselineAudioFeatures.spectralRolloff);
     const rolloffIsSimilar = deltaRolloff < 600;
 
     // spectral crest: "This is the ratio of the loudest magnitude over the RMS
@@ -177,7 +177,7 @@ export class Frog implements FrogProps {
     // This is very useful, because it ensures that the majority of activity in the spectrum is
     // close to the frog's dominant frequency
     const centroid = audioFeatures.spectralCentroid;
-    const relativeCentroid = Math.abs(centroid - this.audioAnalyser.baselineCentroid);
+    const relativeCentroid = Math.abs(centroid - this.audioAnalyser.baselineAudioFeatures.spectralCentroid);
     const centroidIsSimilar = relativeCentroid < 1.0;
 
     this.frogSignalDetected =

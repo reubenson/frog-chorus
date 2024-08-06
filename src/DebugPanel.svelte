@@ -167,11 +167,9 @@
   <header class="mt-4 text-xl">
     Audio Features
   </header>
-  <ul>
-    <li class="h-14 p-2 basis-2/4">Base Rolloff: {_.round(analyser.baselineRolloff, 1)}</li>
-    <li class="h-14 p-2 basis-2/4">Base Centroid: {_.round(analyser.baselineCentroid, 1)}</li>
-  </ul>
   <ul class="flex flex-row flex-wrap">
+    <li class="h-14 p-2 basis-2/4">Base Rolloff: {_.round(analyser.baselineAudioFeatures?.spectralRolloff, 1)}</li>
+    <li class="h-14 p-2 basis-2/4">Base Centroid: {_.round(analyser.baselineAudioFeatures?.spectralCentroid, 1)}</li>
     <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(loudnessThreshold, 1)}</li>
     <!-- <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(analyser.amplitude, 0)}</li> -->
     <!-- <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(analyser.convolutionAmplitude)}</li> -->
