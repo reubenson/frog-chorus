@@ -1,6 +1,6 @@
 <script lang="ts">
   import _ from 'lodash'
-  import { FROGS } from './lib/store';
+  import { audioAnalyser, FROGS } from './lib/store';
   import { drawFFT, log } from './lib/utils'
   import { Frog } from './lib/Frog'
 
@@ -9,15 +9,14 @@
 
   export let id
   $: frog = $FROGS[0];
+  $: analyser = $audioAnalyser;
 
   $: {
-    // if (!!frog) {
-      plotInputFFT(frog.directInputFFT);
-      plotConvolution(frog.convolutionFFT);
-      plotBaseline(frog.ambientFFT);
-      plotEagernessCurve();
-      plotShynessCurve();
-    // }
+    plotInputFFT(analyser.directInputFFT);
+    plotConvolution(analyser.convolutionFFT);
+    plotBaseline(analyser.ambientFFT);
+    plotEagernessCurve();
+    plotShynessCurve();
   }
 
   function plotInputFFT(data) {
@@ -119,7 +118,6 @@
       }]
     });
   }
-
 </script>
 
 <div class="debug-panel">
@@ -170,24 +168,24 @@
     Audio Features
   </header>
   <ul>
-    <li class="h-14 p-2 basis-2/4">Base Rolloff: {_.round(frog.baselineRolloff, 1)}</li>
-    <li class="h-14 p-2 basis-2/4">Base Centroid: {_.round(frog.baselineCentroid, 1)}</li>
+    <li class="h-14 p-2 basis-2/4">Base Rolloff: {_.round(analyser.baselineRolloff, 1)}</li>
+    <li class="h-14 p-2 basis-2/4">Base Centroid: {_.round(analyser.baselineCentroid, 1)}</li>
   </ul>
   <ul class="flex flex-row flex-wrap">
-    <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(frog.loudnessThreshold, 1)}</li>
-    <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(frog.amplitude, 0)}</li>
-    <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(frog.convolutionAmplitude)}</li>
+    <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(analyser.loudnessThreshold, 1)}</li>
+    <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(analyser.amplitude, 0)}</li>
+    <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(analyser.convolutionAmplitude)}</li>
     <li class="h-14 p-2 basis-2/4">
-      Loudness: {_.round(frog.loudness, 1)}
+      Loudness: {_.round(analyser.loudness, 1)}
     </li>
     <li class="h-14 p-2 basis-2/4">
-      Rolloff: {_.round(frog.audioFeatures?.spectralRolloff, 0)}
+      Rolloff: {_.round(analyser.audioFeatures?.spectralRolloff, 0)}
     </li>
     <li class="h-14 p-2 basis-2/4">
-      Centroid: {_.round(frog.audioFeatures?.spectralCentroid, 0)}
+      Centroid: {_.round(analyser.audioFeatures?.spectralCentroid, 0)}
     </li>
     <li class="h-14 p-2 basis-2/4">
-      Crest: {_.round(frog.audioFeatures?.spectralCrest, 0)}
+      Crest: {_.round(analyser.audioFeatures?.spectralCrest, 0)}
     </li>
   </ul>
 </div>

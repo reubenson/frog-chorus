@@ -3,10 +3,12 @@ import NoSleep from 'nosleep.js';
 import { writable } from 'svelte/store';
 import { AudioConfig } from './AudioManager';
 import { Frog } from './Frog';
+import { AudioAnalyser } from './AudioAnalyser';
 import spring_peeper from '../assets/spring-peeper.mp3';
+import { log } from './utils';
 
 // Important parameters for refining behavior
-export const inputSamplingInterval = 120; // time (ms) between audio analysis events
+export const inputSamplingInterval = 12; // time (ms) between audio analysis events
 export const FFT_SIZE = 1024;
 export const highpassFilterFrequency = 1000; // (units: hz)
 export const loudnessThreshold = 28; // arbitrary units, following Meyda lib
@@ -34,6 +36,8 @@ export const colors = {
 
 export const frogsCount = 1;
 export const audio = new AudioConfig();
+export const audioAnalyser = writable(null);
+export const baselineRolloff = writable(0);
 export const audioFile = spring_peeper;
 export const hasStarted = writable(false);
 export const DEBUG_ON = writable(false);
@@ -42,6 +46,7 @@ export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
 export const url = writable('');
 export let inputSourceNode;
+export let analyser;
 
 export const handleError = (msg: string): void => {
   console.error('Rendering error to user:', msg);
@@ -65,6 +70,9 @@ function setUpdateInterval(): void {
       state = frogInstances.map((frog) => ({ ...frog.getProps() }));
       return state;
     });
+    audioAnalyser.update((state) => {
+      return state;
+    });
   }, inputSamplingInterval);
 }
 
@@ -80,8 +88,12 @@ export const handleStart = async (): Promise<void> => {
     .then(async () => {
       inputSourceNode = audio.input;
 
+      analyser = new AudioAnalyser(audio, audioFile);
+      await analyser.init();
+      audioAnalyser.set(analyser);
+
       const promises = _.times(frogsCount, async () => {
-        const frog = new Frog(audio, audioFile);
+        const frog = new Frog(analyser);
 
         await frog.initialize().then(() => {
           const frogProps = frog.getProps();
@@ -107,5 +119,6 @@ export const toggleOnDebug = (): void => {
 };
 
 export const sendFrogsToBed = (): void => {
+  analyser.stop();
   frogInstances.forEach((frog) => frog.sleep());
 };

@@ -1,7 +1,7 @@
 <script lang="ts">
   import _ from 'lodash';
   import DebugPanel from './DebugPanel.svelte';
-  import { DEBUG_ON, colors } from './lib/store';
+  import { DEBUG_ON, colors, audioAnalyser } from './lib/store';
   import { onMount } from 'svelte';
   import spring_peeper from './assets/spring-p.png';
   
@@ -11,7 +11,6 @@
   export let isSleeping;
   export let frogSignalDetected;
   export let isCurrentlySinging;
-  export let environmentIsQuiet;
 
   let environmentVolumeLevel = 0;
   let showNoisyWarning = false;
@@ -20,6 +19,8 @@
   function updateMetrics(amp) {
     environmentVolumeLevel = Math.min(((amp + 90) / 80) * 100, 100); // roughly map it to a percentage
   }
+
+  $: environmentIsQuiet = $audioAnalyser.environmentIsQuiet;
 
   $: {
     updateMetrics(amplitude)

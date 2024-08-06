@@ -167,3 +167,26 @@ export function matchToHash(str: string): boolean {
 export function testProbability(probability = 0): boolean {
   return probability >= Math.random();
 }
+
+/**
+ * For a given array, return an object containing the index-value pair
+ * corresponding to the largest value in the array
+ * @param arr - expects an array of FFT values
+ * @returns { index: number, value: number } - object containing the index and value of the peak bin
+ */
+export function findPeakBin(arr: Float32Array): { index: number; value: number } {
+  const defaultValue = { index: 0, value: -Infinity };
+
+  if (!arr) return defaultValue;
+
+  return arr.reduce(
+    (acc: { index: number; value: number }, item: number, i: number) => {
+      if (item > acc.value) {
+        return { index: i, value: item };
+      } else {
+        return acc;
+      }
+    },
+    defaultValue,
+  );
+}
