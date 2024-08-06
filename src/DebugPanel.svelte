@@ -12,9 +12,9 @@
   $: analyser = $audioAnalyser;
 
   $: {
-    plotInputFFT(analyser.directInputFFT);
-    plotConvolution(analyser.convolutionFFT);
-    plotBaseline(analyser.ambientFFT);
+    plotInputFFT(analyser.realtimeAudioFeatures?.directInputFFT);
+    plotConvolution(analyser.realtimeAudioFeatures?.convolutionFFT);
+    plotBaseline(analyser.ambientAudioFeatures?.convolutionFFT);
     plotEagernessCurve();
     plotShynessCurve();
   }
@@ -173,19 +173,19 @@
   </ul>
   <ul class="flex flex-row flex-wrap">
     <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(analyser.loudnessThreshold, 1)}</li>
-    <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(analyser.amplitude, 0)}</li>
-    <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(analyser.convolutionAmplitude)}</li>
+    <!-- <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(analyser.amplitude, 0)}</li> -->
+    <!-- <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(analyser.convolutionAmplitude)}</li> -->
     <li class="h-14 p-2 basis-2/4">
-      Loudness: {_.round(analyser.loudness, 1)}
+      Loudness: {_.round(analyser.realtimeAudioFeatures?.loudness, 1)}
     </li>
     <li class="h-14 p-2 basis-2/4">
-      Rolloff: {_.round(analyser.audioFeatures?.spectralRolloff, 0)}
+      Rolloff: {_.round(analyser.realtimeAudioFeatures?.spectralRolloff, 0)}
     </li>
     <li class="h-14 p-2 basis-2/4">
-      Centroid: {_.round(analyser.audioFeatures?.spectralCentroid, 0)}
+      Centroid: {_.round(analyser.realtimeAudioFeatures?.spectralCentroid, 0)}
     </li>
     <li class="h-14 p-2 basis-2/4">
-      Crest: {_.round(analyser.audioFeatures?.spectralCrest, 0)}
+      Crest: {_.round(analyser.realtimeAudioFeatures?.spectralCrest, 0)}
     </li>
   </ul>
 </div>

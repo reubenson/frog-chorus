@@ -38,13 +38,9 @@
 import { EventEmitter } from 'eventemitter3';
 import _ from 'lodash';
 import type { AudioConfig } from './AudioManager';
-import {
-  DEBUG_ON,
-  chirpAttemptRate,
-  loudnessThreshold,
-  rateOfLosingShyness,
-} from './store';
+import { DEBUG_ON, chirpAttemptRate, loudnessThreshold, rateOfLosingShyness } from './store';
 import { log, calculateAmplitude, testProbability, findPeakBin } from './utils';
+import { AudioFeatures } from './AudioFeatures';
 
 let idCounter = 0;
 let debugOn = false;
@@ -58,7 +54,7 @@ interface FrogProps {
 }
 
 interface FrogPropsExtended extends FrogProps {
-  convolutionAmplitude: number;
+  // convolutionAmplitude: number;
   shyness: number;
   eagerness: number;
   loudnessThreshold: number;
@@ -72,7 +68,7 @@ export class Frog implements FrogPropsExtended {
   id: number;
   amplitude: number;
   audioAnalyser: AudioAnalyser;
-  audioFilepath: string;
+  // audioFilepath: string;
   audioConfig: AudioConfig;
   shyness: number; // 0. - 1.
   eagerness: number; // 0. - 1.
@@ -86,8 +82,8 @@ export class Frog implements FrogPropsExtended {
   loudness: number;
   frogSignalDetected: boolean;
   isCurrentlySinging: boolean;
-  baselineRolloff: number;
-  baselineCentroid: number;
+  // baselineRolloff: number;
+  // baselineCentroid: number;
   chirpProbability: number;
   detuneAmount: number;
   chirpTimer: NodeJS.Timeout;
@@ -162,7 +158,6 @@ export class Frog implements FrogPropsExtended {
     this.isSleeping = true;
   }
 
-
   /**
    * Perform frequency analysis using FFT data to determine whether another frog is being heard.
    * The convolutionFFT data is a way of representing the degree of match between the microphone
@@ -174,43 +169,55 @@ export class Frog implements FrogPropsExtended {
    *
    * TO DO: Ideas for improving signal detection
    * - Use a weighted average calculation instead of analysing frequency bins in the FFT individually
-   * - Use a library like Meyda to extract more complex audio features (https://meyda.js.org/audio-features)
    * - Try statistical measurements https://www.npmjs.com/package/stat-fns
    */
-  private detectFrogSignal(audioFeatures): void {
+  private detectFrogSignal(audioFeatures: AudioFeatures): void {
+    if (!this.audioAnalyser.environmentIsQuiet) return;
+
     const convolutionPeakBin = findPeakBin(audioFeatures.convolutionFFT);
-    const ambientPeakBin = findPeakBin(audioFeatures.ambientFFT);
+    const ambientPeakBin = findPeakBin(this.audioAnalyser.ambientAudioFeatures.convolutionFFT);
 
     // simple calculation: determine whether the peak frequency bin is similar,
     // between convolutionFFT and ambientFFT
-    const peaksAreSimilar =
-      Math.abs(convolutionPeakBin.index - ambientPeakBin.index) < 4;
+    const peaksAreSimilar = Math.abs(convolutionPeakBin.index - ambientPeakBin.index) < 4;
     const convolutionAmplitude = calculateAmplitude(audioFeatures.convolutionFFT);
     const convolutionIsLouder =
       convolutionAmplitude - this.audioAnalyser.convolutionAmplitudeThreshold > 20;
 
-    // these criteria ensure (1) that the dominant frequency of the frog is reflected in the convolution FFT data (works under the assumption that the frog only has one dominant frequency, e.g. not cocqui) and (2) that the microphone is above ambient noise, and therefore actually hearing a frog, and not hovering around the ambient state
+    // these criteria ensure (1) that the dominant frequency of the frog is
+    // reflected in the convolution FFT data (works under the assumption that
+    // the frog only has one dominant frequency, e.g. not cocqui) and (2) that
+    // the microphone is above ambient noise, and therefore actually hearing a
+    // frog, and not hovering around the ambient state
     const convolutionMatches = peaksAreSimilar && convolutionIsLouder;
 
-    // spectral rolloff: "The frequency below which is contained 99% of the energy of the spectrum". This is useful for ensuring that the spectrum is similar, without a bunch of energy added to non-frog parts of the spectrun
-    const rolloff = audioFeatures.audioFeatures?.spectralRolloff;
-    const deltaRolloff = Math.abs(rolloff - this.baselineRolloff);
+    // spectral rolloff: "The frequency below which is contained 99% of the energy
+    // of the spectrum". This is useful for ensuring that the spectrum is similar,
+    // without a bunch of energy added to non-frog parts of the spectrum
+    const rolloff = audioFeatures.spectralRolloff;
+    const deltaRolloff = Math.abs(rolloff - this.audioAnalyser.baselineRolloff);
     const rolloffIsSimilar = deltaRolloff < 600;
 
-    // spectral crest: "This is the ratio of the loudest magnitude over the RMS of the whole frame. A high number is an indication of a loud peak compared out to the overall curve of the spectrum".  This is useful for ensuring that there are still sharp peaks in the audio. This is only useful for frogs like spring peepers, which have a strong dominant frequency
-    const crest = audioFeatures.audioFeatures?.spectralCrest;
+    // spectral crest: "This is the ratio of the loudest magnitude over the RMS 
+    // of the whole frame. A high number is an indication of a loud peak compared
+    // out to the overall curve of the spectrum".  This is useful for ensuring that
+    // there are still sharp peaks in the audio. This is only useful for frogs like
+    // spring peepers, which have a strong dominant frequency
+    const crest = audioFeatures.spectralCrest;
     const hasSharpCrest = crest > 10;
 
-    // spectral centroid: "An indicator of the “brightness” of a given sound, representing the spectral centre of gravity. If you were to take the spectrum, make a wooden block out of it and try to balance it on your finger (across the X axis), the spectral centroid would be the frequency that your finger “touches” when it successfully balances." This is very useful, because it ensures that the majority of activity in the spectrum is close to the frog's dominant frequency
-    const centroid = audioFeatures.audioFeatures?.spectralCentroid;
-    const relativeCentroid = Math.abs(centroid - this.baselineCentroid);
+    // spectral centroid: "An indicator of the “brightness” of a given sound, representing
+    // the spectral centre of gravity. If you were to take the spectrum, make a wooden
+    // block out of it and try to balance it on your finger (across the X axis), the spectral
+    // centroid would be the frequency that your finger “touches” when it successfully balances."
+    // This is very useful, because it ensures that the majority of activity in the spectrum is
+    //  close to the frog's dominant frequency
+    const centroid = audioFeatures.spectralCentroid;
+    const relativeCentroid = Math.abs(centroid - this.audioAnalyser.baselineCentroid);
     const centroidIsSimilar = relativeCentroid < 1.0;
 
     this.frogSignalDetected =
-      convolutionMatches &&
-      hasSharpCrest &&
-      centroidIsSimilar &&
-      rolloffIsSimilar;
+      convolutionMatches && hasSharpCrest && centroidIsSimilar && rolloffIsSimilar;
   }
 
   /**
@@ -304,10 +311,7 @@ export class Frog implements FrogPropsExtended {
   public calculateEagernessFactor(eagerness): number {
     const eagernessBaseFactor = 0.01;
 
-    return (
-      eagernessBaseFactor +
-      Math.pow(eagerness, 1 / 2) * (1 - eagernessBaseFactor)
-    );
+    return eagernessBaseFactor + Math.pow(eagerness, 1 / 2) * (1 - eagernessBaseFactor);
   }
 
   /**
@@ -328,8 +332,7 @@ export class Frog implements FrogPropsExtended {
       return 1;
     } else {
       return (
-        this.calculateEagernessFactor(this.eagerness) *
-        this.calculateShynessFactor(this.shyness)
+        this.calculateEagernessFactor(this.eagerness) * this.calculateShynessFactor(this.shyness)
       );
     }
   }
@@ -338,15 +341,15 @@ export class Frog implements FrogPropsExtended {
    * Determine whether the frog should chirp, or not.
    * Probability is calculated over a volume of time:
    * likelihood of chirp per second.
-   * This is done to account for variable attempt rate, especially when interval timers are subject to throttling by the browser (e.g. when screen is inactive)
+   * This is done to account for variable attempt rate, especially when interval timers are subject
+   * to throttling by the browser (e.g. when screen is inactive)
    */
   private tryChirp(): void {
     const time = Date.now();
     const probabilityInterval = 1; // (unit: seconds)
 
     this.chirpProbability =
-      (this.determineChirpProbability() *
-        ((time - this.lastAttemptTime) / 1000)) /
+      (this.determineChirpProbability() * ((time - this.lastAttemptTime) / 1000)) /
       probabilityInterval;
     const shouldChirp = testProbability(this.chirpProbability);
 
@@ -365,7 +368,7 @@ export class Frog implements FrogPropsExtended {
    * (many of these are for debug/diagnostics, not for the primary view)
    * @returns FrogProps
    */
-  public getProps(): FrogProps | FrogPropsExtended {
+  public getUiProps(): FrogProps | FrogPropsExtended {
     return debugOn
       ? {
           id: this.id,
