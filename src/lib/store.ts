@@ -5,7 +5,6 @@ import { AudioConfig } from './AudioManager';
 import { Frog } from './Frog';
 import { AudioAnalyser } from './AudioAnalyser';
 import spring_peeper from '../assets/spring-peeper.mp3';
-import { log } from './utils';
 
 // Important parameters for refining behavior
 export const inputSamplingInterval = 120; // time (ms) between audio analysis events
@@ -95,13 +94,13 @@ export const handleStart = async (): Promise<void> => {
       const promises = _.times(frogsCount, async () => {
         const frog = new Frog(analyser);
 
-        await frog.initialize().then(() => {
-          const frogProps = frog.getUiProps();
-          frogInstances.push(frog);
-          console.log('frogProps', frogProps);
-          FROGS.update((val) => [...val, frogProps]);
-          setUpdateInterval();
-        });
+        frog.initialize();
+
+        const frogProps = frog.getUiProps();
+        frogInstances.push(frog);
+        console.log('frogProps', frogProps);
+        FROGS.update((val) => [...val, frogProps]);
+        setUpdateInterval();
       });
 
       return await Promise.all(promises);

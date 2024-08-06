@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { FFT_SIZE, handleError } from './store';
 import { log } from './utils';
 

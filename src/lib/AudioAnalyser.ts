@@ -1,12 +1,11 @@
 import _ from 'lodash';
 import { EventEmitter } from 'eventemitter3';
-import type { MeydaAnalyzer } from 'meyda';
+import MeydaAnalyzer from 'meyda';
 import Meyda from 'meyda';
 import type { AudioConfig } from './AudioManager';
 import { AudioFeatures } from './AudioFeatures';
-import { log, calculateAmplitude } from './utils';
+import { calculateAmplitude } from './utils';
 import {
-  DEBUG_ON,
   FFT_SIZE,
   highpassFilterFrequency,
   inputSamplingInterval,
@@ -34,21 +33,14 @@ export class AudioAnalyser {
   audioFilepath: string;
   audioConfig: AudioConfig;
   convolutionAnalyser: AnalyserNode;
-  // convolutionAmplitude: number;
-  // amplitude: number;
-  // convolutionFFT: Float32Array;
-  // directInputFFT: Float32Array;
-  // ambientFFT: Float32Array;
-  // loudness: number;
-  loudnessThreshold: number; // loudness calculated with Meyda lib
   directInputAnalyser: AnalyserNode;
   meydaAnalyser: MeydaAnalyzer;
   convolver: ConvolverNode;
   buffer: AudioBuffer;
   audioFeatures: AudioFeatures;
   audioFeaturesOverTime: AudioFeaturesOverTime;
-  updateStateWithThrottle: Function;
-  ambientTimeout: number;
+  // updateStateWithThrottle: Function;
+  ambientTimeout: NodeJS.Timeout;
   baselineRolloff: number;
   baselineCentroid: number;
   convolutionAmplitudeThreshold: number;
@@ -62,7 +54,6 @@ export class AudioAnalyser {
     this.audioConfig = audioConfig;
     this.audioFilepath = audioFilepath;
     this.emitter = new EventEmitter();
-    this.loudnessThreshold = loudnessThreshold;
 
     this.audioFeaturesOverTime = {
       spectralCentroid: [],
@@ -177,27 +168,18 @@ export class AudioAnalyser {
    * To Do: try extracting more audio features (https://meyda.js.org/audio-features)
    */
   private analyseInputSignal() {
-    // todo: don't re-instantiate
     const convolutionFFT = new Float32Array(FFT_SIZE / 2);
     const directInputFFT = new Float32Array(FFT_SIZE / 2);
 
     this.convolutionAnalyser.getFloatFrequencyData(convolutionFFT);
-    // this.convolutionAmplitude = calculateAmplitude(convolutionFFT);
 
     // the direct input analyser is currently just used for diagnostics, and is not being actively used
     this.directInputAnalyser.getFloatFrequencyData(directInputFFT);
-    // this.amplitude = calculateAmplitude(directInputFFT);
-
-    // this.convolutionFFT = convolutionFFT;
-    // this.directInputFFT = directInputFFT;
-
-    // this.loudness = this?.audioFeatures?.loudness?.total;
 
     return {
       convolutionFFT,
       directInputFFT,
-      // loudness: this?.audioFeatures?.loudness?.total,
-      amplitude: calculateAmplitude(directInputFFT)
+      amplitude: calculateAmplitude(directInputFFT),
     };
   }
 
@@ -211,40 +193,31 @@ export class AudioAnalyser {
       spectralRolloff: data.spectralRolloff,
       spectralCentroid: data.spectralCentroid,
       loudness: data.loudness.total,
-      // audioFeatures: this.audioFeatures,
-      // convolutionAmplitude: this.convolutionAmplitude,
       amplitude: inputAnalysis.amplitude,
       convolutionFFT: inputAnalysis.convolutionFFT,
-      directInputFFT: inputAnalysis.directInputFFT
+      directInputFFT: inputAnalysis.directInputFFT,
     });
 
     this.establishAmbientFFT(features);
     this.emitter.emit('audioFeatures', features);
     this.realtimeAudioFeatures = features;
-    // if (!this.hasInitialized || this.isSleeping) return;
-
   }
 
   /**
-   * Set ambientFFT and related properties if the environment has settled into quiet for a certain period of time
+   * Set ambientFFT and related properties if the environment has settled into
+   * quiet for a certain period of time
    */
   private setAmbientFFT(audioFeatures): void {
-    // this.ambientFFT = data.convolutionFFT;
     const convolutionAmplitude = calculateAmplitude(audioFeatures.convolutionFFT);
     this.convolutionAmplitudeThreshold = convolutionAmplitude;
 
     // TODO?: dynamically reset amplitude threshold to lower values as the environment gets quieter
-    // this.baselineRolloff = this.audioFeatures?.spectralRolloff
     const averageRolloff = _.mean(this.audioFeaturesOverTime.spectralRolloff);
     this.baselineRolloff = averageRolloff;
-    // this.audioFeatures.averageRolloff = averageRolloff
-    // this.baselineCentroid = this.audioFeatures?.spectralCentroid
     const averageCentroid = _.mean(this.audioFeaturesOverTime.spectralCentroid);
     this.baselineCentroid = averageCentroid;
-    // this.audioFeatures.averageCentroid = averageCentroid
 
     this.ambientAudioFeatures = new AudioFeatures(audioFeatures);
-    log('Ambient FFT set', this.ambientAudioFeatures);
   }
 
   /**
@@ -258,10 +231,9 @@ export class AudioAnalyser {
     // early return if ambientFFT has already been set
     if (this.ambientAudioFeatures || !convolvedInputHasSettled) return;
 
-    if (data.loudness > this.loudnessThreshold) {
+    if (data.loudness > loudnessThreshold) {
       clearTimeout(this.ambientTimeout);
       this.ambientTimeout = null;
-      // to do: refactor
       this.audioFeaturesOverTime = {
         spectralRolloff: [],
         spectralCentroid: [],
@@ -279,8 +251,6 @@ export class AudioAnalyser {
 
   public meydaCallback(data: MeydaFeatures): void {
     const isAnalysingAmbience = !!this.ambientTimeout;
-
-    // this.audioFeatures = Object.assign(features);
 
     this.updateStateWithThrottle(data);
 

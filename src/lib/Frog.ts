@@ -38,12 +38,12 @@
 import { EventEmitter } from 'eventemitter3';
 import _ from 'lodash';
 import type { AudioConfig } from './AudioManager';
-import { DEBUG_ON, chirpAttemptRate, loudnessThreshold, rateOfLosingShyness } from './store';
-import { log, calculateAmplitude, testProbability, findPeakBin } from './utils';
+import { chirpAttemptRate, loudnessThreshold, rateOfLosingShyness } from './store';
+import { calculateAmplitude, testProbability, findPeakBin } from './utils';
 import { AudioFeatures } from './AudioFeatures';
+import { AudioAnalyser } from './AudioAnalyser';
 
 let idCounter = 0;
-let debugOn = false;
 
 interface FrogProps {
   id: number;
@@ -51,24 +51,17 @@ interface FrogProps {
   isCurrentlySinging: boolean;
   frogSignalDetected: boolean;
   isSleeping: boolean;
-}
-
-interface FrogPropsExtended extends FrogProps {
-  // convolutionAmplitude: number;
   shyness: number;
   eagerness: number;
-  loudnessThreshold: number;
-  loudness: number;
   chirpProbability: number;
   detuneAmount: number;
 }
 
-export class Frog implements FrogPropsExtended {
+export class Frog implements FrogProps {
   private emitter: EventEmitter;
   id: number;
   amplitude: number;
   audioAnalyser: AudioAnalyser;
-  // audioFilepath: string;
   audioConfig: AudioConfig;
   shyness: number; // 0. - 1.
   eagerness: number; // 0. - 1.
@@ -76,25 +69,17 @@ export class Frog implements FrogPropsExtended {
   currentTimestamp: number;
   rateOfStateChange: number; // manually-calibrated value used to determine rate of change in eagerness and shyness
   sampleDuration: number;
-  loudnessThreshold: number; // loudness calculated with Meyda lib
-  convolutionAmplitudeThreshold: number;
   hasInitialized: boolean;
-  loudness: number;
   frogSignalDetected: boolean;
   isCurrentlySinging: boolean;
-  // baselineRolloff: number;
-  // baselineCentroid: number;
   chirpProbability: number;
   detuneAmount: number;
   chirpTimer: NodeJS.Timeout;
   isSleeping: boolean;
   lastAttemptTime: number;
-  updateStateWithThrottle: Function;
+  // updateStateWithThrottle: Function;
 
   constructor(audioAnalyser) {
-    DEBUG_ON.subscribe((val) => {
-      debugOn = val;
-    });
     this.id = ++idCounter;
     this.audioAnalyser = audioAnalyser;
     this.emitter = audioAnalyser.emitter;
@@ -104,7 +89,6 @@ export class Frog implements FrogPropsExtended {
     this.lastUpdated = Date.now();
     this.currentTimestamp = Date.now();
     this.rateOfStateChange = 0.2; // to be tweaked
-    this.loudnessThreshold = loudnessThreshold;
     this.hasInitialized = false;
     this.frogSignalDetected = false;
     this.isCurrentlySinging = false;
@@ -116,24 +100,23 @@ export class Frog implements FrogPropsExtended {
   }
 
   /**
-   * Calculate the audioImprint, which will be used to compare against the microphone's audio
-   * feed in order to determine the level of match in the frequency spectrum and thereby calcuate
-   * the frog's shyness and eagerness
+   * Initialize the frog
    */
-  public async initialize(): Promise<void> {
-    const attemptRate = chirpAttemptRate;
+  public initialize(): void {
     // evaluate whether to chirp or not on every tick
-    this.chirpTimer = setInterval(this.tryChirp.bind(this), attemptRate);
+    this.chirpTimer = setInterval(this.tryChirp.bind(this), chirpAttemptRate);
 
     this.hasInitialized = true;
   }
 
   /**
-   * Periodically update frog's shyness and eagerness
+   * Update the internal state in response to environment
    * Hearing other frogs will increase eagerness.
    * A loud environment with non-frog sounds will increase shyness.
+   * @param audioFeatures - object containing audio features
+   * @returns
    */
-  public updateState(audioFeatures): void {
+  public updateState(audioFeatures: AudioFeatures): void {
     if (!this.hasInitialized || this.isSleeping) return;
 
     if (this.isCurrentlySinging) {
@@ -143,7 +126,6 @@ export class Frog implements FrogPropsExtended {
 
     this.currentTimestamp = Date.now();
 
-    this.loudness = audioFeatures.audioFeatures?.loudness?.total;
     this.amplitude = audioFeatures.amplitude;
 
     this.detectFrogSignal(audioFeatures);
@@ -198,7 +180,7 @@ export class Frog implements FrogPropsExtended {
     const deltaRolloff = Math.abs(rolloff - this.audioAnalyser.baselineRolloff);
     const rolloffIsSimilar = deltaRolloff < 600;
 
-    // spectral crest: "This is the ratio of the loudest magnitude over the RMS 
+    // spectral crest: "This is the ratio of the loudest magnitude over the RMS
     // of the whole frame. A high number is an indication of a loud peak compared
     // out to the overall curve of the spectrum".  This is useful for ensuring that
     // there are still sharp peaks in the audio. This is only useful for frogs like
@@ -211,7 +193,7 @@ export class Frog implements FrogPropsExtended {
     // block out of it and try to balance it on your finger (across the X axis), the spectral
     // centroid would be the frequency that your finger “touches” when it successfully balances."
     // This is very useful, because it ensures that the majority of activity in the spectrum is
-    //  close to the frog's dominant frequency
+    // close to the frog's dominant frequency
     const centroid = audioFeatures.spectralCentroid;
     const relativeCentroid = Math.abs(centroid - this.audioAnalyser.baselineCentroid);
     const centroidIsSimilar = relativeCentroid < 1.0;
@@ -224,8 +206,9 @@ export class Frog implements FrogPropsExtended {
    * Update the frog's "shyness", which is the frog's tendency to be silent
    */
   private updateShyness(): void {
-    const rateOfIncreasingShyness = 0.8 * ((this.loudness || 0) / 40.0);
-    const isQuiet = this.loudness < this.loudnessThreshold + 5;
+    const loudness = this.audioAnalyser.realtimeAudioFeatures?.loudness || 0;
+    const rateOfIncreasingShyness = 0.8 * (loudness / 40.0);
+    const isQuiet = loudness < loudnessThreshold + 5;
 
     if (isQuiet) {
       const velocity = rateOfLosingShyness;
@@ -368,27 +351,17 @@ export class Frog implements FrogPropsExtended {
    * (many of these are for debug/diagnostics, not for the primary view)
    * @returns FrogProps
    */
-  public getUiProps(): FrogProps | FrogPropsExtended {
-    return debugOn
-      ? {
-          id: this.id,
-          amplitude: this.amplitude,
-          frogSignalDetected: this.frogSignalDetected,
-          isCurrentlySinging: this.isCurrentlySinging,
-          isSleeping: this.isSleeping,
-          shyness: this.shyness,
-          eagerness: this.eagerness,
-          loudnessThreshold: this.loudnessThreshold,
-          loudness: this.loudness,
-          chirpProbability: this.chirpProbability,
-          detuneAmount: this.detuneAmount,
-        }
-      : {
-          id: this.id,
-          amplitude: this.amplitude,
-          frogSignalDetected: this.frogSignalDetected,
-          isCurrentlySinging: this.isCurrentlySinging,
-          isSleeping: this.isSleeping,
-        };
+  public getUiProps(): FrogProps {
+    return {
+      id: this.id,
+      amplitude: this.amplitude,
+      frogSignalDetected: this.frogSignalDetected,
+      isCurrentlySinging: this.isCurrentlySinging,
+      isSleeping: this.isSleeping,
+      shyness: this.shyness,
+      eagerness: this.eagerness,
+      chirpProbability: this.chirpProbability,
+      detuneAmount: this.detuneAmount,
+    };
   }
 }

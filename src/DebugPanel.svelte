@@ -1,6 +1,6 @@
 <script lang="ts">
   import _ from 'lodash'
-  import { audioAnalyser, FROGS } from './lib/store';
+  import { audioAnalyser, FROGS, loudnessThreshold } from './lib/store';
   import { drawFFT, log } from './lib/utils'
   import { Frog } from './lib/Frog'
 
@@ -172,7 +172,7 @@
     <li class="h-14 p-2 basis-2/4">Base Centroid: {_.round(analyser.baselineCentroid, 1)}</li>
   </ul>
   <ul class="flex flex-row flex-wrap">
-    <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(analyser.loudnessThreshold, 1)}</li>
+    <li class="h-14 p-2 basis-2/4">Loudness Threshold: {_.round(loudnessThreshold, 1)}</li>
     <!-- <li class="h-14 p-2 basis-2/4">Amplitude: {_.round(analyser.amplitude, 0)}</li> -->
     <!-- <li class="h-14 p-2 basis-2/4">Conv Amp: {Math.round(analyser.convolutionAmplitude)}</li> -->
     <li class="h-14 p-2 basis-2/4">

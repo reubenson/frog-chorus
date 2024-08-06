@@ -6,7 +6,7 @@ import { PRINT_LOGS } from './store';
  * @param message - first string
  * @param additionalMessage - optional string
  */
-export function log(message: string, additionalMessage?: any): void {
+export function log(message: string, additionalMessage?: string): void {
   if (PRINT_LOGS) {
     console.log(message, additionalMessage || '');
   }
