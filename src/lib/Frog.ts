@@ -16,23 +16,6 @@
  * Multiple instances of this class may run within the runtime environment on a single device,
  * but the ultimate intent is to only have one instatiated per device, and to have it "interact"
  * with other frogs running on other devices within acoustic proximity.
- *
- * To see a diagram of the general logic flow, see https://reubenson.com/frog/frog-diagram.png
- *
- * Historical Context:
- * Felix Hess began developing his frog-based installation work in 1982, which involved developing
- * a set of fifty robots, each outfitted with a microphone, speaker, and circuitry to allow each
- * robot to listen to its environment and make sounds in the manner of a frog in a frog chorus.
- *
- * Some historical documentation can be read here (https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/),
- * but the best resource for understanding Hess' work is his monograph, 'Light as Air', published by Kehrer Verlag,
- * as well as an artist talk from the 2010s on [YouTube](https://www.youtube.com/watch?v=rMnFKYHzm2k).
- *
- * Additional references:
- * On how frogs hear: https://www.sonova.com/en/story/frogs-hearing-no-ears
- * Autocorrelation for pitch detection: https://alexanderell.is/posts/tuner/
- * Convolution vs correlation: https://towardsdatascience.com/convolution-vs-correlation-af868b6b4fb5
- * Pitchy lib: https://www.npmjs.com/package/pitchy
  */
 
 import { EventEmitter } from 'eventemitter3';
@@ -77,7 +60,6 @@ export class Frog implements FrogProps {
   chirpTimer: NodeJS.Timeout;
   isSleeping: boolean;
   lastAttemptTime: number;
-  // updateStateWithThrottle: Function;
 
   constructor(audioAnalyser) {
     this.id = ++idCounter;
@@ -143,7 +125,7 @@ export class Frog implements FrogProps {
   /**
    * Perform frequency analysis using FFT data to determine whether another frog is being heard.
    * The convolutionFFT data is a way of representing the degree of match between the microphone
-   * input and the sound of the frog. The ambientFFT data is a snapshot of the convolutionFFT
+   * input and the sound of the frog. The baselineAudioFeatures is snapshot of the convolutionFFT
    * data taken when the environment is very quiet, and therefore represents a baseline measurement
    * to detect when there are sounds in the environment above ambient noise. By comparing these two
    * FFT arrays, we can get make an approximate determination of detectable sounds, whether those
@@ -157,11 +139,11 @@ export class Frog implements FrogProps {
     if (!this.audioAnalyser.environmentIsQuiet) return;
 
     const convolutionPeakBin = findPeakBin(audioFeatures.convolutionFFT);
-    const ambientPeakBin = findPeakBin(this.audioAnalyser.ambientAudioFeatures.convolutionFFT);
+    const baselinePeakBin = findPeakBin(this.audioAnalyser.baselineAudioFeatures.convolutionFFT);
 
     // simple calculation: determine whether the peak frequency bin is similar,
-    // between convolutionFFT and ambientFFT
-    const peaksAreSimilar = Math.abs(convolutionPeakBin.index - ambientPeakBin.index) < 4;
+    // between convolutionFFT and baselineFFT
+    const peaksAreSimilar = Math.abs(convolutionPeakBin.index - baselinePeakBin.index) < 4;
     const convolutionAmplitude = calculateAmplitude(audioFeatures.convolutionFFT);
     const convolutionIsLouder =
       convolutionAmplitude - this.audioAnalyser.convolutionAmplitudeThreshold > 20;

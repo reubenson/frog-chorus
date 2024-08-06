@@ -1,5 +1,4 @@
 import { FFT_SIZE, handleError } from './store';
-import { log } from './utils';
 
 /**
  * The AudioConfig class is responsible for managing audio input and output devices
@@ -23,7 +22,6 @@ export class AudioConfig {
       (window as any).AudioContext || (window as any).webkitAudioContext;
     this.ctx = new AudioContext();
     this.sampleRate = this.ctx.sampleRate;
-    log('Audio Sample Rate:', this.sampleRate);
 
     await this.setInputDeviceId()
       .then(this.initializeAudio.bind(this))

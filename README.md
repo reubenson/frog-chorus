@@ -12,11 +12,16 @@ The core challenge of achieving the behavior necessary for Frog Chorus is the de
 
 Currently, this seems to work well enough, but additional sophistication in audio feature-matching is necessary for more complex frog calls. The spring peeper (Pseudacris crucifer) has been a good specimen to work with in this project, because it emits a simple peep, with a clear audio signature consisting of a single peak frequency. Check out [https://github.com/reubenson/frog-chorus/blob/main/src/lib/Frog.ts](https://github.com/reubenson/frog-chorus/blob/main/src/lib/Frog.ts) to see the current implementation of the audio analysis and frog chirping behavior (which I've modeled after Felix's original designs).
 
-As a side note ... it's hard to say how actual frogs perceive sound, but according to [this source](https://www.sonova.com/en/story/frogs-hearing-no-ears), sound reaches their inner ear through their mouth, and their hearing is highly specific to the frequency range of their own species. But more apropos to this project, Felix Hess sums up his own motivations for his work in the following way:
-
-> The complexity of my electronic 'sound creatures' is nothing compared to that of any biological system [...] I developed them as a means to investigate the nature of listening. Through actually building machines such as the 'sound creatures' one can get a 'feel' for the relationship between sensitivity and intelligence. This work has only increased my respect for the frogs, who taught me to sit in silence and listen. - Felix Hess, [Electronic Sound Creatures](https://alife.org/wp-content/uploads/2013/08/collections_ECAL93-0452-0457-Hess.pdf)
+Historical Context:
+Felix Hess began developing his frog-based installation work in 1982, which involved developing a set of fifty robots, each outfitted with a microphone, speaker, and circuitry to allow each robot to listen to its environment and make sounds in the manner of a frog in a frog chorus. Some historical documentation can be read here (https://bldgblog.com/2008/04/space-as-a-symphony-of-turning-off-sounds/), but the best resource for understanding Hess' work is his monograph, 'Light as Air', published by Kehrer Verlag, as well as an artist talk from the 2010s on [YouTube](https://www.youtube.com/watch?v=rMnFKYHzm2k).
 
 This project is built with Svelte, TypeScript, Vite, and Tailwind, and hosted via GitHub pages at https://frogchor.us.
+
+Additional references:
+- On how frogs hear: https://www.sonova.com/en/story/frogs-hearing-no-ears
+- Autocorrelation for pitch detection: https://alexanderell.is/posts/tuner/
+- Convolution vs correlation: https://towardsdatascience.com/convolution-vs-correlation-af868b6b4fb5
+- Pitchy lib: https://www.npmjs.com/package/pitchy
 
 ## Getting Started
 

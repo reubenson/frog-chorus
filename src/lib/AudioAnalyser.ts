@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { EventEmitter } from 'eventemitter3';
-import MeydaAnalyzer from 'meyda';
 import Meyda from 'meyda';
+import { MeydaAnalyzer } from 'meyda/dist/esm/meyda-wa';
 import type { AudioConfig } from './AudioManager';
 import { AudioFeatures } from './AudioFeatures';
 import { calculateAmplitude } from './utils';
@@ -26,7 +26,7 @@ interface MeydaFeatures {
 }
 
 export class AudioAnalyser {
-  ambientAudioFeatures: AudioFeatures;
+  baselineAudioFeatures: AudioFeatures;
   realtimeAudioFeatures: AudioFeatures;
   environmentIsQuiet: boolean;
   emitter: EventEmitter;
@@ -39,8 +39,8 @@ export class AudioAnalyser {
   buffer: AudioBuffer;
   audioFeatures: AudioFeatures;
   audioFeaturesOverTime: AudioFeaturesOverTime;
-  // updateStateWithThrottle: Function;
-  ambientTimeout: NodeJS.Timeout;
+  updateStateWithThrottle: Function;
+  baselineMeasurementTimeout: NodeJS.Timeout;
   baselineRolloff: number;
   baselineCentroid: number;
   convolutionAmplitudeThreshold: number;
@@ -146,9 +146,7 @@ export class AudioAnalyser {
       source: this.convolver,
       bufferSize: 1024,
       featureExtractors: ['loudness', 'spectralRolloff', 'spectralCrest', 'spectralCentroid'],
-      callback: (features) => {
-        this.meydaCallback(features);
-      },
+      callback: this.meydaCallback.bind(this)
     });
 
     this.meydaAnalyser.start();
@@ -198,16 +196,16 @@ export class AudioAnalyser {
       directInputFFT: inputAnalysis.directInputFFT,
     });
 
-    this.establishAmbientFFT(features);
+    this.establishBaselineAudioFeatures(features);
     this.emitter.emit('audioFeatures', features);
     this.realtimeAudioFeatures = features;
   }
 
   /**
-   * Set ambientFFT and related properties if the environment has settled into
+   * Set baseline audio features, when the environment has settled into
    * quiet for a certain period of time
    */
-  private setAmbientFFT(audioFeatures): void {
+  private setBaselineAudioFeatures(audioFeatures): void {
     const convolutionAmplitude = calculateAmplitude(audioFeatures.convolutionFFT);
     this.convolutionAmplitudeThreshold = convolutionAmplitude;
 
@@ -217,7 +215,7 @@ export class AudioAnalyser {
     const averageCentroid = _.mean(this.audioFeaturesOverTime.spectralCentroid);
     this.baselineCentroid = averageCentroid;
 
-    this.ambientAudioFeatures = new AudioFeatures(audioFeatures);
+    this.baselineAudioFeatures = new AudioFeatures(audioFeatures);
   }
 
   /**
@@ -225,15 +223,18 @@ export class AudioAnalyser {
    * environment is quiet. This provides the baseline measurement to detect
    * other frogs in the acoustic environment
    */
-  private establishAmbientFFT(data: AudioFeatures): void {
+  private establishBaselineAudioFeatures(data: AudioFeatures): void {
+    const baselineMeasurementPeriod = 2500;
     const convolvedInputHasSettled = Date.now() - this.startTime > this.sampleDuration * 1000;
 
-    // early return if ambientFFT has already been set
-    if (this.ambientAudioFeatures || !convolvedInputHasSettled) return;
+    // early return if baselineAudioFeatures has already been set
+    if (this.baselineAudioFeatures || !convolvedInputHasSettled) return;
 
+    // ensure that the environment is quiet for a period of time (baselineMeasurementPeriod)
+    // before setting baseline features
     if (data.loudness > loudnessThreshold) {
-      clearTimeout(this.ambientTimeout);
-      this.ambientTimeout = null;
+      clearTimeout(this.baselineMeasurementTimeout);
+      this.baselineMeasurementTimeout = null;
       this.audioFeaturesOverTime = {
         spectralRolloff: [],
         spectralCentroid: [],
@@ -241,16 +242,16 @@ export class AudioAnalyser {
       return;
     }
 
-    if (this.ambientTimeout) return;
+    if (this.baselineMeasurementTimeout) return;
 
-    this.ambientTimeout = setTimeout(() => {
-      this.setAmbientFFT(data);
+    this.baselineMeasurementTimeout = setTimeout(() => {
+      this.setBaselineAudioFeatures(data);
       this.environmentIsQuiet = true;
-    }, 2500);
+    }, baselineMeasurementPeriod);
   }
 
-  public meydaCallback(data: MeydaFeatures): void {
-    const isAnalysingAmbience = !!this.ambientTimeout;
+  private meydaCallback(data: MeydaFeatures): void {
+    const isAnalysingAmbience = !!this.baselineMeasurementTimeout;
 
     this.updateStateWithThrottle(data);
 
