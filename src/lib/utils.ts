@@ -6,7 +6,7 @@ import { PRINT_LOGS } from './store';
  * @param message - first string
  * @param additionalMessage - optional string
  */
-export function log(message: string, additionalMessage?: any): void {
+export function log(message: string, additionalMessage?: string): void {
   if (PRINT_LOGS) {
     console.log(message, additionalMessage || '');
   }
@@ -67,10 +67,7 @@ export function linearToLog(data: number[]): number[] {
  * @param dataArray - fft data to be plotted
  * @param canvasElement - canvas element to plot onto
  */
-export function drawFFT(
-  dataArray: Float32Array,
-  canvasElement: HTMLCanvasElement,
-): void {
+export function drawFFT(dataArray: Float32Array, canvasElement: HTMLCanvasElement): void {
   const canvasCtx = canvasElement.getContext('2d');
 
   if (!canvasCtx) {
@@ -91,12 +88,7 @@ export function drawFFT(
     const barHeight = (dataArray[i] + 140) * 2;
 
     canvasCtx.fillStyle = 'rgb(' + Math.floor(barHeight + 100) + ', 50, 50)';
-    canvasCtx.fillRect(
-      posX,
-      canvasElement.height - barHeight / 2,
-      barWidth,
-      barHeight / 2,
-    );
+    canvasCtx.fillRect(posX, canvasElement.height - barHeight / 2, barWidth, barHeight / 2);
     posX += barWidth + 1;
   }
 }
@@ -106,10 +98,7 @@ export function drawFFT(
  * @param dataArray - fft data to be plotted
  * @param canvasElement - canvas element to plot onto
  */
-export function drawHistogram(
-  dataArray: number[],
-  canvasElement: HTMLCanvasElement,
-): void {
+export function drawHistogram(dataArray: number[], canvasElement: HTMLCanvasElement): void {
   const canvasCtx = canvasElement.getContext('2d');
 
   if (!canvasCtx) {
@@ -130,12 +119,7 @@ export function drawHistogram(
     const barHeight = (dataArray[i] + 140) * 2;
 
     canvasCtx.fillStyle = 'rgb(' + Math.floor(barHeight + 100) + ', 50, 50)';
-    canvasCtx.fillRect(
-      posX,
-      canvasElement.height - barHeight / 2,
-      barWidth,
-      barHeight / 2,
-    );
+    canvasCtx.fillRect(posX, canvasElement.height - barHeight / 2, barWidth, barHeight / 2);
     posX += barWidth + 1;
   }
 }
@@ -166,4 +150,27 @@ export function matchToHash(str: string): boolean {
  */
 export function testProbability(probability = 0): boolean {
   return probability >= Math.random();
+}
+
+/**
+ * For a given array, return an object containing the index-value pair
+ * corresponding to the largest value in the array
+ * @param arr - expects an array of FFT values
+ * @returns { index: number, value: number } - object containing the index and value of the peak bin
+ */
+export function findPeakBin(arr: Float32Array): {
+  index: number;
+  value: number;
+} {
+  const defaultValue = { index: 0, value: -Infinity };
+
+  if (!arr) return defaultValue;
+
+  return arr.reduce((acc: { index: number; value: number }, item: number, i: number) => {
+    if (item > acc.value) {
+      return { index: i, value: item };
+    } else {
+      return acc;
+    }
+  }, defaultValue);
 }

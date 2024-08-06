@@ -3,6 +3,7 @@ import NoSleep from 'nosleep.js';
 import { writable } from 'svelte/store';
 import { AudioConfig } from './AudioManager';
 import { Frog } from './Frog';
+import { AudioAnalyser } from './AudioAnalyser';
 import spring_peeper from '../assets/spring-peeper.mp3';
 
 // Important parameters for refining behavior
@@ -34,6 +35,8 @@ export const colors = {
 
 export const frogsCount = 1;
 export const audio = new AudioConfig();
+export const audioAnalyser = writable(null);
+export const baselineRolloff = writable(0);
 export const audioFile = spring_peeper;
 export const hasStarted = writable(false);
 export const DEBUG_ON = writable(false);
@@ -42,6 +45,7 @@ export const FROGS = writable([]);
 export const PRINT_LOGS = writable(true);
 export const url = writable('');
 export let inputSourceNode;
+export let analyser;
 
 export const handleError = (msg: string): void => {
   console.error('Rendering error to user:', msg);
@@ -62,7 +66,10 @@ export const handleError = (msg: string): void => {
 function setUpdateInterval(): void {
   setInterval(() => {
     FROGS.update((state) => {
-      state = frogInstances.map((frog) => ({ ...frog.getProps() }));
+      state = frogInstances.map((frog) => ({ ...frog.getUiProps() }));
+      return state;
+    });
+    audioAnalyser.update((state) => {
       return state;
     });
   }, inputSamplingInterval);
@@ -80,16 +87,20 @@ export const handleStart = async (): Promise<void> => {
     .then(async () => {
       inputSourceNode = audio.input;
 
-      const promises = _.times(frogsCount, async () => {
-        const frog = new Frog(audio, audioFile);
+      analyser = new AudioAnalyser(audio, audioFile);
+      await analyser.init();
+      audioAnalyser.set(analyser);
 
-        await frog.initialize().then(() => {
-          const frogProps = frog.getProps();
-          frogInstances.push(frog);
-          console.log('frogProps', frogProps);
-          FROGS.update((val) => [...val, frogProps]);
-          setUpdateInterval();
-        });
+      const promises = _.times(frogsCount, async () => {
+        const frog = new Frog(analyser);
+
+        frog.initialize();
+
+        const frogProps = frog.getUiProps();
+        frogInstances.push(frog);
+        console.log('frogProps', frogProps);
+        FROGS.update((val) => [...val, frogProps]);
+        setUpdateInterval();
       });
 
       return await Promise.all(promises);
@@ -107,5 +118,6 @@ export const toggleOnDebug = (): void => {
 };
 
 export const sendFrogsToBed = (): void => {
+  analyser.stop();
   frogInstances.forEach((frog) => frog.sleep());
 };

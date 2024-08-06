@@ -17,6 +17,7 @@
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "@tsconfig/svelte": "^3.0.0",
     "@types/lodash": "^4.14.192",
+    "@types/node": "^22.1.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "autoprefixer": "^10.4.13",
@@ -38,6 +39,7 @@
   },
   "dependencies": {
     "@types/meyda": "^4.3.3",
+    "eventemitter3": "^5.0.1",
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
     "markdown-it": "^14.0.0",

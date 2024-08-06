@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { FFT_SIZE, handleError } from './store';
 import { log } from './utils';
 
@@ -47,9 +46,7 @@ export class AudioConfig {
     await navigator.mediaDevices
       .enumerateDevices()
       .then((devices) => {
-        const audioInputDevices = devices.filter(
-          (device) => device.kind === 'audioinput',
-        );
+        const audioInputDevices = devices.filter((device) => device.kind === 'audioinput');
         const audioInputDevice = audioInputDevices[0];
 
         // manually throw error, for debugging error-handling
@@ -80,10 +77,8 @@ export class AudioConfig {
     const ctx = this.ctx;
     const constraints = { audio: {} };
 
-    if (this.deviceId)
-      constraints.audio = { deviceId: { exact: this.deviceId } };
-    else if (this.groupId)
-      constraints.audio = { groupId: { exact: this.groupId } };
+    if (this.deviceId) constraints.audio = { deviceId: { exact: this.deviceId } };
+    else if (this.groupId) constraints.audio = { groupId: { exact: this.groupId } };
 
     await navigator.mediaDevices
       .getUserMedia(constraints)
