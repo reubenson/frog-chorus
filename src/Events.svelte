@@ -7,11 +7,11 @@
     mainColor = $hasStarted ? colors.darkMode.main : colors.lightMode.main;
   }
 
-  const currentDate = new Date( (new Date()).toLocaleDateString() )
+  const currentDate = new Date();
   
   const upcomingEvents = events
     .filter(event => {
-      return new Date(event.date).getDate() >= currentDate.getDate()
+      return new Date(event.date) >= currentDate
     })
     .map(event => {
       return {
@@ -20,7 +20,7 @@
       }
     });
 
-  const pastEvents = events.filter(event => new Date(event.date).getDate() < currentDate.getDate())
+  const pastEvents = events.filter(event => new Date(event.date) < currentDate)
     .map(event => {
       return {
         ...event,
