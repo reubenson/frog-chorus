@@ -118,6 +118,6 @@ export const toggleOnDebug = (): void => {
 };
 
 export const sendFrogsToBed = (): void => {
-  analyser.stop();
+  analyser?.stop();
   frogInstances.forEach((frog) => frog.sleep());
 };

@@ -31,7 +31,7 @@ export class AudioConfig {
   }
 
   public stop(): void {
-    this.stream.getTracks().forEach((track) => {
+    this.stream?.getTracks().forEach((track) => {
       track.stop();
     });
   }
