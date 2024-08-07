@@ -41,8 +41,6 @@ export class AudioAnalyser {
   audioFeaturesOverTime: AudioFeaturesOverTime;
   updateStateWithThrottle: Function;
   baselineMeasurementTimeout: NodeJS.Timeout;
-  baselineRolloff: number;
-  baselineCentroid: number;
   convolutionAmplitudeThreshold: number;
   startTime: number;
   lastAttemptTime: number;
@@ -211,9 +209,9 @@ export class AudioAnalyser {
 
     // TODO?: dynamically reset amplitude threshold to lower values as the environment gets quieter
     const averageRolloff = _.mean(this.audioFeaturesOverTime.spectralRolloff);
-    this.baselineRolloff = averageRolloff;
+    audioFeatures.spectralRolloff = averageRolloff;
     const averageCentroid = _.mean(this.audioFeaturesOverTime.spectralCentroid);
-    this.baselineCentroid = averageCentroid;
+    audioFeatures.spectralCentroid = averageCentroid;
 
     this.baselineAudioFeatures = new AudioFeatures(audioFeatures);
   }
